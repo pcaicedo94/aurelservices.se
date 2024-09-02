@@ -8,7 +8,7 @@ const AboutUsContent = () => {
           <div className="row align-items-center">
             <div className="col-lg-6">
               <div className="about-image">
-                <img src="/images/truckceter.png" alt="image" />
+                <img src="/images/aurel3.jpg" alt="image" />
               </div>
             </div>
 
