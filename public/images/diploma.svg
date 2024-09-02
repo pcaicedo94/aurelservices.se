@@ -1,0 +1,11 @@
+<svg height="30px" width="30px" fill="#0A8944" xmlns="http://www.w3.org/2000/svg"
+  data-name="Layer 1" viewBox="0 0 100 100" x="0px" y="0px">
+  <title>Diploma</title>
+  <g data-name="Group">
+    <path data-name="Compound Path"
+      d="M86.8,10H26.5a12,12,0,0,0-12,11.9l-.4,41.4H4.7a4,4,0,0,0-4,4v7.3A15.3,15.3,0,0,0,15.5,90H67.1A15.3,15.3,0,0,0,82.4,74.7V39.8H95.3a4,4,0,0,0,4-4V22.5A12.5,12.5,0,0,0,86.8,10ZM16,82a7.3,7.3,0,0,1-7.3-7.3V71.3h43v3.3A15.2,15.2,0,0,0,53.6,82Zm58.3-7.3a7.3,7.3,0,0,1-14.7,0V67.3a4,4,0,0,0-4-4H22.1L22.5,22a4,4,0,0,1,4-4H75.2a12.4,12.4,0,0,0-.8,4.5ZM91.3,31.8H82.4V22.5a4.5,4.5,0,1,1,8.9,0Z"></path>
+    <rect data-name="Path" x="26.9" y="26.7" width="23.5" height="8"></rect>
+    <rect data-name="Path" x="26.9" y="38.7" width="41.5" height="8"></rect>
+    <rect data-name="Path" x="26.9" y="50.7" width="41.5" height="8"></rect>
+  </g>
+</svg>

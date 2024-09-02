@@ -1,0 +1,27 @@
+{
+    "name": "raxr",
+    "version": "1.8.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start"
+    },
+    "dependencies": {
+        "aos": "^2.3.4",
+        "axios": "^0.22.0",
+        "fslightbox-react": "^1.6.2-2",
+        "next": "^12.3.1",
+        "nodemailer": "^6.7.2",
+        "nodemailer-sendgrid-transport": "^0.2.0",
+        "react": "^18.2.0",
+        "react-accessible-accordion": "^5.0.0",
+        "react-confetti": "^6.1.0",
+        "react-dom": "^18.2.0",
+        "react-tabs": "^5.1.0",
+        "sass": "^1.43.5",
+        "sweetalert2": "^11.2.1",
+        "sweetalert2-react-content": "^5.0.5",
+        "swiper": "^8.4.4"
+    }
+}
