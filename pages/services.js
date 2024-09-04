@@ -3,6 +3,7 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import Footer from "../components/Layouts/Footer";
 import Cards from "../components/Common/Cards";
+import ServicesDetails from "../components/HomeOne/ServicesDetails";
 
 const Services = () => {
   return (
@@ -10,13 +11,13 @@ const Services = () => {
       <Navbar />
 
       <PageBanner
-        pageTitle="Estaciones de servicio"
-        breadcrumbTextOne="Inicio"
-        breadcrumbTextTwo="Estaciones de servicio"
+        pageTitle="Tjänster"
+        breadcrumbTextOne="Start"
+        breadcrumbTextTwo="Tjänster"
         breadcrumbUrl="/"
-        bgImage="/images/estaciones.png"
+        bgImage="/images/services-bg.jpg"
       />
-      <Cards />
+      <ServicesDetails/>
       <Footer />
     </>
   );

@@ -27,23 +27,13 @@ const Index = () => {
       <AboutUs />
 
       <FunFacts />
-      {/* <WorkingProcess /> */}
 
-      {/* <div className="pb-100">
-        <FeaturedService />
-      </div> */}
-
-      {/* <Testimonial /> */}
       <div className="pb-100">
         <GetStartedProject />
       </div>
 
-      {/* <BlogPost /> */}
-
       <Customers />
-      <SolutionsTab />
 
-      {/* <Subscribe /> */}
 
       <Footer />
     </>

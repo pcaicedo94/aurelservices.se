@@ -67,7 +67,7 @@ const OurValues = () => {
 
             <div className="col-lg-4 col-md-6">
               <div className="data-service-image">
-                <img src="/images/data-service.png" alt="image" />
+                <img src="/images/values.jpeg" alt="image" />
               </div>
             </div>
 

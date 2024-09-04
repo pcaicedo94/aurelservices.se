@@ -39,7 +39,7 @@ const Navbar = ({associates}) => {
                     loading="lazy"
                   />
                   <img
-                    src="/images/logo.png"
+                    src="/images/logo-white.png"
                     className="black-logo"
                     alt="logo"
                     loading="lazy"
@@ -63,7 +63,6 @@ const Navbar = ({associates}) => {
               </button>
 
               <div className={classOne} id="navbarSupportedContent">
-                {!associates ?
                 <ul className="navbar-nav m-auto">
                   <li className="nav-item">
                     <Link href="/about-us" activeClassName="active">
@@ -78,69 +77,12 @@ const Navbar = ({associates}) => {
                   </li>
 
                   <li className="nav-item">
-                    <Link href="/offices" activeClassName="active">
-                      <a className="nav-link">Transporte de carga</a>
-                    </Link>
-                  </li>
-
-                  <li className="nav-item">
-                    <Link href="/associates" activeClassName="active">
-                      <a className="nav-link">Asociados</a>
-                    </Link>
-                  </li>
-
-                  <li className="nav-item">
-                    <Link href="/certification" activeClassName="active">
-                      <a className="nav-link">Gestión certificada</a>
-                    </Link>
-                  </li>
-
-                  <li className="nav-item">
                     <Link href="/contact" activeClassName="active">
-                      <a className="nav-link">Contáctenos</a>
+                      <a className="nav-link">Kontakta Oss</a>
                     </Link>
                   </li>
                 </ul>
-                :
-                <ul className="navbar-nav m-auto">
-                  <li className="nav-item">
-                    <Link href="/normativity" activeClassName="active">
-                      <a className="nav-link">Normatividad</a>
-                    </Link>
-                  </li>
-
-                  <li className="nav-item">
-                    <Link href="/happy-birthday" activeClassName="active">
-                      <a className="nav-link">Cumpleaños</a>
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link href="/benefits-page" activeClassName="active">
-                      <a className="nav-link">Beneficios</a>
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link href="/services-page" activeClassName="active">
-                      <a className="nav-link">Servicios</a>
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link href="/credits" activeClassName="active">
-                      <a className="nav-link">Créditos</a>
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link href="/agreements" activeClassName="active">
-                      <a className="nav-link">Convenios</a>
-                    </Link>
-                  </li>
-                  <li className="nav-item ">
-                    <Link href="/associates" activeClassName="active">
-                      <a className="nav-link" style={{fontWeight:'700 !important', paddingLeft:'1rem'}}>Cerrar Sesión</a>
-                    </Link>
-                  </li>
-                </ul>
-              }
+    
 
               </div>
             </nav>

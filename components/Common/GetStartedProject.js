@@ -17,13 +17,6 @@ const GetStartedProject = () => {
                 </p>
 
                 <div className="productive-btn">
-                  {/* <Link href="/projects">
-                    <a className="productive-btn">
-                      Get Started Project
-                      <span></span>
-                    </a>
-                  </Link> */}
-
                   <Link href="/contact">
                     <a className="productive-btn-one">
                       Kontakta Oss
@@ -36,7 +29,7 @@ const GetStartedProject = () => {
 
             <div className="col-lg-6">
               <div className="productive-image">
-                <img src="/images/productive.png" alt="image" />
+                <img src="/images/peaceful.jpg" alt="image" />
               </div>
             </div>
           </div>

@@ -27,7 +27,7 @@ const WorkingProcess = () => {
               data-aos-once="true"
             >
               <div className="process-item">
-                <img src="/images/process/process1.png" alt="image" />
+                <img src="/images/process/mision-img.jpg" alt="image" />
 
                 <h2>Mission</h2>
 
@@ -52,7 +52,7 @@ const WorkingProcess = () => {
               data-aos-once="true"
             >
               <div className="process-item">
-                <img src="/images/process/process3.png" alt="image" />
+                <img src="/images/process/vision-img.jpeg" alt="image" />
 
                 <h2>Vision</h2>
                 <p>

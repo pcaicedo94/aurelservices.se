@@ -12,9 +12,9 @@ const Contact = () => {
       <Navbar />
 
       <PageBanner
-        pageTitle="Contacto / Pqrs"
-        breadcrumbTextOne="Inicio"
-        breadcrumbTextTwo="Contacto/PQRS"
+        pageTitle="Kontakt/Funderingar"
+        breadcrumbTextOne="Start"
+        breadcrumbTextTwo="Kontakt/Funderingar"
         breadcrumbUrl="/"
         bgImage="/images/page-title-bg.jpg"
       />
@@ -22,7 +22,6 @@ const Contact = () => {
       <ContactInfo />
 
       <ContactForm />
-      <FinancialDetails/>
       <Footer />
     </>
   );

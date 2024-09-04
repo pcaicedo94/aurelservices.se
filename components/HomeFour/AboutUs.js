@@ -9,7 +9,7 @@ const AboutUs = () => {
           <div className="row align-items-center">
             <div className="col-lg-6">
               <div className="about-image">
-                <img src="/images/about.png" alt="image" />
+                <img src="/images/15-years-exp.png" alt="image" />
               </div>
             </div>
 

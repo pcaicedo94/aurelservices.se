@@ -15,7 +15,7 @@ const AboutUs = () => {
                 data-aos-duration="1200"
                 data-aos-once="true"
               >
-                <img src="/images/about.png" alt="image" />
+                <img src="/images/15-years-exp.png" alt="image" />
               </div>
             </div>
 

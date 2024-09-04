@@ -219,8 +219,20 @@ p:last-child {
 }
 .section-title h2 {
   font-size: 40px;
-  color: #393953;
-  margin: 10px 0 0 0;
+  color: #34a783;
+  margin: 40px 0 0 0;
+}
+/*Welcoming text*/
+#custom-title {
+  font-family: 'Georgia', serif;
+  font-size: 2.5em;
+  color: #34a783;
+}
+
+#custom-paragraph {
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 1.2em;
+  color: rgb(116, 112, 115);
 }
 
 .form-group {
@@ -406,8 +418,8 @@ Navbar Area CSS
 }
 .main-nav .navbar .navbar-nav .nav-item a {
   font-size: 16px;
-  font-weight: 500;
-  color: #1C3A57;
+  font-weight: bolder;
+  color:rgb(6, 6, 92);
   text-transform: capitalize;
   padding-left: 0;
   padding-right: 0;
@@ -4667,13 +4679,13 @@ blockquote::after,
 Footer Section CSS
 =================================================*/
 .footer-section {
-  background-image: url(/images/footer-bg.jpg);
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
   z-index: 1;
   overflow: hidden;
+  background-color: #34A783;
 }
 .footer-section::before {
   position: absolute;
@@ -4984,176 +4996,65 @@ Go Top CSS
   animation: fadeAnimation 9s infinite 6s;
   z-index: 3;
 } */
-
-@keyframes tonext {
-  75% {
-    left: 0;
-  }
-  95% {
-    left: 100%;
-  }
-  98% {
-    left: 100%;
-  }
-  99% {
-    left: 0;
-  }
-}
-
-@keyframes tostart {
-  0% {
-    left: 0;
-  }
-  50% {
-    left: 0;
-  }
-  98% {
-    left: -300%;
-  }
-  99% {
-    left: 0;
-  }
-}
-
-@keyframes snap {
-  96% {
-    scroll-snap-align: center;
-  }
-  97% {
-    scroll-snap-align: none;
-  }
-  99% {
-    scroll-snap-align: none;
-  }
-  100% {
-    scroll-snap-align: center;
-  }
-}
-
-ol,
-li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
+/* Basic Carousel Styles */
 .carousel {
   position: relative;
-  padding-top: 50%;
-  filter: drop-shadow(0 0 10px #0003);
-  perspective: 100px;
+  width: 100%;
+  padding-top: 9%; /* Adjust this to match the aspect ratio of your images */
+  overflow: hidden;
+  height: auto;
 }
 
 .carousel__viewport {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: -53px;
-  left: 0;
   display: flex;
-  align-items: center;
-  overflow: hidden;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
+  width: 110%; /* 100% for each of the three slides */
+  animation: slide-animation 18s infinite; /* Cycle through slides every 9 seconds */
+  margin-bottom:0 !important;
 }
 
-@media only screen and (min-width: 1000px) and (max-width: 1390px) {
-  .carousel {
-    padding-top: 41%;
-  }
-  .carousel__viewport {
-    bottom: -120px;
-  }
-}
-@media only screen and (min-width: 1400px) {
-  .carousel {
-    padding-top: 39%;
-  }
-  .carousel__viewport {
-    bottom: -103px;
-  }
-}
-@media only screen and (min-width: 1500px) {
-  .carousel {
-    padding-top: 37%;
-  }
-  .carousel__viewport {
-    bottom: -103px;
-  }
-}
 .carousel__slide {
-  position: relative;
-  flex: 0 0 100%;
+  flex: 0 0 100%; /* Each slide takes up 100% of the viewport */
   width: 100%;
-  /* background-color: #2b1678; */
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+  align-items: center; /* Center the image vertically */
+  overflow: hidden; /* Hide any overflow */
+}
 
-  & > img {
-    width: 100%;
+.carousel__slide img {
+  width: 100%; /* Make the image take up the full width of the slide */
+  height: auto; /* Maintain the aspect ratio */
+  object-fit: contain; /* Cover the container without stretching */
+  max-width: 100%; /* Prevent the image from scaling beyond its container */
+  max-height: 100%; /* Prevent the image from scaling beyond its container */
+}
+
+/* Keyframes for the sliding animation */
+@keyframes slide-animation {
+  0% {
+    transform: translateX(0%); /* Show the first slide */
+  }
+  33% {
+    transform: translateX(0%); /* Hold the first slide */
+  }
+  34% {
+    transform: translateX(-100%); /* Slide to the second slide */
+  }
+  66% {
+    transform: translateX(-100%); /* Hold the second slide */
+  }
+  67% {
+    transform: translateX(-200%); /* Slide to the third slide */
+  }
+  99% {
+    transform: translateX(-200%); /* Hold the third slide */
+  }
+  100% {
+    transform: translateX(-10%); /* Jump back to the first slide */
   }
 }
 
-.carousel__slide:nth-child(even) {
-  background-color: #2b1678;
-}
 
-.carousel__slide:before {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -40%, 70px);
-  color: #fff;
-  font-size: 2em;
-}
-
-.carousel__snapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  scroll-snap-align: center;
-}
-
-@media (hover: hover) {
-  .carousel__snapper {
-    animation-name: tonext, snap;
-    animation-timing-function: ease;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
-  }
-
-  .carousel__slide:last-child .carousel__snapper {
-    animation-name: tostart, snap;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .carousel__snapper {
-    animation-name: none;
-  }
-}
-.carousel__navigation {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  text-align: center;
-}
-.carousel__navigation-list,
-.carousel__navigation-item {
-  display: inline-block;
-}
-.carousel__navigation-button {
-  display: inline-block;
-  width: 1.5rem;
-  height: 1.5rem;
-  background-color: #333;
-  background-clip: content-box;
-  border: 0.25rem solid transparent;
-  border-radius: 50%;
-  font-size: 0;
-  transition: transform 0.1s;
-}
 
 .Associates {
   padding: 15px;

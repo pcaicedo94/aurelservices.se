@@ -44,7 +44,7 @@ const Associate = () => {
             data-aos-once="true"
           >
             <div className="Associates__LoginBox">
-              <img alt="Ceter logo" src="/images/logo.png" />
+              <img alt="Aurel logo" src="/images/logo.png" />
               <h2 className="Associates__Title">Ingreso</h2>
               <form
                 className="form-group"
@@ -62,17 +62,7 @@ const Associate = () => {
                     onChange={handleChange}
                   />
                 </div>
-                {/* <div className="Associates__FormGroup">
-                  <input
-                    className="Associates__FormControl"
-                    name="password"
-                    placeholder="Contrasena"
-                    required=""
-                    value={contact.name}
-                    onChange={handleChange}
-                    type="password"
-                  />
-                </div> */}
+              
                 <button
                   className="default-btn col-lg-12 col-md-12 col-sm-12"
                   type="submit"

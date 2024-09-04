@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
 import baseUrl from "../../utils/baseUrl";
+import Chatbot from "../ChatBot/chatbot";
 
 const alertContent = () => {
   MySwal.fire({
@@ -52,16 +53,12 @@ const ContactForm = () => {
     <div className="contact-section ptb-50">
       <div className="container">
         <div className="about-content">
-          <h2>PQRS - Peticiones Quejas Reclamos Sugerencias</h2>
+          <h2>Hör av dig!</h2>
           <p className="pb-100">
-            Su respuesta se enviará a través de la dirección de correspondencia
-            o correo electrónico. Por favor, verifique la precisión de sus
-            datos. Al hacer clic en 'Enviar', confirma la validez del correo
-            electrónico proporcionado y autoriza a Ceter para enviar la
-            respuesta electrónicamente. Garantizamos la confidencialidad y el
-            tratamiento adecuado de sus datos personales de acuerdo con la
-            legislación vigente (Ley 1581 de 2012), en cumplimiento de nuestra
-            política.
+          Låt oss ta hand om städningen så att du kan fokusera på 
+          det som verkligen betyder något. Kontakta oss idag för att 
+          begära en offert eller boka en konsultation. Vi är här 
+          för att hjälpa dig att hålla ditt utrymme fläckfritt!
           </p>
         </div>
         <div className="row align-items-center">
@@ -73,88 +70,9 @@ const ContactForm = () => {
 
           <div className="col-lg-6">
             <div className="contact-form">
-              <form onSubmit={handleSubmit}>
-                <div className="row">
-                  <div className="col-lg-6 col-md-6">
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        name="name"
-                        placeholder="Nombre"
-                        className="form-control"
-                        value={contact.name}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-lg-6 col-md-6">
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        name="email"
-                        placeholder="Email"
-                        className="form-control"
-                        value={contact.email}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-lg-6 col-md-6">
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        name="number"
-                        placeholder="Numero Teléfonico"
-                        className="form-control"
-                        value={contact.number}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-lg-6 col-md-6">
-                    <div className="form-group">
-                      <select
-                        id="option"
-                        name="subject"
-                        className="form-control"
-                        onChange={handleChange}
-                        required
-                        value={contact.subject}
-                      >
-                        <option value="" disabled>
-                          Selecciona una opción 🔻
-                        </option>
-                        <option value="Petición">Petición</option>
-                        <option value="Queja">Queja</option>
-                        <option value="Reclamo">Reclamo</option>
-                        <option value="Sugerencia">Sugerencia</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-lg-12 col-md-12">
-                    <div className="form-group">
-                      <textarea
-                        name="text"
-                        cols="30"
-                        rows="6"
-                        placeholder="Escriba su mensaje"
-                        className="form-control"
-                        value={contact.text}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-lg-12 col-sm-12">
-                    <button type="submit" className="submit-btn mt-2">
-                      Enviar Mensaje
-                    </button>
-                  </div>
-                </div>
-              </form>
+            {<Chatbot />}
+
+
             </div>
           </div>
         </div>

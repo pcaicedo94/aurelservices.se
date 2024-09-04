@@ -14,9 +14,9 @@ export default async (req, res) => {
   const { name, email, number, subject, text } = req.body;
 
   const data = {
-    to: "comercial@ceter.com.co",
-    from: "comercial@ceter.com.co",
-    subject: "desde la pagina de ceter",
+    to: "info@aurelservice.se",
+    from: "info@aurelservice.se",
+    subject: "from AurelService  webpage",
     text: text,
     html: `
             <b>From:</b> ${name} <br /> 

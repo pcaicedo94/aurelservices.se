@@ -7,6 +7,15 @@ const OurServices = () => {
       <div className="services-section pt-100 pb-70">
         <div className="container">
           <div className="section-title">
+            <h2 id ="custom-title">Välkommen till Aurel Städ AB</h2>
+            <br></br>
+            <br></br>
+            <h4 id ="custom-paragraph">Din pålitliga partner för städning sedan 2007.</h4>
+            <h4 id ="custom-paragraph">På Aurel Städ AB är vi stolta över att erbjuda enastående städtjänster över hela Stockholm sedan 2007. 
+              Vi är ett familjeföretag förankrat i samhället, engagerade för att leverera excellens och kundnöjdhet i 
+              varje uppdrag vi utför.</h4>
+            <br></br>
+            <br></br> 
             <h2>Våra Tjänster</h2>
           </div>
 
