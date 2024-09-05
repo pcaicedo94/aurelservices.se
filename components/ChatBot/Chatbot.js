@@ -32,6 +32,8 @@ const Chatbot = () => {
 
   const sendMessage = () => {
     if (input.trim() === '') return;
+    addOptions();
+    
 
     // Add user's message to chatbox
     const userMessage = { sender: 'You', text: input };
@@ -42,6 +44,7 @@ const Chatbot = () => {
 
     // Optionally, add options based on specific intents
     addOptions(botResponse.text);
+    console.log('botResponse',botResponse)
   };
 
   const addOptions = (responseText) => {
@@ -96,7 +99,8 @@ const Chatbot = () => {
             placeholder="Type your message..."
             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
           />
-          <button onClick={sendMessage}>Send</button>
+          <button onClick={sendMessage}>Skicka</button>
+          <button id="toggle-chatbox" onClick={toggleChatbox}>Chat with us</button>
         </div>
     
     </div>

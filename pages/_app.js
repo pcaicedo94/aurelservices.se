@@ -22,11 +22,13 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Ceter - Cooperativa Multiactiva y de Transporte de Santander</title>
+        <title>Aurelservices</title>
+        <meta charset="UTF-8"></meta>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
         <title>
-          Ceter - Cooperativa Multiactiva y de Transporte de Santander
+          Aurelservices
         </title>
         <meta
           name="description"
@@ -44,6 +46,7 @@ function MyApp({ Component, pageProps }) {
         <meta property="og:site_name" content="Ceter" />
         <meta name="author" content="jose caicedo" />
       </Head>
+
 
       <Component {...pageProps} />
 
