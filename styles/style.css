@@ -385,7 +385,7 @@ Preloader Area CSS
 Navbar Area CSS
 =================================================*/
 .main-nav {
-  background-color: transparent;
+  background: transparent; /*linear-gradient(90deg, #34a783, #53b38b, #72c192, #a8d599, #f3ab6b); */
   padding-top: 20px;
   padding-bottom: 20px;
   padding-right: 0;
@@ -2947,7 +2947,7 @@ Process Section CSS
 =================================================*/
 .process-item {
   position: relative;
-  text-align: center;
+  text-align: left;
   margin-bottom: 30px;
 }
 .process-item img {
@@ -2960,6 +2960,9 @@ Process Section CSS
 }
 .process-item p {
   margin: 0;
+  font-size: 16px;
+  line-height: 2.5rem;
+  padding-bottom: 15px;
 }
 .process-item .process-btn {
   margin-top: 10px;
@@ -4997,6 +5000,24 @@ Go Top CSS
   z-index: 3;
 } */
 /* Basic Carousel Styles */
+/* Container for text and carousel */
+.content-container {
+  display: flex;
+  align-items: flex-start; /* Align items to the top */
+  margin-top: 60px; /* Adjust this value based on your navbar height */
+}
+
+/* Text section */
+.text-section {
+  flex: 1; /* Take up remaining space */
+  padding: 20px;
+}
+
+/* Carousel section */
+.carousel-section {
+  flex: 0 0 40%; /* Adjust the width of the carousel section */
+  padding: 20px;
+}
 .carousel {
   position: relative;
   width: 100%;

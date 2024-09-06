@@ -26,20 +26,18 @@ const WorkingProcess = () => {
               data-aos-duration="1200"
               data-aos-once="true"
             >
-              <div className="process-item">
+              <div className="process-item" >
                 <img src="/images/process/mision-img.jpg" alt="image" />
 
                 <h2>Mission</h2>
 
-                <h3>FLEXIBILITET, KVALITET OCH SERVICE</h3>
-
-                <p>- Vi är ett effektivt städtjänsteföretag med stora ambitioner och höga krav på kvalitet.
+                <p>Vi är ett effektivt städtjänsteföretag med stora ambitioner och höga krav på kvalitet.
                   Vi erbjuder en komplett städtjänst för företag och privatpersoner i Storstockholm.
                   Vi utför både stora och små uppgifter med samma energi och entusiasm.</p>
 
-                <p>- Våra tjänster kännetecknas av skräddarsydda lösningar med hög flexibilitet, kvalitet och garanti.</p>
+                <p>Våra tjänster kännetecknas av skräddarsydda lösningar med hög flexibilitet, kvalitet och garanti.</p>
 
-                <p>- Vi använder marknadens senaste och bästa utrustning samt produkter som har så liten miljöpåverkan som möjligt.</p>
+                <p>Vi använder marknadens senaste och bästa utrustning samt produkter som har så liten miljöpåverkan som möjligt.</p>
 
               </div>
             </div>
@@ -56,34 +54,13 @@ const WorkingProcess = () => {
 
                 <h2>Vision</h2>
                 <p>
-                  - Att vara ett nationellt erkänt prestigefyllt företag med administrativ autonomi, utmärkt städtjänst som erbjuder en produkt av utmärkt kvalitet, där kontinuerlig förbättring uppskattas av våra kunder.
+                  Att vara ett nationellt erkänt prestigefyllt företag med administrativ autonomi, utmärkt städtjänst som erbjuder en produkt av utmärkt kvalitet, där kontinuerlig förbättring uppskattas av våra kunder.
                 </p>
-                  - Att vara ett konkurrenskraftigt företag med strategiskt partnerskap, nationellt och engagerad i kundservicen.
+                  Att vara ett konkurrenskraftigt företag med strategiskt partnerskap, nationellt och engagerad i kundservicen.
                   <p>
-                  - Att fortsätta bidra till att förbättra miljön.
+                  Att fortsätta bidra till att förbättra miljön.
                   </p>
-                  <p>
-                  Värderingar:
-                  </p>
-                  <p>
-                  - Respekt
-                  </p>
-                  <p>
-                  - Empati
-                  </p>
-                  <p>
-                  - Ansvar
-                  </p>
-                  <p>
-                  - Vilja
-                </p>
 
-                {/* <Link href="/project-details">
-                  <a className="process-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
-                </Link> */}
               </div>
             </div>
 
