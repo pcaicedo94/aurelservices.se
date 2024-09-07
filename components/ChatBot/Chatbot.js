@@ -74,7 +74,7 @@ const Chatbot = () => {
     console.log("responseText", responseText);
     if (responseText.toLowerCase().includes('storstädning')) {
       setMessages((prevMessages) => [
-        ...prevMessages,
+
         {
           sender: "Bot",
           text: "Please select an option:",
@@ -131,7 +131,7 @@ const Chatbot = () => {
         }}
       >
         <div id="chatbox">
-          <h4>Hey welcome </h4>
+          <h4>Hej Välkommen </h4>
           {messages?.map((message, index) => (
             <div key={index}>
               <p>
