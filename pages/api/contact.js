@@ -3,7 +3,7 @@ import sgTransport from "nodemailer-sendgrid-transport";
 
 const transporter = {
   auth: {
-    api_key:  process.env.SENDGRID_API_KEY,
+    api_key: process.env.SENDGRID_API_KEY,
   },
 };
 
@@ -11,19 +11,16 @@ const mailer = nodemailer.createTransport(sgTransport(transporter));
 
 export default async (req, res) => {
   console.log(req.body);
-  const { name, email, number, subject, text } = req.body;
+  const { size, address, clientEmail } = req.body;
 
   const data = {
-    to: "info@aurelservice.se",
-    from: "info@aurelservice.se",
+    to: clientEmail,
+    from: "braianfilipovic@gmail.com",
     subject: "from AurelService  webpage",
-    text: text,
+    text: `${size} ${address}`,
     html: `
-            <b>From:</b> ${name} <br /> 
-            <b>Number:</b> ${number} <br /> 
-            <b>Subject:</b> ${subject} <br /> 
-            <b>Message:</b> ${text} 
-            <b>email:</b> ${email}
+          <b>Size:</b> ${size} <br /> 
+          <b>Address:</b> ${address} <br /> 
         `,
   };
   try {

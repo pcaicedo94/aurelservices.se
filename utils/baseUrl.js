@@ -1,5 +1,5 @@
 const baseUrl = process.env.NODE_ENV === "production"
-? 'https://ceter.com.co'
+? 'https://aurelservice.vercel.app'
 : 'http://localhost:3000';
 
 

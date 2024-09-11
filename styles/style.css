@@ -126,6 +126,7 @@ p:last-child {
 }
 
 .default-btn {
+  cursor: pointer;
   border: none;
   position: relative;
   display: inline-block;
@@ -166,6 +167,7 @@ p:last-child {
 }
 
 .default-btn-one {
+  cursor: pointer;
   border: none;
   position: relative;
   display: inline-block;
@@ -1232,6 +1234,102 @@ Navbar Area CSS
 .navbar-toggler.collapsed .bottom-bar {
   transform: rotate(0);
   left: 0;
+}
+
+/*================================================
+Main Home Form CSS
+=================================================*/
+
+.main-banner-two {
+  display: flex;
+  flex-direction: column;
+}
+.home-form-container {
+  position: absolute;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ width: 50%;
+ top: 0;
+ bottom: 0;
+ padding-top: 10%;
+ z-index: 1000;
+}
+
+.home-form {
+  padding: 1.5rem 2rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  gap: 1.5rem;
+  max-width: 500px;
+}
+.home-form > h1{
+ font-size: 32px;
+ color: #34a783;
+}
+.home-form div {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+.home-form input{
+  /* border: 0; */
+  border: 1px solid gray;
+  font-size: 18px;
+  border-radius: 5px;
+  height: 3rem;
+  padding: 0 0.5rem;
+}
+.home-form input:focus{
+  outline: 0;
+}
+.home-form > div:nth-child(2) { 
+  width: 100% !important
+}
+
+@media only screen and (max-width: 1200px) {
+  .home-form-container {
+   position: unset;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   top: 0;
+   bottom: 0;
+   padding-top: 0;
+   margin-top: 2rem;
+   margin-bottom: 2rem;
+  }
+  .main-banner-two {
+    flex-direction: column-reverse;
+  }
+  .home-form {
+   width: 95%;
+  padding: 1.5rem 1rem 1rem 1rem;
+  border-radius: 2rem;
+  max-width: 400px;
+  }
+  .home-form > div:first-child{
+   flex-direction: column;
+   width: 100%;
+   gap: 1.5rem;
+
+  }
+  .home-form > div:first-child > span{ 
+    display: none;
+  }
+  .home-form > div:first-child > input{ 
+    width: 100% !important
+  }
+  .home-form  input{ 
+    font-size: 16px
+  }
 }
 
 /*================================================
@@ -5018,10 +5116,11 @@ Go Top CSS
   flex: 0 0 40%; /* Adjust the width of the carousel section */
   padding: 20px;
 }
+
 .carousel {
   position: relative;
   width: 100%;
-  padding-top: 9%; /* Adjust this to match the aspect ratio of your images */
+  padding-top: 10%; /* Adjust this to match the aspect ratio of your images */
   overflow: hidden;
   height: auto;
 }

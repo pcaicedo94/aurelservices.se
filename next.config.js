@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
-const path = require('path')
 
 const nextConfig = {
-    reactStrictMode: true,
-    swcMinify: true,
-    sassOptions: {
-        includePaths: [path.join(__dirname, 'styles')],
-    },
-    trailingSlash: true,
-    optimizeFonts: false,
-}
-module.exports = nextConfig
+  env: {
+    BACKEND_URL: process.env.BACKEND_URL,
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+  },
+};
+
+module.exports = nextConfig;

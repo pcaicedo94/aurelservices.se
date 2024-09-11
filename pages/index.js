@@ -14,7 +14,6 @@ import Customers from "../components/Common/Customers";
 import Subscribe from "../components/Common/Subscribe";
 import Footer from "../components/Layouts/Footer";
 
-
 const Index = () => {
   return (
     <>
@@ -33,7 +32,6 @@ const Index = () => {
       </div>
 
       <Customers />
-
 
       <Footer />
     </>
