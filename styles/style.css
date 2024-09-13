@@ -1313,7 +1313,6 @@ Main Home Form CSS
    width: 95%;
   padding: 1.5rem 1rem 1rem 1rem;
   border-radius: 2rem;
-  max-width: 400px;
   }
   .home-form > div:first-child{
    flex-direction: column;
