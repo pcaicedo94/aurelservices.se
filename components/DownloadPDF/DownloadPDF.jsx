@@ -14,7 +14,7 @@ export default function DownloadPDF(props) {
         const body = [[address, size]];
 
         doc.text("Aurelservice", 85, 10);
-        doc.autoTable({ head: head, body: body });
+        doc.autoTable({ head: head, body: body, theme: "grid" });
 
         doc.save("Aurelservice.pdf");
       }
