@@ -15,8 +15,8 @@ export default async (req, res) => {
 
   const data = {
     to: clientEmail,
-    from: "braianfilipovic@gmail.com",
-    subject: "from AurelService  webpage",
+    from: "aurelservice.noreply@gmail.com",
+    subject: "From AurelService webpage",
     text: `${size} ${address}`,
     html: `
           <b>Size:</b> ${size} <br /> 
@@ -26,9 +26,9 @@ export default async (req, res) => {
   try {
     const response = await mailer.sendMail(data);
     console.log(response);
-    res.status(200).send("Mensaje enviado");
+    res.status(200).send("Email sended");
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error al enviar");
+    res.status(500).send("Error send email");
   }
 };
