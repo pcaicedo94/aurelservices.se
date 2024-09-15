@@ -16,6 +16,7 @@ export default async (req, res) => {
   const data = {
     to: clientEmail,
     from: "aurelservice.noreply@gmail.com",
+    replyTo: "info@aurelservice.se",
     subject: "From AurelService webpage",
     text: `${size} ${address}`,
     html: `
@@ -26,7 +27,7 @@ export default async (req, res) => {
   try {
     const response = await mailer.sendMail(data);
     console.log(response);
-    res.status(200).send("Email sended");
+    res.status(200).send("Email sent");
   } catch (error) {
     console.log(error);
     res.status(500).send("Error send email");
