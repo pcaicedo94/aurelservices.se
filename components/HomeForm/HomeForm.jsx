@@ -56,7 +56,7 @@ export default function HomeForm() {
   return (
     <div className="home-form-container">
       <form className="home-form" onSubmit={handleSubmit}>
-        <h1>Behöver du hjälp med städning</h1>
+        <h1>Behöver du hjälp med städning&#63;</h1>
         <div>
           <input
             value={size}
