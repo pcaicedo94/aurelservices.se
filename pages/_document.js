@@ -38,6 +38,17 @@ class MyDocument extends Document {
           <link rel="preconnect" type="image/png" href="images/favicon.png" />
         </Head>
         <body>
+          <script
+            async
+            type="module"
+            src="https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js"
+          ></script>
+          <zapier-interfaces-chatbot-embed
+            is-popup="true"
+            chatbot-id="cm15025ns0021k2fihjtlkpms"
+            height="600px"
+            width="400px"
+          ></zapier-interfaces-chatbot-embed>
           <Main />
           <NextScript />
         </body>
