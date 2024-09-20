@@ -2,12 +2,15 @@ import { useState } from "react";
 import baseUrl from "../../utils/baseUrl";
 import DownloadPDF from "../DownloadPDF/DownloadPDF";
 import axios from "axios";
+import Select from "../Select/Select";
 
 export default function HomeForm() {
   const [size, setSize] = useState("");
   const [address, setAddress] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [type, setType] = useState({});
+  const [service, setService] = useState({});
 
   async function saveHomeForm(data) {
     return await fetch(baseUrl + `/api/form`, {
@@ -21,6 +24,8 @@ export default function HomeForm() {
 
   const saveDataOnTurso = async () => {
     const payload = {
+      service_type: type.value,
+      clean_type: service.value,
       address,
       email: clientEmail,
       size,
@@ -45,7 +50,13 @@ export default function HomeForm() {
 
       //SEND EMAIL
       const url = `${baseUrl}/api/contact`;
-      const payload = { size, address, clientEmail };
+      const payload = {
+        size,
+        address,
+        clientEmail,
+        serviceType: type.label,
+        cleanType: service.label,
+      };
       const response = await axios.post(url, payload);
       console.log(response);
     } catch (error) {
@@ -53,11 +64,43 @@ export default function HomeForm() {
     }
   };
 
+  const typeOptions = [
+    { value: "business", label: "Privat" },
+    { value: "private", label: " Företag" },
+  ];
+
+  const cleanOptions = [
+    { value: "home", label: "Hemstädning" },
+    { value: "moving", label: "Flyttstädning" },
+    { value: "major", label: "Storstädning" },
+    { value: "window", label: "Fönsterputs" },
+  ];
+
   return (
     <div className="home-form-container">
       <form className="home-form" onSubmit={handleSubmit}>
         <h1>Cleaning services that feel as fresh as they look.</h1>
-        <div>
+        <div className="form-row">
+          <Select
+            required
+            placeholder="Typ"
+            options={typeOptions}
+            onChange={(data) => {
+              if (submitted) setSubmitted(false);
+              setType(data);
+            }}
+          />
+          <Select
+            required
+            placeholder="Tjänster"
+            options={cleanOptions}
+            onChange={(data) => {
+              if (submitted) setSubmitted(false);
+              setService(data);
+            }}
+          />
+        </div>
+        <div className="form-row">
           <input
             value={size}
             min="1"
@@ -98,9 +141,17 @@ export default function HomeForm() {
         <div>
           {submitted && (
             <DownloadPDF
-              disabled={!clientEmail.length || !size.length || !address.length}
+              disabled={
+                !clientEmail.length ||
+                !size.length ||
+                !address.length ||
+                !type.value ||
+                !service.value
+              }
               size={size}
               address={address}
+              serviceType={type.label}
+              cleanType={service.label}
             />
           )}
           <button

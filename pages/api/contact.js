@@ -11,15 +11,17 @@ const mailer = nodemailer.createTransport(sgTransport(transporter));
 
 export default async (req, res) => {
   console.log(req.body);
-  const { size, address, clientEmail } = req.body;
+  const { size, address, clientEmail, serviceType, cleanType } = req.body;
 
   const data = {
     to: clientEmail,
     from: "aurelservice.noreply@gmail.com",
     replyTo: "info@aurelservice.se",
     subject: "From AurelService webpage",
-    text: `${size} ${address}`,
+    text: `Service type: ${serviceType}, Clean type: ${cleanType}, Size: ${size}, Address: ${address}`,
     html: `
+          <b>Service type:</b> ${serviceType} <br /> 
+          <b>Clean type:</b> ${cleanType} <br /> 
           <b>Size:</b> ${size} <br /> 
           <b>Address:</b> ${address} <br /> 
         `,

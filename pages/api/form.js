@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ message: "Not POST method", error: true });
   }
 
-  const { address, email, size } = req.body;
+  const { address, email, size, service_type, clean_type } = req.body;
 
   const client = createClient({
     url: process.env.TURSO_DATABASE_URL,
@@ -13,8 +13,8 @@ export default async function handler(req, res) {
   });
 
   const bdResponse = await client.execute({
-    sql: "INSERT INTO aurel (address, email, size) VALUES (?, ?, ?)",
-    args: [address, email, size],
+    sql: "INSERT INTO home_form_submits (address, email, size, service_type, clean_type) VALUES (?, ?, ?, ?, ?)",
+    args: [address, email, size, service_type, clean_type],
   });
 
   if (bdResponse.rowsAffected === 1) {

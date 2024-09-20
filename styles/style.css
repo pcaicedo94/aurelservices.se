@@ -49,7 +49,7 @@ Default CSS
 body {
   font-size: 15px;
   font-family: "Open Sans", sans-serif;
-  color: #111937;
+  color: #000000;
 }
 
 img {
@@ -1265,29 +1265,38 @@ Main Home Form CSS
   background-color: white;
   border-radius: 15px;
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
-  gap: 1.5rem;
+  gap: 1rem;
   max-width: 500px;
 }
+
 .home-form > h1{
  font-size: 32px;
  color: #34a783;
 }
-.home-form div {
+.home-form > div {
   display: flex;
   flex-direction: row;
   gap: 1rem;
   align-items: center;
 }
+.home-form > div.form-row {
+  width: 100%;
+}
 .home-form input{
   /* border: 0; */
   border: 1px solid gray;
-  font-size: 18px;
+  font-size: 15px;
   border-radius: 5px;
   height: 3rem;
   padding: 0 0.5rem;
 }
-.home-form input:focus{
+.home-form input:hover:not(:focus){
   outline: 0;
+  border-color: #c4c4c4;
+}
+.home-form input:focus, .home-form input:active{
+  outline: 0;
+  border-color: #34a783;
 }
 .home-form > div:nth-child(2) { 
   width: 100% !important

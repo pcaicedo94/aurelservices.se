@@ -6,12 +6,12 @@ export default function DownloadPDF(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { size, address } = props;
+      const { serviceType, cleanType, size, address } = props;
       const doc = new jsPDF();
       function generate() {
-        const head = [["Address", "Size"]];
+        const head = [["Service type", "Clean type", "Address", "Size"]];
 
-        const body = [[address, size]];
+        const body = [[serviceType, cleanType, address, size]];
 
         doc.text("Aurelservice", 85, 10);
         doc.autoTable({ head: head, body: body, theme: "grid" });
