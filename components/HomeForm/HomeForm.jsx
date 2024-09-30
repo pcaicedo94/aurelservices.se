@@ -48,7 +48,7 @@ export default function HomeForm() {
     try {
       await saveDataOnTurso();
 
-      //SEND EMAIL
+      // SEND EMAIL
       const url = `${baseUrl}/api/contact`;
       const payload = {
         size,
