@@ -106,7 +106,7 @@ export default function HomeForm() {
             min="1"
             type="number"
             style={{ width: 130 }}
-            placeholder="Size (m2)"
+            placeholder="Storlek (m2)"
             required
             onChange={(e) => {
               if (submitted) setSubmitted(false);
