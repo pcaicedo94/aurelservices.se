@@ -22,7 +22,7 @@ const AboutUsContent = () => {
               <div className="about-content">
                 <h2>Om oss</h2>
                 <p> 
-                Vi är ett f företag som grundades år 2007 under namnet Xabia AB, och det var år 2012 
+                Vi är ett familj företag som grundades år 2007 under namnet Xabia AB, och det var år 2012 
                 då vi bytte namn till Aurel Städ AB under domännamnet (www.aurelservice.se) som följd av 
                 en utveckling av bilder, produkter och tjänster.
                 Våra ledare har över 15 års erfarenhet av städmarknaden, vilket gör Aurel Städ AB till 
