@@ -1,37 +1,39 @@
-import nodemailer from "nodemailer";
-import sgTransport from "nodemailer-sendgrid-transport";
+const express = require("express");
+const bodyParser = require("body-parser");
+const nodemailer = require("nodemailer");
+const cors = require("cors");
 
-const transporter = {
-  auth: {
-    api_key: process.env.SENDGRID_API_KEY,
-  },
-};
+const app = express();
 
-const mailer = nodemailer.createTransport(sgTransport(transporter));
+app.use(cors());
+app.use(bodyParser.json());
 
-export default async (req, res) => {
-  console.log(req.body);
-  const { size, address, clientEmail, serviceType, cleanType } = req.body;
+app.post("/send-email", (req, res) => {
+  const { serviceType, cleanType, size, address, email, price } = req.body;
 
-  const data = {
-    to: clientEmail,
-    from: "aurelservice.noreply@gmail.com",
-    replyTo: "info@aurelservice.se",
-    subject: "From AurelService webpage",
-    text: `Service type: ${serviceType}, Clean type: ${cleanType}, Size: ${size}, Address: ${address}`,
-    html: `
-          <b>Service type:</b> ${serviceType} <br /> 
-          <b>Clean type:</b> ${cleanType} <br /> 
-          <b>Size:</b> ${size} <br /> 
-          <b>Address:</b> ${address} <br /> 
-        `,
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "your-email@gmail.com",
+      pass: "your-email-password",
+    },
+  });
+
+  const mailOptions = {
+    from: "your-email@gmail.com",
+    to: email,
+    subject: "Service Details",
+    text: `Service Type: ${serviceType}\nClean Type: ${cleanType}\nSize: ${size}\nAddress: ${address}\nPrice: ${price}`,
   };
-  try {
-    const response = await mailer.sendMail(data);
-    console.log(response);
-    res.status(200).send("Email sent");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Error send email");
-  }
-};
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).send(error.toString());
+    }
+    res.send("Email sent: " + info.response);
+  });
+});
+
+app.listen(3001, () => {
+  console.log("Server running on port 3001");
+});
