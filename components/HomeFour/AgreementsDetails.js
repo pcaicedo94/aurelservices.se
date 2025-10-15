@@ -70,10 +70,7 @@ const AgreementsDetails = () => {
                 >
                   {/* <h4>{val.title}</h4> */}
                   <img src={val.path} width={200} height={100} />
-                  <Link href={val.to}>
-                    <a className="default-btn">{val.button}</a>
-                  </Link>
-                </div>
+                  <Link href={val.to} className="default-btn">{val.button}</Link>                </div>
               ))}
             </div>
           </div>

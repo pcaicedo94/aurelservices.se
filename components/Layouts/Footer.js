@@ -28,20 +28,11 @@ const Footer = () => {
 
                 <ul className="footer-quick-links">
                   <li>
-                    <Link href="/about-us">
-                      <a>Om oss</a>
-                    </Link>
-                  </li>
+                    <Link href="/about-us">Om oss</Link>                  </li>
                   <li>
-                    <Link href="/services">
-                      <a>Tjänster</a>
-                    </Link>
-                  </li>
+                    <Link href="/services">Tjänster</Link>                  </li>
                   <li>
-                    <Link href="/contact">
-                      <a>Kontakta Oss</a>
-                    </Link>
-                  </li>
+                    <Link href="/contact">Kontakta Oss</Link>                  </li>
                 </ul>
               </div>
             </div>

@@ -21,10 +21,8 @@ export default function Office({
       <div className="blog-item">
         <div className="blog-content">
           <h3>
-            <Link href={link} passHref>
-              <a target="_blank" rel="noopener">
-                {title}
-              </a>
+            <Link href={link} target="_blank" rel="noopener">
+              {title}
             </Link>
           </h3>
 
@@ -34,11 +32,14 @@ export default function Office({
           </p>
           <p>{city}</p>
 
-          <Link href={link} passHref>
-            <a target="_blank" rel="noopener" className="read-more">
-              {callToAction}
-              <i className="fa fa-chevron-right"></i>
-            </a>
+          <Link
+            href={link}
+            target="_blank"
+            rel="noopener"
+            className="read-more"
+          >
+            {callToAction}
+            <i className="fa fa-chevron-right"></i>
           </Link>
         </div>
       </div>

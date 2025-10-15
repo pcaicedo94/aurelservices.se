@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 
-
 const FinantialDetails = () => {
   const documents = [
     {
@@ -30,8 +29,9 @@ const FinantialDetails = () => {
       p: "Haga clic sobre esta tarjeta para ver el documento",
     },
   ];
+
   return (
-    <div className=" main-banner-two services-section pt-100 pb-70">
+    <div className="main-banner-two services-section pt-100 pb-70">
       <div
         className="container"
         data-aos="fade-down"
@@ -47,27 +47,24 @@ const FinantialDetails = () => {
           {documents.map((item) => {
             return (
               <div key={item.title} className="col-lg-4 col-md-4">
-                <Link href={item.path}>
-                  <a className="service-btn" download>
-                    <div className="single-services-box">
-                      <div className="icon">
-                        <i className="flaticon-big-data"></i>
-                      </div>
-
-                      <h3>{item.title}</h3>
-                      <p>{item.p}</p>
-
-                      <div className="service-btn">
-                        Descargar
-                        <i className="flaticon-right"></i>
-                      </div>
+                <Link href={item.path} className="service-btn" download>
+                  <div className="single-services-box">
+                    <div className="icon">
+                      <i className="flaticon-big-data"></i>
                     </div>
-                  </a>
+
+                    <h3>{item.title}</h3>
+                    <p>{item.p}</p>
+
+                    <div className="service-btn">
+                      Descargar
+                      <i className="flaticon-right"></i>
+                    </div>
+                  </div>
                 </Link>
               </div>
             );
           })}
-
         </div>
       </div>
     </div>

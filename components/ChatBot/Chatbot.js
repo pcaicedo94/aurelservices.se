@@ -1,173 +1,173 @@
-"use client"
+"use client";
 import React, { useState } from "react";
+import axios from "axios";
 
 const Chatbot = () => {
   const [chatboxVisible, setChatboxVisible] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      sender: "Bot",
-      text: "Please select an option:",
-      options: ["storstädning", "kontorstädning", "hemstädning"],
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
-  // Intent-response mapping
-  const intents = {
-    hello: "Hi there! How can I assist you today?",
-    hej: "Hej där! Hur kan jag hjälpa till idag?",
-    "find glasses":
-      "Sure! We have a wide range of glasses. Are you looking for something specific?",
-    "book appointment":
-      "I'd be happy to help you book an appointment. When would you like to come in?",
-    företag: "aurel städ",
-    bye: "Goodbye! Have a great day!",
-    städ: "Vi erbjuder städningstjänster för företag och privatpersoner.",
-    storstädning: [{
-      sender: "Bot",
-      text: "Please select an option:", options: ["1-50kvm: 2400 kr (fast pris)",
-        "51-70kvm: 2900 kr",
-        "71-100kvm: 3400 kr",
-        "101-150kvm: 4000 kr",
-        "151-200 kvm: 4800 kr"
-      ]
-    }]
-  };
-
-  // Function to find the correct response based on the user's message
-  const getResponse = (message) => {
-    console.log("message", message);
-    const lowerCaseMessage = message?.toLowerCase();
-    for (const intent in intents) {
-      if (lowerCaseMessage.includes(intent)) {
-        console.log("intents[intent]", intents[intent]);
-        return intents[intent];
-      }
-    }
-    return "Sorry, jag förstod inte riktigt det där men du kanske är intresserad om att veta om tjänsterna vi erbjuder?";
-  };
-
+  // Toggle chatbox visibility
   const toggleChatbox = () => {
     setChatboxVisible(!chatboxVisible);
   };
 
-  const sendMessage = () => {
+  // Send message to n8n workflow and get response
+  const sendMessage = async () => {
     if (input.trim() === "") return;
 
     // Add user's message to chatbox
     const userMessage = { sender: "You", text: input };
-    const botResponseText = getResponse(input);
-    console.log("botResponseText", botResponseText, "input", input);
-    const botResponse = { sender: "Bot", text: botResponseText };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-    // Update messages with user and bot responses
-    setMessages([...messages, userMessage, botResponse]);
+    try {
+      // Send the user's message to the n8n workflow
+      const response = await axios.post("http://localhost:5678/webhook/d577e66b-35d7-4791-ab06-b9dfeff49222", {
+        message: input,
+      });
 
-    // Optionally, add options based on specific intents
-    addOptions(botResponseText);
+      // Add bot's response to chatbox
+      const botMessage = { sender: "Bot", text: response.data.output };
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+    } catch (error) {
+      console.error("Error communicating with n8n:", error);
+
+      // Handle specific errors
+      let errorMessageText = "Sorry, something went wrong. Please try again later.";
+      if (error.message === "Network Error") {
+        errorMessageText = "Unable to connect to the chatbot service. Please check your network or try again later.";
+      } else if (error.response) {
+        if (error.response.status === 404) {
+          errorMessageText = "The chatbot service is currently unavailable. Please try again later.";
+        } else if (error.response.data && error.response.data.message.includes("webhook is not registered")) {
+          errorMessageText = "The chatbot workflow is inactive. Please contact support.";
+        }
+      }
+
+      const errorMessage = { sender: "Bot", text: errorMessageText };
+      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+    }
 
     setInput("");
   };
 
-  const addOptions = (responseText) => {
-    const options = ["storstädning", "kontorstädning", "hemstädning"];
-    console.log("responseText", responseText);
-    if (responseText.toLowerCase().includes('storstädning')) {
-      setMessages((prevMessages) => [
-
-        {
-          sender: "Bot",
-          text: "Please select an option:",
-          options: intents.storstädning.options,
-        },
-      ]); return
+  // Handle sending message on Enter key press
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      sendMessage();
     }
-    console.log("messages Add options", messages);
-    if (typeof responseText?.toLowerCase == 'string' && responseText.toLowerCase().includes("städ")) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          sender: "Bot",
-          text: "Please select an option:",
-          options: options,
-        },
-      ]);
-    }
-
-  };
-
-  const sendOption = (option) => {
-    const userMessage = { sender: "You", text: option };
-    const botResponse = {
-      sender: "Bot",
-      text: `You selected ${option}. Here is the information about ${option}...`,
-    };
-
-    setMessages([...messages, userMessage, botResponse]);
   };
 
   return (
     <div
       style={{
+        position: "fixed",
+        bottom: "80px", // Adjusted to avoid overlapping with the footer
+        right: "20px",
+        width: chatboxVisible ? "300px" : "60px",
+        height: chatboxVisible ? "auto" : "60px",
+        borderRadius: chatboxVisible ? "10px" : "50%",
+        backgroundColor: "#fff", // Make the bubble fully green
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+        overflow: "hidden",
+        border: chatboxVisible ? "2px solid #34a783" : "none", // Add a green frame when expanded
         display: "flex",
-        alignItems: "left",
-        justifyContent: "left",
-        border: "1px solid gray",
-        flexDirection: "column",
-        position: "relative",
-        overflow: "auto",
+        flexDirection: chatboxVisible ? "column" : "center",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        zIndex: 9999, // Ensure the chatbox is always on top
       }}
+      onClick={!chatboxVisible ? toggleChatbox : undefined}
     >
-      <h1>Chatta med Oss</h1>
-      <div
-        id="chatbox-container"
-        style={{
-          height: "300px",
-          overflowY: "auto",
-          height: "300px",
-          "overflow-y": "auto",
-          textAlign: "left",
-          paddingLeft: "12px",
-        }}
-      >
-        <div id="chatbox">
-          <h4>Hej Välkommen </h4>
-          {messages?.map((message, index) => (
-            <div key={index}>
-              <p>
-                <strong>{message.sender}:</strong> {message.text}
-              </p>
-              {message.options && (
+      {chatboxVisible && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            backgroundColor: "#34a783",
+            padding: "10px",
+            borderBottom: "1px solid #fff", // Add a subtle divider
+          }}
+        >
+          <span
+            style={{
+              fontSize: "20px",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+            onClick={toggleChatbox}
+          >
+            ✖ {/* X icon moved to the left */}
+          </span>
+          <span style={{ fontSize: "16px", color: "#fff" }}>Chatta med Aurel</span>
+        </div>
+      )}
+
+      {!chatboxVisible && (
+        <span style={{ fontSize: "20px", color: "#fff" }}>💬</span> // Chat bubble icon
+      )}
+
+      {chatboxVisible && (
+        <div style={{ padding: "10px", maxHeight: "400px", overflowY: "auto" }}>
+          <div id="chatbox">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: message.sender === "You" ? "flex-end" : "flex-start",
+                  marginBottom: "10px",
+                }}
+              >
                 <div
-                  className="options"
                   style={{
-                    display: "flex",
-                    gap: "20px",
-                    paddingBottom: "2rem",
+                    maxWidth: "70%",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    backgroundColor: message.sender === "You" ? "#34a783" : "#f1f1f1",
+                    color: message.sender === "You" ? "#fff" : "#000",
                   }}
                 >
-                  {message.options.map((option, index) => (
-                    <button key={index} onClick={() => sendOption(option)}>
-                      {option}
-                    </button>
-                  ))}
+                  <strong>{message.sender}:</strong> {message.text}
                 </div>
-              )}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", marginTop: "10px" }}>
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your message..."
+              style={{
+                flex: 1,
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                marginRight: "5px",
+              }}
+            />
+            <button
+              onClick={sendMessage}
+              style={{
+                padding: "10px",
+                backgroundColor: "#34a783",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Send
+            </button>
+          </div>
         </div>
-        <div style={{ position: "absolute", bottom: 0 }}>
-          <input
-            type="text"
-            id="input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          />
-          <button onClick={sendMessage}>Skicka</button>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

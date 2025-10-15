@@ -7,6 +7,7 @@ import '../styles/fontawesome.min.css';
 import "react-accessible-accordion/dist/fancy-example.css";
 import 'react-tabs/style/react-tabs.css';
 import "swiper/css/bundle";
+import Chatbot from "../components/ChatBot/Chatbot";
 
 // Globals CSS
 import "../styles/style.css";
@@ -22,29 +23,29 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Aurelservices</title>
+        <title>Aurel Service AB</title>
         <meta charSet="UTF-8"></meta>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         
         <title>
-          Aurelservices
+          Aurel Service AB
         </title>
         <meta
           name="description"
-          content="Cooperativa Multiactiva y de Transporte de Santander."
+          content="Din pålitliga partner för städning sedan efter 2007."
         />
-        <meta name="keywords" content="ceter" />
-        <meta property="og:title" content="Ceter - lineas de negocio " />
+        <meta name="keywords" content="Aurel" />
+        <meta property="og:title" content="Aurelstäd - 15 års erfarenhet " />
         <meta
           property="og:description"
-          content="1. Estaciones de servicio 2.Transporte 3. Asociados "
+          content="1. Hemstädning 2. Flyttstädning 3. Storstädning "
         />
         <meta property="og:image" content="http://ceter.com.co/images/logo.png" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="www.ceter.com.co" />
-        <meta property="og:site_name" content="Ceter" />
-        <meta name="author" content="jose caicedo" />
+        <meta property="og:url" content="www.aurelservices.se" />
+        <meta property="og:site_name" content="Aurelservices" />
+        <meta name="author" content="pablo andres caicedo" />
       </Head>
 
 
@@ -52,6 +53,8 @@ function MyApp({ Component, pageProps }) {
 
       {/* Go Top Button */}
       <GoTop />
+      <Chatbot />
+
     </>
   );
 }

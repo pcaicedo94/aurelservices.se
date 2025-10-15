@@ -63,21 +63,12 @@ const CreditsDetails = () => {
               }}
             >
               {tipos.map((val) => (
-                <div
-                  className="d-flex creditsDetail"
-                  key={val.title}
-                >
-                  <img
-                    src={val.path}
-                    width={300}
-                    height={180}
-                  />
+                <div className="d-flex creditsDetail" key={val.title}>
+                  <img src={val.path} width={300} height={180} />
                   <div className="creditsBody">
                     <h5>{val.title}</h5>
-                    <Link href={val.to}>
-                      <a className="default-btn btnDetails">
-                        {val.button}
-                      </a>
+                    <Link href={val.to} className="default-btn btnDetails">
+                      {val.button}
                     </Link>
                   </div>
                 </div>

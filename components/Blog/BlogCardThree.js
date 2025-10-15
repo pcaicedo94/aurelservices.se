@@ -19,26 +19,20 @@ const BlogCardThree = () => {
                 <div className="col-lg-6 col-md-6">
                   <div className="blog-item">
                     <Link href="/blog-details">
-                      <a>
-                        <img src="/images/blog/blog1.png" alt="image" />
-                      </a>
+                      <img src="/images/blog/blog1.png" alt="image" />
                     </Link>
 
                     <div className="blog-content">
                       <ul className="meta-tags">
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fa fa-user-alt"></i>
-                              Admin
-                            </a>
+                            <i className="fa fa-user-alt"></i>
+                            Admin
                           </Link>
                         </li>
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fas fa-calendar-week"></i>7 Dec 2020
-                            </a>
+                            <i className="fas fa-calendar-week"></i>7 Dec 2020
                           </Link>
                         </li>
                         <li>
@@ -48,7 +42,7 @@ const BlogCardThree = () => {
 
                       <h3>
                         <Link href="/blog-details">
-                          <a>Startup marketing solution for business owner</a>
+                          Startup marketing solution for business owner
                         </Link>
                       </h3>
 
@@ -57,11 +51,9 @@ const BlogCardThree = () => {
                         sed do eiusmod.
                       </p>
 
-                      <Link href="/blog-details">
-                        <a className="read-more">
-                          Read More
-                          <i className="fa fa-chevron-right"></i>
-                        </a>
+                      <Link href="/blog-details" className="read-more">
+                        Read More
+                        <i className="fa fa-chevron-right"></i>
                       </Link>
                     </div>
                   </div>
@@ -70,26 +62,20 @@ const BlogCardThree = () => {
                 <div className="col-lg-6 col-md-6">
                   <div className="blog-item">
                     <Link href="/blog-details">
-                      <a>
-                        <img src="/images/blog/blog2.png" alt="image" />
-                      </a>
+                      <img src="/images/blog/blog2.png" alt="image" />
                     </Link>
 
                     <div className="blog-content">
                       <ul className="meta-tags">
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fa fa-user-alt"></i>
-                              Admin
-                            </a>
+                            <i className="fa fa-user-alt"></i>
+                            Admin
                           </Link>
                         </li>
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fas fa-calendar-week"></i>7 Dec 2020
-                            </a>
+                            <i className="fas fa-calendar-week"></i>7 Dec 2020
                           </Link>
                         </li>
                         <li>
@@ -99,7 +85,7 @@ const BlogCardThree = () => {
 
                       <h3>
                         <Link href="/blog-details">
-                          <a>Web developement best work in future world</a>
+                          Web development best work in future world
                         </Link>
                       </h3>
 
@@ -108,11 +94,9 @@ const BlogCardThree = () => {
                         sed do eiusmod.
                       </p>
 
-                      <Link href="/blog-details">
-                        <a className="read-more">
-                          Read More
-                          <i className="fa fa-chevron-right"></i>
-                        </a>
+                      <Link href="/blog-details" className="read-more">
+                        Read More
+                        <i className="fa fa-chevron-right"></i>
                       </Link>
                     </div>
                   </div>
@@ -121,26 +105,20 @@ const BlogCardThree = () => {
                 <div className="col-lg-6 col-md-6">
                   <div className="blog-item">
                     <Link href="/blog-details">
-                      <a>
-                        <img src="/images/blog/blog3.png" alt="image" />
-                      </a>
+                      <img src="/images/blog/blog3.png" alt="image" />
                     </Link>
 
                     <div className="blog-content">
                       <ul className="meta-tags">
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fa fa-user-alt"></i>
-                              Admin
-                            </a>
+                            <i className="fa fa-user-alt"></i>
+                            Admin
                           </Link>
                         </li>
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fas fa-calendar-week"></i>7 Dec 2020
-                            </a>
+                            <i className="fas fa-calendar-week"></i>7 Dec 2020
                           </Link>
                         </li>
                         <li>
@@ -150,7 +128,7 @@ const BlogCardThree = () => {
 
                       <h3>
                         <Link href="/blog-details">
-                          <a>Creative solutions to improve your business!</a>
+                          Creative solutions to improve your business!
                         </Link>
                       </h3>
 
@@ -159,11 +137,9 @@ const BlogCardThree = () => {
                         sed do eiusmod.
                       </p>
 
-                      <Link href="/blog-details">
-                        <a className="read-more">
-                          Read More
-                          <i className="fa fa-chevron-right"></i>
-                        </a>
+                      <Link href="/blog-details" className="read-more">
+                        Read More
+                        <i className="fa fa-chevron-right"></i>
                       </Link>
                     </div>
                   </div>
@@ -172,26 +148,20 @@ const BlogCardThree = () => {
                 <div className="col-lg-6 col-md-6">
                   <div className="blog-item">
                     <Link href="/blog-details">
-                      <a>
-                        <img src="/images/blog/blog4.png" alt="image" />
-                      </a>
+                      <img src="/images/blog/blog4.png" alt="image" />
                     </Link>
 
                     <div className="blog-content">
                       <ul className="meta-tags">
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fa fa-user-alt"></i>
-                              Admin
-                            </a>
+                            <i className="fa fa-user-alt"></i>
+                            Admin
                           </Link>
                         </li>
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fas fa-calendar-week"></i>7 Dec 2020
-                            </a>
+                            <i className="fas fa-calendar-week"></i>7 Dec 2020
                           </Link>
                         </li>
                         <li>
@@ -201,9 +171,7 @@ const BlogCardThree = () => {
 
                       <h3>
                         <Link href="/blog-details">
-                          <a>
-                            Making peace with the feast or famine of freelancing
-                          </a>
+                          Making peace with the feast or famine of freelancing
                         </Link>
                       </h3>
 
@@ -212,11 +180,9 @@ const BlogCardThree = () => {
                         sed do eiusmod.
                       </p>
 
-                      <Link href="/blog-details">
-                        <a className="read-more">
-                          Read More
-                          <i className="fa fa-chevron-right"></i>
-                        </a>
+                      <Link href="/blog-details" className="read-more">
+                        Read More
+                        <i className="fa fa-chevron-right"></i>
                       </Link>
                     </div>
                   </div>
@@ -225,26 +191,20 @@ const BlogCardThree = () => {
                 <div className="col-lg-6 col-md-6">
                   <div className="blog-item">
                     <Link href="/blog-details">
-                      <a>
-                        <img src="/images/blog/blog5.png" alt="image" />
-                      </a>
+                      <img src="/images/blog/blog5.png" alt="image" />
                     </Link>
 
                     <div className="blog-content">
                       <ul className="meta-tags">
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fa fa-user-alt"></i>
-                              Admin
-                            </a>
+                            <i className="fa fa-user-alt"></i>
+                            Admin
                           </Link>
                         </li>
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fas fa-calendar-week"></i>7 Dec 2020
-                            </a>
+                            <i className="fas fa-calendar-week"></i>7 Dec 2020
                           </Link>
                         </li>
                         <li>
@@ -254,7 +214,7 @@ const BlogCardThree = () => {
 
                       <h3>
                         <Link href="/blog-details">
-                          <a>Instagram feed add to your WordPress site</a>
+                          Instagram feed add to your WordPress site
                         </Link>
                       </h3>
 
@@ -263,11 +223,9 @@ const BlogCardThree = () => {
                         sed do eiusmod.
                       </p>
 
-                      <Link href="/blog-details">
-                        <a className="read-more">
-                          Read More
-                          <i className="fa fa-chevron-right"></i>
-                        </a>
+                      <Link href="/blog-details" className="read-more">
+                        Read More
+                        <i className="fa fa-chevron-right"></i>
                       </Link>
                     </div>
                   </div>
@@ -276,26 +234,20 @@ const BlogCardThree = () => {
                 <div className="col-lg-6 col-md-6">
                   <div className="blog-item">
                     <Link href="/blog-details">
-                      <a>
-                        <img src="/images/blog/blog6.png" alt="image" />
-                      </a>
+                      <img src="/images/blog/blog6.png" alt="image" />
                     </Link>
 
                     <div className="blog-content">
                       <ul className="meta-tags">
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fa fa-user-alt"></i>
-                              Admin
-                            </a>
+                            <i className="fa fa-user-alt"></i>
+                            Admin
                           </Link>
                         </li>
                         <li>
                           <Link href="/blog">
-                            <a>
-                              <i className="fas fa-calendar-week"></i>7 Dec 2020
-                            </a>
+                            <i className="fas fa-calendar-week"></i>7 Dec 2020
                           </Link>
                         </li>
                         <li>
@@ -305,7 +257,7 @@ const BlogCardThree = () => {
 
                       <h3>
                         <Link href="/blog-details">
-                          <a>I used the web for a day on a 50 mb budget</a>
+                          I used the web for a day on a 50 mb budget
                         </Link>
                       </h3>
 
@@ -314,11 +266,9 @@ const BlogCardThree = () => {
                         sed do eiusmod.
                       </p>
 
-                      <Link href="/blog-details">
-                        <a className="read-more">
-                          Read More
-                          <i className="fa fa-chevron-right"></i>
-                        </a>
+                      <Link href="/blog-details" className="read-more">
+                        Read More
+                        <i className="fa fa-chevron-right"></i>
                       </Link>
                     </div>
                   </div>
@@ -327,30 +277,23 @@ const BlogCardThree = () => {
                 {/* Pagination */}
                 <div className="col-lg-12 col-md-12">
                   <div className="pagination-area">
-                    <Link href="#">
-                      <a className="prev page-numbers">
-                        <i className="fas fa-angle-double-left"></i>
-                      </a>
+                    <Link href="#" className="prev page-numbers">
+                      <i className="fas fa-angle-double-left"></i>
                     </Link>
 
-                    <Link href="#">
-                      <a className="page-numbers">1</a>
+                    <Link href="#" className="page-numbers">
+                      1
                     </Link>
-
                     <span className="page-numbers current">2</span>
 
-                    <Link href="#">
-                      <a className="page-numbers">3</a>
+                    <Link href="#" className="page-numbers">
+                      3
                     </Link>
-
-                    <Link href="#">
-                      <a className="page-numbers">4</a>
+                    <Link href="#" className="page-numbers">
+                      4
                     </Link>
-
-                    <Link href="#">
-                      <a className="next page-numbers">
-                        <i className="fas fa-angle-double-right"></i>
-                      </a>
+                    <Link href="#" className="next page-numbers">
+                      <i className="fas fa-angle-double-right"></i>
                     </Link>
                   </div>
                 </div>

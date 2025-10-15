@@ -21,10 +21,7 @@ const Projects = () => {
                 <div className="image-hover">
                   <div className="text">
                     <h3>
-                      <Link href="/project-details">
-                        <a>Data is the new science big data holds the answer</a>
-                      </Link>
-                    </h3>
+                      <Link href="/project-details">Data is the new science big data holds the answer</Link>                    </h3>
                     <p>Data Analysis</p>
                   </div>
                 </div>
@@ -40,10 +37,7 @@ const Projects = () => {
                 <div className="image-hover">
                   <div className="text">
                     <h3>
-                      <Link href="/project-details">
-                        <a>Data is the new science big data holds the answer</a>
-                      </Link>
-                    </h3>
+                      <Link href="/project-details">Data is the new science big data holds the answer</Link>                    </h3>
                     <p>Business Intelligence</p>
                   </div>
                 </div>
@@ -59,10 +53,7 @@ const Projects = () => {
                 <div className="image-hover">
                   <div className="text">
                     <h3>
-                      <Link href="/project-details">
-                        <a>Data is the new science big data holds the answer</a>
-                      </Link>
-                    </h3>
+                      <Link href="/project-details">Data is the new science big data holds the answer</Link>                    </h3>
                     <p>Data Management</p>
                   </div>
                 </div>

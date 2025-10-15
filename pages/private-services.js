@@ -5,15 +5,15 @@ import Footer from "../components/Layouts/Footer";
 import ServiceDetails from "../components/HomeFour/ServiceDetails";
 
 
-const servicePage = () => {
+const PrivateServices = () => {
   return (
     <>
       <Navbar associates />
-      <PageBanner pageTitle="Servicios" bgImage="/images/estaciones.png" />
+      <PageBanner pageTitle="Privata Tjänster" bgImage="/images/estaciones.png" />
       <ServiceDetails />
       <Footer />
     </>
   );
 };
 
-export default servicePage;
+export default PrivateServices;

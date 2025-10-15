@@ -30,7 +30,10 @@ const AboutUs = () => {
                 {/* <span>About Us</span> */}
                 <h2>Vi har 15 års erfarenhet som backar upp oss</h2>
                 <p>
-                Vi är ett effektivt städtjänsteföretag med stora ambitioner och höga krav på kvalitet. Vi erbjuder en komplett städtjänst för företag och privatpersoner i Storstockholm. Vi utför både stora och små uppgifter med samma energi och entusiasm.
+                  Vi är ett effektivt städtjänsteföretag med stora ambitioner
+                  och höga krav på kvalitet. Vi erbjuder en komplett städtjänst
+                  för företag och privatpersoner i Storstockholm. Vi utför både
+                  stora och små uppgifter med samma energi och entusiasm.
                 </p>
 
                 <ul className="about-list">
@@ -52,10 +55,8 @@ const AboutUs = () => {
                   </li> */}
                 </ul>
 
-                <Link href="/contact">
-                  <a className="default-btn">
-                    Kontakta Oss <span></span>
-                  </a>
+                <Link href="/contact" className="default-btn">
+                  Kontakta Oss <span></span>
                 </Link>
               </div>
             </div>

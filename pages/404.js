@@ -23,10 +23,7 @@ const CoustomErorPage = () => {
                 La página que esta buscando no está disponible.
               </h4>
 
-              <Link href="/">
-                <a className="default-btn-one">Regresar al Inicio</a>
-              </Link>
-            </div>
+              <Link href="/" className="default-btn-one">Regresar al Inicio</Link>            </div>
           </div>
         </div>
       </div>

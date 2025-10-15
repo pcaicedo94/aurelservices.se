@@ -19,16 +19,16 @@ const Consumo = () => {
         <div className="container">
           <div className="projects-details-desc">
             <div className="features-text">
-            <h2>Crédito de Consumo</h2>
+              <h2>Crédito de Consumo</h2>
               <p>
                 Se entienden como créditos de consumo las operaciones activas de
                 crédito otorgadas a asociados cuyo objeto sea financiar:
               </p>
               <ol>
-                <li>Compra de cartera </li>
-                <li> adquisición de bienes de consumo</li>
+                <li>Compra de cartera</li>
+                <li>Adquisición de bienes de consumo</li>
                 <li>
-                  el pago de servicios para fines no comerciales o empresariales
+                  El pago de servicios para fines no comerciales o empresariales
                 </li>
               </ol>
               <h3>Requisitos:</h3>
@@ -185,21 +185,21 @@ const Consumo = () => {
             </div>
 
             <div className="project-details-info">
-            <div
-                className="single-info-box flex-center" >
+              <div className="single-info-box flex-center">
                 Escríbenos
-                <Link href={whastApp}>
-                  <>
-                    <a href={whastApp} className="btnDetails " target="_blank">
-                      <Image
-                        width={50}
-                        height={50}
-                        alt="icon whatsapp"
-                        src="/images/whatsappIcon.webp"
-                        decoding="async"
-                      />
-                    </a>
-                  </>
+                <Link
+                  href={whastApp}
+                  className="btnDetails"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    width={50}
+                    height={50}
+                    alt="icon whatsapp"
+                    src="/images/whatsappIcon.webp"
+                    decoding="async"
+                  />
                 </Link>
               </div>
             </div>

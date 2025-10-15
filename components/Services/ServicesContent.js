@@ -8,7 +8,7 @@ const ServicesContent = () => {
         <div className="container">
           <div className="section-title">
             <span>Our Services</span>
-            <h2>Expolre Our Data Services</h2>
+            <h2>Explore Our Data Services</h2>
           </div>
 
           <div className="row">
@@ -25,11 +25,9 @@ const ServicesContent = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -47,11 +45,9 @@ const ServicesContent = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -68,11 +64,9 @@ const ServicesContent = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -89,11 +83,9 @@ const ServicesContent = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -110,11 +102,9 @@ const ServicesContent = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -131,11 +121,9 @@ const ServicesContent = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>

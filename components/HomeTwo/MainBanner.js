@@ -41,18 +41,14 @@ const MainBanner = () => {
                       data-aos-once="true"
                     >
                       <div className="banner-btn">
-                        <Link href="/about-us">
-                          <a className="default-btn-one">
-                            About Us
-                            <span></span>
-                          </a>
+                        <Link href="/about-us" className="default-btn-one">
+                          About Us
+                          <span></span>
                         </Link>
 
-                        <Link href="/contact">
-                          <a className="default-btn">
-                            Contact Us
-                            <span></span>
-                          </a>
+                        <Link href="/contact" className="default-btn">
+                          Contact Us
+                          <span></span>
                         </Link>
                       </div>
                     </div>

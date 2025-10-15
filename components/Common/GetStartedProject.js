@@ -12,16 +12,14 @@ const GetStartedProject = () => {
                 {/* <span>Let’s Get Started</span> */}
                 <h3>Lita på oss för att förnya ditt utrymme och miljö!</h3>
                 <p>
-                Förvandla ditt utrymme till en fridfull oas av renhet och harmoni.
-                Upplev freden som våra experttjänster ger!
+                  Förvandla ditt utrymme till en fridfull oas av renhet och
+                  harmoni. Upplev freden som våra experttjänster ger!
                 </p>
 
                 <div className="productive-btn">
-                  <Link href="/contact">
-                    <a className="productive-btn-one">
-                      Kontakta Oss
-                      <span></span>
-                    </a>
+                  <Link href="/contact" className="productive-btn-one">
+                    Kontakta Oss
+                    <span></span>
                   </Link>
                 </div>
               </div>

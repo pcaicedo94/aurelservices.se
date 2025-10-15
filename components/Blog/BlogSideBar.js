@@ -6,7 +6,7 @@ const BlogSideBar = () => {
     <>
       <aside className="widget-area">
         <div className="widget widget_search">
-          <form 
+          <form
             className="search-form search-top"
             onSubmit={(e) => e.preventDefault()}
           >
@@ -29,51 +29,45 @@ const BlogSideBar = () => {
           <h3 className="widget-title">Recent posts</h3>
 
           <article className="item">
-            <Link href="/blog-details">
-              <a className="thumb">
-                <span className="fullimage cover bg1" role="img"></span>
-              </a>
+            <Link href="/blog-details" className="thumb">
+              <span className="fullimage cover bg1" role="img"></span>
             </Link>
 
             <div className="info">
               <time>February 10, 2020</time>
               <h4 className="title usmall">
                 <Link href="/blog-details">
-                  <a>Making peace with the feast or famine of freelancing</a>
+                  Making peace with the feast or famine of freelancing
                 </Link>
               </h4>
             </div>
           </article>
 
           <article className="item">
-            <Link href="/blog-details">
-              <a className="thumb">
-                <span className="fullimage cover bg2" role="img"></span>
-              </a>
+            <Link href="/blog-details" className="thumb">
+              <span className="fullimage cover bg2" role="img"></span>
             </Link>
 
             <div className="info">
               <time>June 21, 2020</time>
               <h4 className="title usmall">
                 <Link href="/blog-details">
-                  <a>I used the web for a day on a 50 mb budget</a>
+                  I used the web for a day on a 50 mb budget
                 </Link>
               </h4>
             </div>
           </article>
 
           <article className="item">
-            <Link href="/blog-details">
-              <a className="thumb">
-                <span className="fullimage cover bg3" role="img"></span>
-              </a>
+            <Link href="/blog-details" className="thumb">
+              <span className="fullimage cover bg3" role="img"></span>
             </Link>
 
             <div className="info">
               <time>June 30, 2020</time>
               <h4 className="title usmall">
                 <Link href="/blog-details">
-                  <a>How to create a responsive popup gallery?</a>
+                  How to create a responsive popup gallery?
                 </Link>
               </h4>
             </div>
@@ -86,37 +80,27 @@ const BlogSideBar = () => {
           <ul>
             <li>
               <Link href="/blog">
-                <a>
-                  Business <span className="post-count">(2)</span>
-                </a>
+                Business <span className="post-count">(2)</span>
               </Link>
             </li>
             <li>
               <Link href="/blog">
-                <a>
-                  Privacy <span className="post-count">(5)</span>
-                </a>
+                Privacy <span className="post-count">(5)</span>
               </Link>
             </li>
             <li>
               <Link href="/blog">
-                <a>
-                  Technology <span className="post-count">(7)</span>
-                </a>
+                Technology <span className="post-count">(7)</span>
               </Link>
             </li>
             <li>
               <Link href="/blog">
-                <a>
-                  Tips <span className="post-count">(4)</span>
-                </a>
+                Tips <span className="post-count">(4)</span>
               </Link>
             </li>
             <li>
               <Link href="/blog">
-                <a>
-                  Uncategorized <span className="post-count">(5)</span>
-                </a>
+                Uncategorized <span className="post-count">(5)</span>
               </Link>
             </li>
           </ul>
@@ -128,58 +112,38 @@ const BlogSideBar = () => {
           <ul>
             <li>
               <span className="comment-author-link">
-                <Link href="#">
-                  <a>A React commenter</a>
-                </Link>
+                <Link href="#">A React commenter</Link>
               </span>
               on
-              <Link href="#">
-                <a>Hello world!</a>
-              </Link>
+              <Link href="#">Hello world!</Link>
             </li>
             <li>
               <span className="comment-author-link">
-                <Link href="#">
-                  <a>Raxr</a>
-                </Link>
+                <Link href="#">Raxr</Link>
               </span>
               on
-              <Link href="#">
-                <a>Hello world!</a>
-              </Link>
+              <Link href="#">Hello world!</Link>
             </li>
             <li>
               <span className="comment-author-link">
-                <Link href="#">
-                  <a>React Next</a>
-                </Link>
+                <Link href="#">React Next</Link>
               </span>
               on
-              <Link href="#">
-                <a>Hello world!</a>
-              </Link>
+              <Link href="#">Hello world!</Link>
             </li>
             <li>
               <span className="comment-author-link">
-                <Link href="#">
-                  <a>A React Next Commenter</a>
-                </Link>
+                <Link href="#">A React Next Commenter</Link>
               </span>
               on
-              <Link href="#">
-                <a>Hello world!</a>
-              </Link>
+              <Link href="#">Hello world!</Link>
             </li>
             <li>
               <span className="comment-author-link">
-                <Link href="#">
-                  <a>Raxr</a>
-                </Link>
+                <Link href="#">Raxr</Link>
               </span>
               on
-              <Link href="#">
-                <a>Hello world!</a>
-              </Link>
+              <Link href="#">Hello world!</Link>
             </li>
           </ul>
         </div>
@@ -189,59 +153,35 @@ const BlogSideBar = () => {
 
           <div className="tagcloud section-bottom">
             <Link href="/blog">
-              <a>
-                IT
-                <span className="tag-link-count"> (3)</span>
-              </a>
+              IT<span className="tag-link-count"> (3)</span>
             </Link>
 
             <Link href="/blog">
-              <a>
-                Raxr
-                <span className="tag-link-count"> (3)</span>
-              </a>
+              Raxr<span className="tag-link-count"> (3)</span>
             </Link>
 
             <Link href="/blog">
-              <a>
-                Games
-                <span className="tag-link-count"> (2)</span>
-              </a>
+              Games<span className="tag-link-count"> (2)</span>
             </Link>
 
             <Link href="/blog">
-              <a>
-                Fashion
-                <span className="tag-link-count"> (2)</span>
-              </a>
+              Fashion<span className="tag-link-count"> (2)</span>
             </Link>
 
             <Link href="/blog">
-              <a>
-                Travel
-                <span className="tag-link-count"> (1)</span>
-              </a>
+              Travel<span className="tag-link-count"> (1)</span>
             </Link>
 
             <Link href="/blog">
-              <a>
-                Smart
-                <span className="tag-link-count"> (1)</span>
-              </a>
+              Smart<span className="tag-link-count"> (1)</span>
             </Link>
 
             <Link href="/blog">
-              <a>
-                Marketing
-                <span className="tag-link-count"> (1)</span>
-              </a>
+              Marketing<span className="tag-link-count"> (1)</span>
             </Link>
 
             <Link href="/blog">
-              <a>
-                Tips
-                <span className="tag-link-count"> (2)</span>
-              </a>
+              Tips<span className="tag-link-count"> (2)</span>
             </Link>
           </div>
         </div>

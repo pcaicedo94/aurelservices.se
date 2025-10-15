@@ -7,7 +7,7 @@ const Benefits = () => {
       <div className="main-banner-four services-section pt-100 pb-70">
         <div className="container">
           <div className="page-title-content pb-70 mt-0">
-            <h2>Expolre Our Data Services</h2>
+            <h2>Explore Our Data Services</h2>
           </div>
 
           <div className="row">
@@ -24,11 +24,9 @@ const Benefits = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -46,11 +44,9 @@ const Benefits = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -67,11 +63,9 @@ const Benefits = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -88,11 +82,9 @@ const Benefits = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -109,11 +101,9 @@ const Benefits = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -130,11 +120,9 @@ const Benefits = () => {
                   ut enim ad minim.
                 </p>
 
-                <Link href="/service-details">
-                  <a className="service-btn">
-                    Read More
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/service-details" className="service-btn">
+                  Read More
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>

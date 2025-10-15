@@ -19,11 +19,9 @@ const OurServices = () => {
                     <i className="flaticon-big-data"></i>
                   </div>
                   <h3>
-                    <Link href="/service-details">
-                      <a>
-                        Big Data
-                        <i className="flaticon-right"></i>
-                      </a>
+                    <Link href="/service-details" className="service-link">
+                      Big Data
+                      <i className="flaticon-right"></i>
                     </Link>
                   </h3>
                 </div>
@@ -33,11 +31,9 @@ const OurServices = () => {
                     <i className="flaticon-science"></i>
                   </div>
                   <h3>
-                    <Link href="/service-details">
-                      <a>
-                        Data Science
-                        <i className="flaticon-right"></i>
-                      </a>
+                    <Link href="/service-details" className="service-link">
+                      Data Science
+                      <i className="flaticon-right"></i>
                     </Link>
                   </h3>
                 </div>
@@ -47,11 +43,9 @@ const OurServices = () => {
                     <i className="flaticon-document"></i>
                   </div>
                   <h3>
-                    <Link href="/service-details">
-                      <a>
-                        Managed Analytics
-                        <i className="flaticon-right"></i>
-                      </a>
+                    <Link href="/service-details" className="service-link">
+                      Managed Analytics
+                      <i className="flaticon-right"></i>
                     </Link>
                   </h3>
                 </div>
@@ -65,11 +59,9 @@ const OurServices = () => {
                     <i className="flaticon-data-analytics"></i>
                   </div>
                   <h3>
-                    <Link href="/service-details">
-                      <a>
-                        Data Analytics
-                        <i className="flaticon-right"></i>
-                      </a>
+                    <Link href="/service-details" className="service-link">
+                      Data Analytics
+                      <i className="flaticon-right"></i>
                     </Link>
                   </h3>
                 </div>
@@ -79,11 +71,9 @@ const OurServices = () => {
                     <i className="flaticon-chart"></i>
                   </div>
                   <h3>
-                    <Link href="/service-details">
-                      <a>
-                        Business Intelligence
-                        <i className="flaticon-right"></i>
-                      </a>
+                    <Link href="/service-details" className="service-link">
+                      Business Intelligence
+                      <i className="flaticon-right"></i>
                     </Link>
                   </h3>
                 </div>
@@ -93,11 +83,9 @@ const OurServices = () => {
                     <i className="flaticon-data"></i>
                   </div>
                   <h3>
-                    <Link href="/service-details">
-                      <a>
-                        Data Management
-                        <i className="flaticon-right"></i>
-                      </a>
+                    <Link href="/service-details" className="service-link">
+                      Data Management
+                      <i className="flaticon-right"></i>
                     </Link>
                   </h3>
                 </div>

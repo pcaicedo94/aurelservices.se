@@ -13,7 +13,7 @@ const Customers = () => {
       <div className="partner-section pt-100 pb-70">
         <div className="container">
           <div className="partner-title">
-            <h2>Våra kunder</h2>
+            <h2>Kunder som litar på oss</h2>
           </div>
 
           <div className="partner-list" style={{display:'flex', justifyContent: "space-between"}}>

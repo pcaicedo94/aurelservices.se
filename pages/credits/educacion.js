@@ -20,7 +20,6 @@ const Educacion = () => {
       <div className="project-details-area pb-100">
         <div className="container">
           <div className="projects-details-desc">
-            {/* <h3>Crédito de Consumo</h3> */}
             <div className="features-text">
               <h2>Créditos de Educación</h2>
 
@@ -29,19 +28,19 @@ const Educacion = () => {
                 para el trabajo, como el pago de matrículas (Educación Primaria,
                 Secundaria, Intermedia y/o Universitaria, Postgrados y
                 Especializaciones) y pensiones tanto de asociados como de su
-                grupo familiar inscrito en CETER
+                grupo familiar inscrito en CETER.
               </p>
 
               <h3>Requisitos:</h3>
               <ol>
                 <li>
                   Presentar los recibos de pago y constancia de matrícula o
-                  polígrafo
+                  polígrafo.
                 </li>
                 <li>
                   Factura original expedida por el establecimiento educativo y
                   se girará al respectivo centro educativo, o copia del recibo
-                  de pago y se girará al asociado
+                  de pago y se girará al asociado.
                 </li>
               </ol>
 
@@ -54,21 +53,21 @@ const Educacion = () => {
             </div>
 
             <div className="project-details-info">
-            <div
-                className="single-info-box flex-center" >
+              <div className="single-info-box flex-center">
                 Escríbenos
-                <Link href={whastApp}>
-                  <>
-                    <a href={whastApp} className="btnDetails " target="_blank">
-                      <Image
-                        width={50}
-                        height={50}
-                        alt="icon whatsapp"
-                        src="/images/whatsappIcon.webp"
-                        decoding="async"
-                      />
-                    </a>
-                  </>
+                <Link
+                  href={whastApp}
+                  className="btnDetails"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    width={50}
+                    height={50}
+                    alt="icon whatsapp"
+                    src="/images/whatsappIcon.webp"
+                    decoding="async"
+                  />
                 </Link>
               </div>
             </div>

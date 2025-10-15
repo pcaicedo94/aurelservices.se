@@ -11,38 +11,23 @@ const CertificationSideBar = () => {
           <ul>
             <li>
               <span className="comment-author-link">
-                <Link href="/about-us">
-                  <a>Acerca de Ceter</a>
-                </Link>
-              </span>
+                <Link href="/about-us">Acerca de Ceter</Link>              </span>
             </li>
             <li>
               <span className="comment-author-link">
-                <Link href="/services">
-                  <a>Estaciones de servicio</a>
-                </Link>
-              </span>
+                <Link href="/services">Estaciones de servicio</Link>              </span>
             </li>
             <li>
               <span className="comment-author-link">
-                <Link href="/associates">
-                  <a>Asociados</a>
-                </Link>
-              </span>
+                <Link href="/associates">Asociados</Link>              </span>
             </li>
             <li>
               <span className="comment-author-link">
-                <Link href="/contact">
-                  <a>Escríbenos</a>
-                </Link>
-              </span>
+                <Link href="/contact">Escríbenos</Link>              </span>
             </li>
             {/* <li>
               <span className="comment-author-link">
-                <Link href="/">
-                  <a></a>
-                </Link>
-              </span>
+                <Link href="/"></Link>              </span>
             </li> */}
           </ul>
         </div>

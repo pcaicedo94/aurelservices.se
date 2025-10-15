@@ -26,9 +26,7 @@ const BlogDetailsContent = () => {
                       </li>
                       <li>
                         <span>Posted by:</span>
-                        <Link href="/blog">
-                          <a>John Anderson</a>
-                        </Link>
+                        <Link href="/blog">John Anderson</Link>
                       </li>
                     </ul>
                   </div>
@@ -144,12 +142,8 @@ const BlogDetailsContent = () => {
                       <i className="fas fa-bookmark"></i>
                     </span>
 
-                    <Link href="/blog">
-                      <a>Fashion</a>
-                    </Link>
-                    <Link href="/blog">
-                      <a>Travel</a>
-                    </Link>
+                    <Link href="/blog">Fashion</Link>
+                    <Link href="/blog">Travel</Link>
                   </div>
 
                   <div className="article-share">
@@ -195,9 +189,7 @@ const BlogDetailsContent = () => {
                           </div>
                           <div className="comment-metadata">
                             <Link href="#">
-                              <a>
-                                <time>February 24, 2020 at 10:59 am</time>
-                              </a>
+                              <time>February 24, 2020 at 10:59 am</time>
                             </Link>
                           </div>
                         </footer>
@@ -212,8 +204,8 @@ const BlogDetailsContent = () => {
                         </div>
 
                         <div className="reply">
-                          <Link href="#">
-                            <a className="comment-reply-link">Reply</a>
+                          <Link href="#" className="comment-reply-link">
+                            Reply
                           </Link>
                         </div>
                       </article>
@@ -233,9 +225,7 @@ const BlogDetailsContent = () => {
                               </div>
                               <div className="comment-metadata">
                                 <Link href="#">
-                                  <a>
-                                    <time>February 24, 2020 at 10:59 am</time>
-                                  </a>
+                                  <time>February 24, 2020 at 10:59 am</time>
                                 </Link>
                               </div>
                             </footer>
@@ -250,8 +240,8 @@ const BlogDetailsContent = () => {
                             </div>
 
                             <div className="reply">
-                              <Link href="#">
-                                <a className="comment-reply-link">Reply</a>
+                              <Link href="#" className="comment-reply-link">
+                                Reply
                               </Link>
                             </div>
                           </article>
@@ -272,9 +262,7 @@ const BlogDetailsContent = () => {
                                 </div>
                                 <div className="comment-metadata">
                                   <Link href="#">
-                                    <a>
-                                      <time>February 24, 2020 at 10:59 am</time>
-                                    </a>
+                                    <time>February 24, 2020 at 10:59 am</time>
                                   </Link>
                                 </div>
                               </footer>
@@ -289,8 +277,8 @@ const BlogDetailsContent = () => {
                               </div>
 
                               <div className="reply">
-                                <Link href="#">
-                                  <a className="comment-reply-link">Reply</a>
+                                <Link href="#" className="comment-reply-link">
+                                  Reply
                                 </Link>
                               </div>
                             </article>
@@ -313,9 +301,7 @@ const BlogDetailsContent = () => {
                           </div>
                           <div className="comment-metadata">
                             <Link href="#">
-                              <a>
-                                <time>February 24, 2020 at 10:59 am</time>
-                              </a>
+                              <time>February 24, 2020 at 10:59 am</time>
                             </Link>
                           </div>
                         </footer>
@@ -330,8 +316,8 @@ const BlogDetailsContent = () => {
                         </div>
 
                         <div className="reply">
-                          <Link href="#">
-                            <a className="comment-reply-link">Reply</a>
+                          <Link href="#" className="comment-reply-link">
+                            Reply
                           </Link>
                         </div>
                       </article>
@@ -342,8 +328,8 @@ const BlogDetailsContent = () => {
                   <div className="comment-respond">
                     <h3 className="comment-reply-title">Leave a Reply</h3>
 
-                    <form 
-                      className="comment-form" 
+                    <form
+                      className="comment-form"
                       onSubmit={(e) => e.preventDefault()}
                     >
                       <p className="comment-notes">

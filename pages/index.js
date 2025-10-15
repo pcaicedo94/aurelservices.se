@@ -23,6 +23,8 @@ const Index = () => {
 
       <OurServices />
 
+      <Customers />
+
       <AboutUs />
 
       <FunFacts />
@@ -31,7 +33,7 @@ const Index = () => {
         <GetStartedProject />
       </div>
 
-      <Customers />
+      
 
       <Footer />
     </>

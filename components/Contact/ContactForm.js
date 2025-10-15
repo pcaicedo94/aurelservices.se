@@ -70,7 +70,7 @@ const ContactForm = () => {
 
           <div className="col-lg-6">
             <div className="contact-form">
-            {<Chatbot />}
+            
 
 
             </div>

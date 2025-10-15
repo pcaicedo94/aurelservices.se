@@ -18,7 +18,7 @@ const MainBanner = () => {
               <div className="row align-items-center">
                 <div className="col-lg-6 col-md-12">
                   <div className="main-banner-content">
-                    <h1>Applying Data Science & Analytics To Life</h1>
+                    <h1>Flyttstädning</h1>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                       sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -27,10 +27,8 @@ const MainBanner = () => {
                     </p>
 
                     <div className="banner-btn">
-                      <Link href="/about-us">
-                        <a className="default-btn-one">
-                          About Us <span></span>
-                        </a>
+                      <Link href="/about-us" className="default-btn-one">
+                        About Us <span></span>
                       </Link>
 
                       <div

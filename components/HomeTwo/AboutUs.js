@@ -42,10 +42,8 @@ const AboutUs = () => {
                   </li>
                 </ul>
 
-                <Link href="/about-us">
-                  <a className="default-btn">
-                    Read More <span></span>
-                  </a>
+                <Link href="/about-us" className="default-btn">
+                  Read More <span></span>
                 </Link>
               </div>
             </div>

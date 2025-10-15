@@ -12,7 +12,7 @@ const BlogPost = () => {
           </div>
 
           <div className="row justify-content-center">
-            <div 
+            <div
               className="col-lg-4 col-md-6"
               data-aos="fade-up"
               data-aos-delay="200"
@@ -21,26 +21,20 @@ const BlogPost = () => {
             >
               <div className="blog-item">
                 <Link href="/blog-details">
-                  <a>
-                    <img src="/images/blog/blog3.png" alt="image" />
-                  </a>
+                  <img src="/images/blog/blog3.png" alt="image" />
                 </Link>
 
                 <div className="blog-content">
                   <ul className="meta-tags">
                     <li>
                       <Link href="/blog">
-                        <a>
-                          <i className="fa fa-user-alt"></i>
-                          Admin
-                        </a>
+                        <i className="fa fa-user-alt"></i>
+                        Admin
                       </Link>
                     </li>
                     <li>
                       <Link href="/blog">
-                        <a>
-                          <i className="fas fa-calendar-week"></i>7 Dec 2020
-                        </a>
+                        <i className="fas fa-calendar-week"></i>7 Dec 2020
                       </Link>
                     </li>
                     <li>
@@ -50,7 +44,7 @@ const BlogPost = () => {
 
                   <h3>
                     <Link href="/blog-details">
-                      <a>Startup marketing solution for business owner</a>
+                      Startup marketing solution for business owner
                     </Link>
                   </h3>
 
@@ -59,17 +53,15 @@ const BlogPost = () => {
                     do eiusmod.
                   </p>
 
-                  <Link href="/blog-details">
-                    <a className="read-more">
-                      Read More
-                      <i className="fa fa-chevron-right"></i>
-                    </a>
+                  <Link href="/blog-details" className="read-more">
+                    Read More
+                    <i className="fa fa-chevron-right"></i>
                   </Link>
                 </div>
               </div>
             </div>
 
-            <div 
+            <div
               className="col-lg-4 col-md-6"
               data-aos="fade-up"
               data-aos-delay="350"
@@ -78,26 +70,20 @@ const BlogPost = () => {
             >
               <div className="blog-item">
                 <Link href="/blog-details">
-                  <a>
-                    <img src="/images/blog/blog4.png" alt="image" />
-                  </a>
+                  <img src="/images/blog/blog4.png" alt="image" />
                 </Link>
 
                 <div className="blog-content">
                   <ul className="meta-tags">
                     <li>
                       <Link href="/blog">
-                        <a>
-                          <i className="fa fa-user-alt"></i>
-                          Admin
-                        </a>
+                        <i className="fa fa-user-alt"></i>
+                        Admin
                       </Link>
                     </li>
                     <li>
                       <Link href="/blog">
-                        <a>
-                          <i className="fas fa-calendar-week"></i>7 Dec 2020
-                        </a>
+                        <i className="fas fa-calendar-week"></i>7 Dec 2020
                       </Link>
                     </li>
                     <li>
@@ -107,7 +93,7 @@ const BlogPost = () => {
 
                   <h3>
                     <Link href="/blog-details">
-                      <a>Web developement best work in future world</a>
+                      Web development best work in future world
                     </Link>
                   </h3>
 
@@ -116,17 +102,15 @@ const BlogPost = () => {
                     do eiusmod.
                   </p>
 
-                  <Link href="/blog-details">
-                    <a className="read-more">
-                      Read More
-                      <i className="fa fa-chevron-right"></i>
-                    </a>
+                  <Link href="/blog-details" className="read-more">
+                    Read More
+                    <i className="fa fa-chevron-right"></i>
                   </Link>
                 </div>
               </div>
             </div>
 
-            <div 
+            <div
               className="col-lg-4 col-md-6"
               data-aos="fade-up"
               data-aos-delay="450"
@@ -135,26 +119,20 @@ const BlogPost = () => {
             >
               <div className="blog-item">
                 <Link href="/blog-details">
-                  <a>
-                    <img src="/images/blog/blog5.png" alt="image" />
-                  </a>
+                  <img src="/images/blog/blog5.png" alt="image" />
                 </Link>
 
                 <div className="blog-content">
                   <ul className="meta-tags">
                     <li>
                       <Link href="/blog">
-                        <a>
-                          <i className="fa fa-user-alt"></i>
-                          Admin
-                        </a>
+                        <i className="fa fa-user-alt"></i>
+                        Admin
                       </Link>
                     </li>
                     <li>
                       <Link href="/blog">
-                        <a>
-                          <i className="fas fa-calendar-week"></i>7 Dec 2020
-                        </a>
+                        <i className="fas fa-calendar-week"></i>7 Dec 2020
                       </Link>
                     </li>
                     <li>
@@ -164,7 +142,7 @@ const BlogPost = () => {
 
                   <h3>
                     <Link href="/blog-details">
-                      <a>Creative solutions to improve your business!</a>
+                      Creative solutions to improve your business!
                     </Link>
                   </h3>
 
@@ -173,11 +151,9 @@ const BlogPost = () => {
                     do eiusmod.
                   </p>
 
-                  <Link href="/blog-details">
-                    <a className="read-more">
-                      Read More
-                      <i className="fa fa-chevron-right"></i>
-                    </a>
+                  <Link href="/blog-details" className="read-more">
+                    Read More
+                    <i className="fa fa-chevron-right"></i>
                   </Link>
                 </div>
               </div>

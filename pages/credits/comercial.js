@@ -18,7 +18,6 @@ const Comercial = () => {
       <div className="project-details-area pb-100">
         <div className="container">
           <div className="projects-details-desc">
-            {/* <h3>Crédito de Consumo</h3> */}
             <div className="features-text">
               <h2>Crédito Comercial</h2>
 
@@ -40,18 +39,19 @@ const Comercial = () => {
             <div className="project-details-info">
               <div className="single-info-box flex-center">
                 Escríbenos
-                <Link href={whastApp}>
-                  <>
-                    <a href={whastApp} className="btnDetails " target="_blank">
-                      <Image
-                        width={50}
-                        height={50}
-                        alt="icon whatsapp"
-                        src="/images/whatsappIcon.webp"
-                        decoding="async"
-                      />
-                    </a>
-                  </>
+                <Link
+                  href={whastApp}
+                  className="btnDetails"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    width={50}
+                    height={50}
+                    alt="icon whatsapp"
+                    src="/images/whatsappIcon.webp"
+                    decoding="async"
+                  />
                 </Link>
               </div>
             </div>

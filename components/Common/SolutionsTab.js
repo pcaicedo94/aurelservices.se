@@ -73,14 +73,6 @@ const SolutionsTab = () => {
                           Servicio de Mantenimiento Básico.
                         </li>
                       </ul>
-
-                      {/* <div className="tab-btn">
-                        <Link href="/service-details">
-                          <a className="default-btn">
-                            Read More <span></span>
-                          </a>
-                        </Link>
-                      </div> */}
                     </div>
                   </div>
 
@@ -136,10 +128,8 @@ const SolutionsTab = () => {
                       </ul>
 
                       <div className="tab-btn">
-                        <Link href="/services">
-                          <a className="default-btn">
-                            Conocer más <span></span>
-                          </a>
+                        <Link href="/services" className="default-btn">
+                          Conocer más <span></span>
                         </Link>
                       </div>
                     </div>
@@ -189,10 +179,8 @@ const SolutionsTab = () => {
                       </ul>
 
                       <div className="tab-btn">
-                        <Link href="/associates">
-                          <a className="default-btn">
-                            Leer Más <span></span>
-                          </a>
+                        <Link href="/associates" className="default-btn">
+                          Leer Más <span></span>
                         </Link>
                       </div>
                     </div>

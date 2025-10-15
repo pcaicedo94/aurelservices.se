@@ -7,15 +7,20 @@ const OurServices = () => {
       <div className="services-section pt-100 pb-70">
         <div className="container">
           <div className="section-title">
-            <h2 id ="custom-title">Välkommen till Aurel Städ AB</h2>
-            <br></br>
-            <br></br>
-            <h4 id ="custom-paragraph">Din pålitliga partner för städning sedan 2007.</h4>
-            <h4 id ="custom-paragraph">På Aurel Städ AB är vi stolta över att erbjuda enastående städtjänster över hela Stockholm sedan 2007. 
-              Vi är ett familjeföretag förankrat i samhället, engagerade för att leverera excellens och kundnöjdhet i 
-              varje uppdrag vi utför.</h4>
-            <br></br>
-            <br></br> 
+            <h2 id="custom-title">Välkommen till Aurel Städ AB</h2>
+            <br />
+            <br />
+            <h4 id="custom-paragraph">
+              Din pålitliga partner för städning sedan 2007.
+            </h4>
+            <h4 id="custom-paragraph">
+              På Aurel Städ AB är vi stolta över att erbjuda enastående
+              städtjänster över hela Stockholm sedan 2007. Vi är ett
+              familjeföretag förankrat i samhället, engagerade för att leverera
+              excellens och kundnöjdhet i varje uppdrag vi utför.
+            </h4>
+            <br />
+            <br />
             <h2>Våra Tjänster</h2>
           </div>
 
@@ -34,14 +39,15 @@ const OurServices = () => {
 
                 <h3>Kontorstädning</h3>
                 <p>
-                En ren och fräsch arbetsplats är stimulerande för de anställda och är en förutsättning för att uträtta ett bra arbete. Vi garanterar en städning som ger dig nöjda medarbetare som trivs på jobbet.
+                  En ren och fräsch arbetsplats är stimulerande för de anställda
+                  och är en förutsättning för att uträtta ett bra arbete. Vi
+                  garanterar en städning som ger dig nöjda medarbetare som trivs
+                  på jobbet.
                 </p>
 
-                <Link href="/about-us">
-                  <a className="service-btn">
-                    Läs mer
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/services" className="service-btn">
+                  Läs mer
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -60,14 +66,13 @@ const OurServices = () => {
 
                 <h3>Storstädning</h3>
                 <p>
-                Vi ger ett rent och fräscht resultat, oavsett om det är inför en speciell händelse eller bara för att få en nystart.
+                  Vi ger ett rent och fräscht resultat, oavsett om det är inför
+                  en speciell händelse eller bara för att få en nystart.
                 </p>
 
-                <Link href="/about-us">
-                  <a className="service-btn">
-                    Leer Más
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/services" className="service-btn">
+                  Läs Mer
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -84,13 +89,15 @@ const OurServices = () => {
                   <i className="flaticon-document"></i>
                 </div>
                 <h3>Hemstädning</h3>
-                <p>Upplev känslan av total trivsel i ditt hem. Vår hemstädning förvandlar ditt viktigaste utrymme till en fridfull oas, där du kan slappna av och verkligen njuta av ditt hem.</p>
+                <p>
+                  Upplev känslan av total trivsel i ditt hem. Vår hemstädning
+                  förvandlar ditt viktigaste utrymme till en fridfull oas, där
+                  du kan slappna av och verkligen njuta av ditt hem.
+                </p>
 
-                <Link href="/about-us">
-                  <a className="service-btn">
-                    Leer Más
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/services" className="service-btn">
+                  Läs Mer
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -108,14 +115,14 @@ const OurServices = () => {
                 </div>
                 <h3>Flyttstädning</h3>
                 <p>
-                Gör din flytt stressfri. Vi tar hand om en grundlig rengöring av din gamla eller nya bostad, så att du kan fokusera på din nya början.
+                  Gör din flytt stressfri. Vi tar hand om en grundlig rengöring
+                  av din gamla eller nya bostad, så att du kan fokusera på din
+                  nya början.
                 </p>
 
-                <Link href="/about-us">
-                  <a className="service-btn">
-                    Leer Más
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/services" className="service-btn">
+                  Läs Mer
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -133,14 +140,14 @@ const OurServices = () => {
                 </div>
                 <h3>Fönsterputsning</h3>
                 <p>
-                Känner du att resultatet inte blir tillfredsställande när du putsar själv? Låt våra skickliga fönsterputsare ta hand om det åt dig och njut av att se solen stråla genom rutorna igen.
+                  Känner du att resultatet inte blir tillfredsställande när du
+                  putsar själv? Låt våra skickliga fönsterputsare ta hand om det
+                  åt dig och njut av att se solen stråla genom rutorna igen.
                 </p>
 
-                <Link href="/about-us">
-                  <a className="service-btn">
-                    Leer Más
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/services" className="service-btn">
+                  Läs Mer
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
@@ -158,14 +165,14 @@ const OurServices = () => {
                 </div>
                 <h3>Etableringsstädning, Bodstädning och Mer</h3>
                 <p>
-                "Vi erbjuder byggstädning för både privatpersoner och företag i Stockholm, inklusive grovstädning, avtäckning, fönsterputs och slutstädning. Vi anpassar oss efter dina behov.
+                  Vi erbjuder byggstädning för både privatpersoner och företag i
+                  Stockholm, inklusive grovstädning, avtäckning, fönsterputs och
+                  slutstädning. Vi anpassar oss efter dina behov.
                 </p>
 
-                <Link href="/about-us">
-                  <a className="service-btn">
-                    Leer Más
-                    <i className="flaticon-right"></i>
-                  </a>
+                <Link href="/services" className="service-btn">
+                  Läs Mer
+                  <i className="flaticon-right"></i>
                 </Link>
               </div>
             </div>
