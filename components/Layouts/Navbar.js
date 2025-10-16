@@ -129,6 +129,23 @@ const Navbar = ({ associates }) => {
                   </li>
 
                   <li className="nav-item">
+                    <a
+                      href="https://yureco.com"
+                      className="nav-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      produkter
+                    </a>
+                  </li>
+
+                  <li className="nav-item">
+                    <Link href="/careers" className="nav-link">
+                      Jobba hos oss
+                    </Link>
+                  </li>
+
+                  <li className="nav-item">
                     <Link
                       href="/contact"
                       className="nav-link"
