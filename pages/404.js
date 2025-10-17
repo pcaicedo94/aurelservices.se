@@ -18,12 +18,12 @@ const CoustomErorPage = () => {
             >
               <img src="/images/404.png" alt="Image" />
 
-              <h3>Página No Encontrada 🔍</h3>
+              <h3>Sidan finns ej 🔍</h3>
               <h4>
-                La página que esta buscando no está disponible.
+                Sidan du letar efter är inte tillgänglig.
               </h4>
 
-              <Link href="/" className="default-btn-one">Regresar al Inicio</Link>            </div>
+              <Link href="/" className="default-btn-one">Återgå till startsidan</Link>            </div>
           </div>
         </div>
       </div>

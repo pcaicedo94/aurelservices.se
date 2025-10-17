@@ -1581,14 +1581,7 @@ Main Banner Area CSS
   position: relative;
   z-index: 1;
   height: 900px;
-  background: linear-gradient(
-    to bottom,
-    #34a783,
-    #53b38b,
-    #72c192,
-    #a8d599,
-    #f3ab6b
-  );
+  background: #ffffff;
 }
 .main-banner-area .container-fluid {
   max-width: 1920px;
@@ -1927,7 +1920,7 @@ Main Banner Two Area CSS
   position: relative;
   z-index: 1;
   height: auto;
-  background: linear-gradient(90deg, #34a783, #64d6a7, #abffcc, #e2ffda, #f3f3f3);
+  background: #f3f3f3;
 
 }
 .main-banner-two .container-fluid {
@@ -4292,11 +4285,10 @@ Pagination Area CSS
   height: 100vh;
   background: linear-gradient(
     to bottom,
-    #370b6f,
-    #00429b,
-    #006dba,
-    #0095ce,
-    #2dbcdc
+    #34a783,
+    #88c9b4,
+    #c2e5da,
+    #ffffff
   );
 }
 
@@ -5363,60 +5355,61 @@ Go Top CSS
 .carousel {
   position: relative;
   width: 100%;
-  height: auto; /* Ensure the height adjusts to the content */
-  padding-top: 5%; /* Adjust this to match the aspect ratio of your images */
+  height: 60vh; /* Adjust height as needed */
   overflow: hidden;
-  height: auto;
-  background-color: transparent; /* Remove the green background */
-  overflow: hidden; /* Prevent overflow */
 }
 
 .carousel__viewport {
-  display: flex;
-  width: 100%; /* 100% for each of the three slides */
-  animation: slide-animation 18s infinite; /* Cycle through slides every 9 seconds */
-  margin-bottom:0 !important;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 .carousel__slide {
-  flex: 0 0 100%; /* Each slide takes up 100% of the viewport */
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  display: flex;
-  justify-content: center; /* Center the image horizontally */
-  align-items: center; /* Center the image vertically */
-  overflow: hidden; /* Hide any overflow */
+  height: 100%;
+  opacity: 0;
+  animation: fade-effect 12s infinite;
+  list-style-type: none;
+  background-color: #ffffff;
 }
 
 .carousel__slide img {
-  width: 100%; /* Make the image take up the full width of the slide */
-  height: auto; /* Maintain the aspect ratio */
-  object-fit: cover; /* Cover the container without stretching */
-  max-width: 100%; /* Prevent the image from scaling beyond its container */
-  max-height: 100%; /* Prevent the image from scaling beyond its container */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures images cover the slide area */
 }
 
-/* Keyframes for the sliding animation */
-@keyframes slide-animation {
+/* Animation delay for each slide */
+.carousel__slide:nth-child(1) {
+  animation-delay: 0s;
+}
+.carousel__slide:nth-child(2) {
+  animation-delay: 4s;
+}
+.carousel__slide:nth-child(3) {
+  animation-delay: 8s;
+}
+
+/* Keyframe animation for the fade effect */
+@keyframes fade-effect {
   0% {
-    transform: translateX(0%); /* Show the first slide */
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
   }
   33% {
-    transform: translateX(0%); /* Hold the first slide */
+    opacity: 1;
   }
-  34% {
-    transform: translateX(-100%); /* Slide to the second slide */
-  }
-  66% {
-    transform: translateX(-100%); /* Hold the second slide */
-  }
-  67% {
-    transform: translateX(-200%); /* Slide to the third slide */
-  }
-  99% {
-    transform: translateX(-200%); /* Hold the third slide */
+  58% {
+    opacity: 0;
   }
   100% {
-    transform: translateX(-10%); /* Jump back to the first slide */
+    opacity: 0;
   }
 }
 
