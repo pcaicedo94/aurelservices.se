@@ -128,6 +128,40 @@ const Navbar = ({ associates }) => {
                     </ul>
                   </li>
 
+                  <li className="nav-item submenu">
+                    <Link href="#" className="nav-link">
+                      Andra tjänster
+                    </Link>
+                    <ul className="dropdown-menu">
+                      {/* You can add your other service pages here */}
+                      <li>
+                        <Link href="/service-page-1" className="dropdown-item">
+                          Måleri
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/service-page-2" className="dropdown-item">
+                          Snickeri
+                        </Link>
+                      </li>
+                                            <li>
+                        <Link href="/service-page-2" className="dropdown-item">
+                          Flytt och transport
+                        </Link>
+                      </li>
+                                            <li>
+                        <Link href="/service-page-2" className="dropdown-item">
+                          Trädgårdsskötsel
+                        </Link>
+                      </li>
+                                            <li>
+                        <Link href="/service-page-2" className="dropdown-item">
+                          El och rörmokare
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
+
                   <li className="nav-item">
                     <a
                       href="https://yureco.com"
