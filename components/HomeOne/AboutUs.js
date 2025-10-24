@@ -28,7 +28,7 @@ const AboutUs = () => {
                 data-aos-once="true"
               >
                 {/* <span>About Us</span> */}
-                <h2>Vi har 15 års erfarenhet som backar upp oss</h2>
+                <h2>Vi har 18 års erfarenhet som backar upp oss</h2>
                 <p>
                   Vi är ett effektivt städtjänsteföretag med stora ambitioner
                   och höga krav på kvalitet. Vi erbjuder en komplett städtjänst

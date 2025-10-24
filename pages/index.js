@@ -1,4 +1,5 @@
 import React from "react";
+import Script from "next/script";
 import Navbar from "../components/Layouts/Navbar";
 import MainBanner from "../components/HomeOne/MainBanner";
 import OurServices from "../components/HomeOne/OurServices";
@@ -20,6 +21,17 @@ const Index = () => {
       <Navbar />
 
       <MainBanner />
+                  {/* --- Start of Shapo Reviews Widget --- */}
+      <div className="container pt-100">
+        <div id="shapo-widget-72759a1d81b0785a4632"></div>
+        <Script
+          id="shapo-embed-js"
+          type="text/javascript"
+          src="https://cdn.shapo.io/js/embed.js"
+          strategy="lazyOnload"
+        />
+      </div>
+      {/* --- End of Shapo Reviews Widget --- */}
 
       <OurServices />
 
@@ -32,8 +44,6 @@ const Index = () => {
       <div className="pb-100">
         <GetStartedProject />
       </div>
-
-      
 
       <Footer />
     </>

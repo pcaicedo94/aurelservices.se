@@ -15,7 +15,7 @@ const FunFacts = () => {
             >
               <div className="single-fun-fact">
                 <h3>
-                  15 års
+                  18 års
                   <span className="sign-icon">+</span>
                 </h3>
                 <p>Erfarenhet</p>

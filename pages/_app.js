@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }) {
           content="Din pålitliga partner för städning sedan efter 2007."
         />
         <meta name="keywords" content="Aurel" />
-        <meta property="og:title" content="Aurelstäd - 15 års erfarenhet " />
+        <meta property="og:title" content="Aurelstäd - 18 års erfarenhet " />
         <meta
           property="og:description"
           content="1. Hemstädning 2. Flyttstädning 3. Storstädning "
@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }) {
 
       {/* Go Top Button */}
       <GoTop />
-      <Chatbot />
+      {/* Chatbot */}
 
     </>
   );

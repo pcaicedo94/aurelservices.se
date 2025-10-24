@@ -6,7 +6,7 @@ const MainBanner = () => {
   return (
     <>
       <div className="main-banner-two">
-        <HomeForm />
+        {/* <HomeForm /> */}
         <Banner />
       </div>
     </>

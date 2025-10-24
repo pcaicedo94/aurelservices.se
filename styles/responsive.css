@@ -49,7 +49,7 @@
     color: #000000;
   }
   .navbar-area .main-nav .navbar .navbar-brand img {
-    max-width: 100px;
+    max-width: 200px;
   }
   .navbar-area .main-nav .navbar .navbar-collapse {
     margin-left: 0;
@@ -767,7 +767,7 @@
     display: none;
   }
   .main-nav .navbar .navbar-brand img {
-    max-width: 100px;
+    max-width: 200px;
   }
   .navbar-area {
     box-shadow: 0 5px 40px 0 rgba(0, 0, 0, 0.11);
@@ -1234,7 +1234,7 @@
     .navbar {
       .navbar-brand {
         img {
-          max-width: 100px;
+          max-width: 200px;
         }
       }
     }
@@ -1440,7 +1440,7 @@
     font-size: 19px;
   }
   .main-nav .navbar .navbar-brand img {
-    max-width: 100px;
+    max-width: 200px;
   }
   .work-item .work-content h3 {
     font-size: 20px;

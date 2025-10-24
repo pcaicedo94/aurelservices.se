@@ -25,7 +25,7 @@ const AboutUsContent = () => {
                 Vi är ett familj företag som grundades år 2007 under namnet Xabia AB, och det var år 2012 
                 då vi bytte namn till Aurel Städ AB under domännamnet (www.aurelservice.se) som följd av 
                 en utveckling av bilder, produkter och tjänster.
-                Våra ledare har över 15 års erfarenhet av städmarknaden, vilket gör Aurel Städ AB till 
+                Våra ledare har över 18 års erfarenhet av städmarknaden, vilket gör Aurel Städ AB till 
                 ett företag som bygger på kunskap om våra kunders behov. 
                 År 2020 genomgick Aurel Städ en förändring, vilket ledde till att den nya generationen uppstod 
                 för att fortsätta att utvecklas på städmarknaden, samtidigt som vi upprätthåller våra standarder:
