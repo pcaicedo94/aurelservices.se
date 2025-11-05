@@ -1,62 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import Footer from "../components/Layouts/Footer";
 
 const DeepCleaning = () => {
-  const [size, setSize] = useState(""); // State for size input
-  const [dateTime, setDateTime] = useState(""); // State for date and time input
-  const [contactPreference, setContactPreference] = useState(""); // State for contact preference
-  const [predictedPrice, setPredictedPrice] = useState(0); // State for predicted price
-  const [showContactForm, setShowContactForm] = useState(false); // State for toggling contact form
-  const [name, setName] = useState(""); // State for name input
-  const [email, setEmail] = useState(""); // State for email input
-  const [phone, setPhone] = useState(""); // State for phone input
-  const [address, setAddress] = useState(""); // State for address input
-  const [showPopup, setShowPopup] = useState(false); // State for showing popup
-  const [popupMessage, setPopupMessage] = useState(""); // State for popup message
+  const [size, setSize] = useState("");
+  const [dateTime, setDateTime] = useState("");
+  const [contactPreference, setContactPreference] = useState("");
+  const [basePrice, setBasePrice] = useState(0);
+  const [predictedPrice, setPredictedPrice] = useState(0);
+  
+  // Extra services checkboxes
+  const [hasKylFrys, setHasKylFrys] = useState(false);
+  const [hasKylFrysDefrost, setHasKylFrysDefrost] = useState(false);
+  const [hasDiskmaskin, setHasDiskmaskin] = useState(false);
+  const [hasKapGarderob, setHasKapGarderob] = useState(false);
+  const [hasForrad, setHasForrad] = useState(false);
+  const [hasTvattmaskin, setHasTvattmaskin] = useState(false);
+  const [vaggtvattCount, setVaggtvattCount] = useState(0);
+  
+  // Contact form states
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
-  const webhookUrl = "https://cjsports.app.n8n.cloud/webhook/b2595e41-0fff-46b9-aeff-4b54e879b2d8"; // Replace with your n8n webhook URL
+  const webhookUrl = "https://cjsports.app.n8n.cloud/webhook/b2595e41-0fff-46b9-aeff-4b54e879b2d8";
 
-  // Function to calculate the predicted price based on area
-  const calculatePrice = (area) => {
-    if (!isNaN(area)) {
-      let calculatedPrice = 0;
-
-      if (area >= 1 && area <= 50) {
-        calculatedPrice = 2520; // Fixed price for area between 1-50 sqm
-      } else if (area > 50 && area <= 70) {
-        calculatedPrice = 3045; // Fixed price for area between 51-70 sqm
-      } else if (area > 70 && area <= 100) {
-        calculatedPrice = 3570; // Fixed price for area between 71-100 sqm
-      } else if (area > 100 && area <= 150) {
-        calculatedPrice = 4200; // Fixed price for area between 101-150 sqm
-      } else if (area > 150) {
-        calculatedPrice = 4800; // Fixed price for area 151 sqm or more
-      }
-
-      setPredictedPrice(calculatedPrice.toFixed(2)); // Format price to 2 decimal places
-    } else {
-      setPredictedPrice(0); // Default to 0 if size is invalid
+  // Calculate base price based on area
+  const calculateBasePrice = (area) => {
+    if (!isNaN(area) && area > 0) {
+      let price = 0;
+      if (area >= 1 && area <= 50) price = 2650;
+      else if (area > 50 && area <= 70) price = 3290;
+      else if (area > 70 && area <= 100) price = 3950;
+      else if (area > 100 && area <= 150) price = 4750;
+      else if (area > 150) price = 4800;
+      setBasePrice(price);
+      return price;
     }
+    setBasePrice(0);
+    return 0;
   };
+
+  // Calculate total price with extras
+  useEffect(() => {
+    let total = basePrice;
+    
+    // Add extra services
+    if (hasKylFrys) total += 250;
+    if (hasKylFrysDefrost) total += 360;
+    if (hasDiskmaskin) total += 250;
+    if (hasKapGarderob) total += 360;
+    if (hasForrad) total += 360;
+    if (hasTvattmaskin) total += 390;
+    total += vaggtvattCount * 250;
+    
+    setPredictedPrice(total.toFixed(2));
+  }, [basePrice, hasKylFrys, hasKylFrysDefrost, hasDiskmaskin, hasKapGarderob, hasForrad, hasTvattmaskin, vaggtvattCount]);
 
   // Handle size input change
   const handleSizeChange = (e) => {
-    const area = parseFloat(e.target.value); // Convert input value to a number
-    setSize(e.target.value); // Update size state
-    calculatePrice(area); // Automatically calculate price
+    const area = parseFloat(e.target.value);
+    setSize(e.target.value);
+    calculateBasePrice(area);
   };
 
   // Function to send data to the webhook
   const sendToWebhook = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
+
+    const extras = [];
+    if (hasKylFrys) extras.push("Kyl/Frys invändigt (ej avfrostning)");
+    if (hasKylFrysDefrost) extras.push("Kyl/Frys med avfrostning");
+    if (hasDiskmaskin) extras.push("Diskmaskin invändigt");
+    if (hasKapGarderob) extras.push("Skåp och garderober invändigt");
+    if (hasForrad) extras.push("Förråd");
+    if (hasTvattmaskin) extras.push("Tvättmaskin/torktumlare invändigt");
+    if (vaggtvattCount > 0) extras.push(`Väggtvätt (${vaggtvattCount} vägg${vaggtvattCount > 1 ? 'ar' : ''})`);
 
     const payload = {
-      cleaningType: "Storstädning", // Cleaning type
+      cleaningType: "Storstädning",
       area: size,
       dateTime,
       contactPreference,
+      basePrice,
+      extras: extras.join(", "),
+      totalPrice: predictedPrice,
       name,
       email,
       phone,
@@ -66,19 +99,16 @@ const DeepCleaning = () => {
     try {
       const response = await fetch(webhookUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
-      const data = await response.json(); // Parse the JSON response
-      setPopupMessage(data.message || "Event created successfully!"); // Update the popup message
+      const data = await response.json();
+      setPopupMessage(data.message || "Bokning skapad!");
     } catch (error) {
-      setPopupMessage("Error connecting to the server. Please try again."); // Handle network errors
+      setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
     } finally {
-      setShowPopup(true); // Show the popup
-      clearFormFields(); // Clear all form fields
+      setShowPopup(true);
+      clearFormFields();
     }
   };
 
@@ -87,18 +117,25 @@ const DeepCleaning = () => {
     setSize("");
     setDateTime("");
     setContactPreference("");
+    setBasePrice(0);
     setPredictedPrice(0);
+    setHasKylFrys(false);
+    setHasKylFrysDefrost(false);
+    setHasDiskmaskin(false);
+    setHasKapGarderob(false);
+    setHasForrad(false);
+    setHasTvattmaskin(false);
+    setVaggtvattCount(0);
     setName("");
     setEmail("");
     setPhone("");
     setAddress("");
-    setShowContactForm(false); // Hide the contact form
+    setShowContactForm(false);
   };
 
-  // Function to handle popup close and refresh the page
   const handlePopupClose = () => {
-    setShowPopup(false); // Hide the popup
-    window.location.reload(); // Refresh the page
+    setShowPopup(false);
+    window.location.reload();
   };
 
   return (
@@ -113,7 +150,7 @@ const DeepCleaning = () => {
             <h2>Storstädning</h2>
             <p>
               Vi bryr oss om kvaliteten på vårt arbete och strävar alltid efter att överträffa våra kunders förväntningar.
-              Använd formuläret nedan för att beräkna ett preliminärt pris på tjänsten och boka ett möte med oss via telefon
+              Använd formuläret nedan för att beräkna ett preliminärt pris på tjänsten och boka ett möte hos oss via telefon
               eller ett direkt hembesök.
             </p>
             <form className="deep-cleaning-form" onSubmit={(e) => e.preventDefault()}>
@@ -129,6 +166,95 @@ const DeepCleaning = () => {
                   required
                 />
               </div>
+              
+              <div className="form-group">
+                <label>Tillvalstjänster</label>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="kylfrys"
+                    checked={hasKylFrys}
+                    onChange={(e) => setHasKylFrys(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="kylfrys">
+                    Kyl/Frys invändigt (ej avfrostning) - 250 kr
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="kylfrysdefrost"
+                    checked={hasKylFrysDefrost}
+                    onChange={(e) => setHasKylFrysDefrost(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="kylfrysdefrost">
+                    Kyl/Frys med avfrostning - 360 kr
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="diskmaskin"
+                    checked={hasDiskmaskin}
+                    onChange={(e) => setHasDiskmaskin(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="diskmaskin">
+                    Diskmaskin invändigt - 250 kr
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="kapgarderob"
+                    checked={hasKapGarderob}
+                    onChange={(e) => setHasKapGarderob(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="kapgarderob">
+                    Skåp och garderober invändigt - 360 kr
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="forrad"
+                    checked={hasForrad}
+                    onChange={(e) => setHasForrad(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="forrad">
+                    Förråd - 360 kr
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="tvattmaskin"
+                    checked={hasTvattmaskin}
+                    onChange={(e) => setHasTvattmaskin(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="tvattmaskin">
+                    Tvättmaskin/torktumlare invändigt - 390 kr
+                  </label>
+                </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="vaggtvatt">Väggtvätt (250 kr per vägg)</label>
+                  <input
+                    type="number"
+                    id="vaggtvatt"
+                    className="form-control"
+                    placeholder="Antal väggar"
+                    min="0"
+                    value={vaggtvattCount}
+                    onChange={(e) => setVaggtvattCount(parseInt(e.target.value) || 0)}
+                  />
+                </div>
+              </div>
+
               <div className="form-group">
                 <label htmlFor="dateTime">Önskat datum och tid</label>
                 <input
@@ -166,6 +292,9 @@ const DeepCleaning = () => {
                   <strong>Storlek:</strong> {size || "Ej angiven"} m²
                 </li>
                 <li>
+                  <strong>Baspris:</strong> {basePrice || "0"} kr
+                </li>
+                <li>
                   <strong>Önskat datum och tid:</strong> {dateTime || "Ej angiven"}
                 </li>
                 <li>
@@ -177,7 +306,7 @@ const DeepCleaning = () => {
                     : "Ej angiven"}
                 </li>
                 <li>
-                  <strong>Uppskattat pris:</strong> {predictedPrice || "0"} kr
+                  <strong>Uppskattat totalpris:</strong> {predictedPrice || "0"} kr
                 </li>
               </ul>
               <button

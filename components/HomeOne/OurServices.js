@@ -29,7 +29,7 @@ const OurServices = () => {
                   och är en förutsättning för att uträtta ett bra arbete.
                 </p>
 
-                <Link href="/services" className="service-btn">
+                <Link href="/officecleaning" className="service-btn">
                   Läs mer
                   <i className="flaticon-right"></i>
                 </Link>
@@ -54,7 +54,7 @@ const OurServices = () => {
                   en speciell händelse eller bara för att få en nystart.
                 </p>
 
-                <Link href="/services" className="service-btn">
+                <Link href="/deepcleaning" className="service-btn">
                   Läs Mer
                   <i className="flaticon-right"></i>
                 </Link>
@@ -79,7 +79,7 @@ const OurServices = () => {
                   du kan slappna av och verkligen njuta av ditt hem.
                 </p>
 
-                <Link href="/services" className="service-btn">
+                <Link href="/homecleaning" className="service-btn">
                   Läs Mer
                   <i className="flaticon-right"></i>
                 </Link>
@@ -104,7 +104,7 @@ const OurServices = () => {
                   nya början.
                 </p>
 
-                <Link href="/services" className="service-btn">
+                <Link href="/movecleaning" className="service-btn">
                   Läs Mer
                   <i className="flaticon-right"></i>
                 </Link>
@@ -129,7 +129,7 @@ const OurServices = () => {
                   åt dig och njut av att se solen stråla genom rutorna igen.
                 </p>
 
-                <Link href="/services" className="service-btn">
+                <Link href="/windowcleaning" className="service-btn">
                   Läs Mer
                   <i className="flaticon-right"></i>
                 </Link>

@@ -1,71 +1,124 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import Footer from "../components/Layouts/Footer";
 
 const MoveCleaning = () => {
-  const [size, setSize] = useState(""); // State for size input
-  const [dateTime, setDateTime] = useState(""); // State for date and time input
-  const [predictedPrice, setPredictedPrice] = useState(0); // State for predicted price
-  const [cleaningTime, setCleaningTime] = useState(0); // State for cleaning time
-  const [showContactForm, setShowContactForm] = useState(false); // State for toggling contact form
-  const [name, setName] = useState(""); // State for name input
-  const [email, setEmail] = useState(""); // State for email input
-  const [phone, setPhone] = useState(""); // State for phone input
-  const [address, setAddress] = useState(""); // State for address input
-  const [showPopup, setShowPopup] = useState(false); // State for showing popup
-  const [popupMessage, setPopupMessage] = useState(""); // State for popup message
+  const [size, setSize] = useState("");
+  const [dateTime, setDateTime] = useState("");
+  const [minDateTime, setMinDateTime] = useState("");
+  const [basePrice, setBasePrice] = useState(0);
+  const [predictedPrice, setPredictedPrice] = useState(0);
+  const [cleaningTime, setCleaningTime] = useState(0);
+  
+  // Extra services checkboxes
+  const [hasKylFrysDefrost, setHasKylFrysDefrost] = useState(false);
+  const [hasPersienner, setHasPersienner] = useState(false);
+  const [hasBalkonger, setHasBalkonger] = useState(false);
+  const [hasBalkongerGlas, setHasBalkongerGlas] = useState(false);
+  
+  // Contact form states
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
-  const webhookUrl = "https://cjsports.app.n8n.cloud/webhook/b2595e41-0fff-46b9-aeff-4b54e879b2d8"; // Replace with your n8n webhook URL
+  const webhookUrl = "https://cjsports.app.n8n.cloud/webhook/b2595e41-0fff-46b9-aeff-4b54e879b2d8";
 
-  // Function to calculate the cleaning time
-  const calculateTime = (area) => {
-    if (!isNaN(area)) {
-      const time = 1.57 + 0.0167 * area; // Formula: Time (h) = 1.57 + 0.0167 * Area (m²)
-      setCleaningTime(time.toFixed(2)); // Format time to 2 decimal places
-    } else {
-      setCleaningTime(0); // Default to 0 if size is invalid
+  // Calendar constraints
+  useEffect(() => {
+    const now = new Date();
+    now.setDate(now.getDate() + 2);
+    now.setHours(7, 0, 0, 0);
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const day = now.getDate().toString().padStart(2, "0");
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    setMinDateTime(`${year}-${month}-${day}T${hours}:${minutes}`);
+  }, []);
+
+  // Calculate base price and time
+  const calculateBasePrice = (area) => {
+    if (!isNaN(area) && area > 0) {
+      // Calculate time
+      const time = 1.57 + 0.0167 * area;
+      setCleaningTime(time.toFixed(2));
+
+      // Calculate base price
+      let price = 0;
+      if (area >= 1 && area <= 50) {
+        price = 3179;
+      } else if (area > 50 && area <= 100) {
+        price = area * 49;
+      } else if (area > 100 && area <= 150) {
+        price = area * 44;
+      } else if (area > 150) {
+        price = area * 39;
+      }
+      setBasePrice(price);
+      return price;
     }
+    setBasePrice(0);
+    setCleaningTime(0);
+    return 0;
   };
 
-  // Function to calculate the predicted price based on area
-  const calculatePrice = (area) => {
-    if (!isNaN(area)) {
-      let calculatedPrice = 0;
+  // Calculate total price with extras
+  useEffect(() => {
+    let total = basePrice;
+    
+    // Add extra services
+    if (hasKylFrysDefrost) total += 400;
+    if (hasPersienner) total += 360;
+    if (hasBalkonger) total += cleaningTime * 360; // 360 kr/timmen
+    if (hasBalkongerGlas) total += 650;
+    
+    setPredictedPrice(total.toFixed(2));
+  }, [basePrice, hasKylFrysDefrost, hasPersienner, hasBalkonger, hasBalkongerGlas, cleaningTime]);
 
-      if (area >= 1 && area <= 50) {
-        calculatedPrice = 2205; // Fixed price for area between 1-50 sqm
-      } else if (area > 50 && area <= 100) {
-        calculatedPrice = area * 47; // Price = area * 47 kr for area between 51-100 sqm
-      } else if (area > 100 && area <= 150) {
-        calculatedPrice = area * 42; // Price = area * 42 kr for area between 101-150 sqm
-      } else if (area > 150) {
-        calculatedPrice = area * 37; // Price = area * 37 kr for area 151 sqm or more
+  // Time validation
+  const handleDateTimeChange = (e) => {
+    const selectedDateTime = e.target.value;
+    if (selectedDateTime) {
+      const selectedHour = new Date(selectedDateTime).getHours();
+      if (selectedHour < 7 || selectedHour >= 17) {
+        alert("Vänligen välj en tid mellan 07:00 och 17:00.");
+        setDateTime("");
+        return;
       }
-
-      setPredictedPrice(calculatedPrice.toFixed(2)); // Format price to 2 decimal places
-    } else {
-      setPredictedPrice(0); // Default to 0 if size is invalid
     }
+    setDateTime(selectedDateTime);
   };
 
   // Handle size input change
   const handleSizeChange = (e) => {
-    const area = parseFloat(e.target.value); // Convert input value to a number
-    setSize(e.target.value); // Update size state
-    calculateTime(area); // Update cleaning time
-    setPredictedPrice(calculatePrice(area)); // Update predicted price
+    const area = parseFloat(e.target.value);
+    setSize(e.target.value);
+    calculateBasePrice(area);
   };
 
   // Function to send data to the webhook
   const sendToWebhook = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
+
+    const extras = [];
+    if (hasKylFrysDefrost) extras.push("Kyl/Frys med avfrostning");
+    if (hasPersienner) extras.push("Persienner (kan bokas som tillägg)");
+    if (hasBalkonger) extras.push("Städning av biytor såsom förråd, garage och balkonger");
+    if (hasBalkongerGlas) extras.push("Fönsterputsning av inglasade balkonger");
 
     const payload = {
-      cleaningType: "Flyttstädning", // Cleaning type
+      cleaningType: "Flyttstädning",
       area: size,
       hours: cleaningTime,
       dateTime,
+      basePrice,
+      extras: extras.join(", "),
+      totalPrice: predictedPrice,
       name,
       email,
       phone,
@@ -81,13 +134,13 @@ const MoveCleaning = () => {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json(); // Parse the JSON response
-      setPopupMessage(data.message || "Event created successfully!"); // Update the popup message
+      const data = await response.json();
+      setPopupMessage(data.message || "Bokning skapad!");
     } catch (error) {
-      setPopupMessage("Error connecting to the server. Please try again."); // Handle network errors
+      setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
     } finally {
-      setShowPopup(true); // Show the popup
-      clearFormFields(); // Clear all form fields
+      setShowPopup(true);
+      clearFormFields();
     }
   };
 
@@ -95,19 +148,24 @@ const MoveCleaning = () => {
   const clearFormFields = () => {
     setSize("");
     setDateTime("");
+    setBasePrice(0);
+    setCleaningTime(0);
+    setPredictedPrice(0);
+    setHasKylFrysDefrost(false);
+    setHasPersienner(false);
+    setHasBalkonger(false);
+    setHasBalkongerGlas(false);
     setName("");
     setEmail("");
     setPhone("");
     setAddress("");
-    setCleaningTime(0);
-    setPredictedPrice(0);
-    setShowContactForm(false); // Hide the contact form
+    setShowContactForm(false);
   };
 
   // Function to handle popup close and refresh the page
   const handlePopupClose = () => {
-    setShowPopup(false); // Hide the popup
-    window.location.reload(); // Refresh the page
+    setShowPopup(false);
+    window.location.reload();
   };
 
   return (
@@ -133,25 +191,72 @@ const MoveCleaning = () => {
                   required
                 />
               </div>
+
               <div className="form-group">
-                <label htmlFor="dateTime">Önskat datum och tid</label>
+                <label>Tilläggstjänster</label>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="kylfrysdefrost"
+                    checked={hasKylFrysDefrost}
+                    onChange={(e) => setHasKylFrysDefrost(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="kylfrysdefrost">
+                    Kyl/Frys med avfrostning - 400 kr
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="persienner"
+                    checked={hasPersienner}
+                    onChange={(e) => setHasPersienner(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="persienner">
+                    Persienner (kan bokas som tillägg) - 360 kr
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="balkonger"
+                    checked={hasBalkonger}
+                    onChange={(e) => setHasBalkonger(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="balkonger">
+                    Städning av biytor såsom förråd, garage och balkonger - 360 kr/timmen
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="balkongerglas"
+                    checked={hasBalkongerGlas}
+                    onChange={(e) => setHasBalkongerGlas(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="balkongerglas">
+                    Fönsterputsning av inglasade balkonger - 650 kr
+                  </label>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="dateTime">Önskat datum och tid (Mellan 07:00-17:00)</label>
                 <input
                   type="datetime-local"
                   id="dateTime"
                   className="form-control"
                   value={dateTime}
-                  onChange={(e) => setDateTime(e.target.value)}
+                  onChange={handleDateTimeChange}
+                  min={minDateTime}
+                  step="1800"
                   required
                 />
               </div>
-              <button
-                type="button"
-                className="default-btn"
-                onClick={() => setShowContactForm(true)}
-                disabled={!size || !dateTime}
-              >
-                Boka tjänsten
-              </button>
             </form>
           </div>
 
@@ -170,9 +275,29 @@ const MoveCleaning = () => {
                   <strong>Beräknad tid:</strong> {cleaningTime || "0"} timmar
                 </li>
                 <li>
-                  <strong>Uppskattat pris:</strong> {predictedPrice || "0"} kr
+                  <strong>Baspris:</strong> {basePrice || "0"} kr
+                </li>
+                <li>
+                  <strong>Tillägg:</strong>{" "}
+                  {[
+                    hasKylFrysDefrost && "Kyl/Frys",
+                    hasPersienner && "Persienner",
+                    hasBalkonger && "Biytor",
+                    hasBalkongerGlas && "Fönsterputsning balkong"
+                  ].filter(Boolean).join(", ") || "Inga"}
+                </li>
+                <li>
+                  <strong>Uppskattat totalpris:</strong> {predictedPrice || "0"} kr
                 </li>
               </ul>
+              <button
+                type="button"
+                className="default-btn"
+                onClick={() => setShowContactForm(true)}
+                disabled={!size || !dateTime}
+              >
+                Boka tjänsten
+              </button>
             </div>
           </div>
 
@@ -230,10 +355,7 @@ const MoveCleaning = () => {
                       required
                     />
                   </div>
-                  <button
-                    type="submit"
-                    className="default-btn"
-                  >
+                  <button type="submit" className="default-btn">
                     Skicka
                   </button>
                 </form>

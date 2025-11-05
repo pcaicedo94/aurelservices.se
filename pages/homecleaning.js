@@ -11,8 +11,9 @@ const HomeCleaning = () => {
   const [minDateTime, setMinDateTime] = useState("");
   const [predictedPrice, setPredictedPrice] = useState(0);
   const [cleaningTime, setCleaningTime] = useState(0);
+  const [hourlyRate, setHourlyRate] = useState(0);
 
-  // States from deepcleaning for contact form and webhook
+  // Contact form and webhook state
   const [showContactForm, setShowContactForm] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -50,41 +51,70 @@ const HomeCleaning = () => {
       }
     }
     setDateTime(selectedDateTime);
+    // Recalculate when date changes
+    updateCalculations(size, frequency, selectedDateTime);
+  };
+
+  // Calculate hourly rate based on day and frequency
+  const getHourlyRate = (selectedDateTime, selectedFrequency) => {
+    // Special rates for monthly and one-time cleanings
+    if (selectedFrequency === "1") return 220; // Once a month
+    if (selectedFrequency === "onetime") return 250; // One-time cleaning
+
+    // Day-based rates for regular cleanings
+    if (selectedDateTime) {
+      const dayOfWeek = new Date(selectedDateTime).getDay();
+      // Monday (1), Tuesday (2), Wednesday (3) = 180 kr
+      if (dayOfWeek >= 1 && dayOfWeek <= 3) return 180;
+      // Thursday (4), Friday (5) = 195 kr
+      if (dayOfWeek >= 4 && dayOfWeek <= 5) return 195;
+    }
+    return 0;
   };
 
   // Combined calculation logic
-  const updateCalculations = (currentSize, currentFrequency) => {
-    if (currentSize && currentFrequency) {
+  const updateCalculations = (currentSize, currentFrequency, currentDateTime) => {
+    if (currentSize && currentFrequency && currentDateTime) {
       const area = parseFloat(currentSize);
-      const hourlyRate = currentFrequency === "1" ? 195 : currentFrequency === "2" ? 190 : currentFrequency === "4" ? 180 : 0;
-      const sessionsPerMonth = parseInt(currentFrequency, 10);
+      const rate = getHourlyRate(currentDateTime, currentFrequency);
       const time = 1.57 + 0.0167 * area;
-      const price = time * hourlyRate * sessionsPerMonth;
-
+      
+      setHourlyRate(rate);
       setCleaningTime(time.toFixed(2));
-      setPredictedPrice(price.toFixed(2));
+
+      // Calculate monthly price
+      let monthlyPrice;
+      if (currentFrequency === "onetime") {
+        monthlyPrice = time * rate; // One-time only
+      } else {
+        const sessionsPerMonth = parseInt(currentFrequency, 10);
+        monthlyPrice = time * rate * sessionsPerMonth;
+      }
+      
+      setPredictedPrice(monthlyPrice.toFixed(2));
     }
   };
 
   const handleSizeChange = (e) => {
     setSize(e.target.value);
-    updateCalculations(e.target.value, frequency);
+    updateCalculations(e.target.value, frequency, dateTime);
   };
 
   const handleFrequencyChange = (e) => {
     setFrequency(e.target.value);
-    updateCalculations(size, e.target.value);
+    updateCalculations(size, e.target.value, dateTime);
   };
 
-  // Webhook submission logic from deepcleaning
+  // Webhook submission logic
   const sendToWebhook = async (e) => {
     e.preventDefault();
 
     const payload = {
       cleaningType: "Hemstädning",
       area: size,
-      frequency,
+      frequency: frequency === "onetime" ? "Enstaka hemstädning" : `${frequency} gång/gånger per månad`,
       dateTime,
+      hourlyRate,
       totalPrice: predictedPrice,
       estimatedHours: cleaningTime,
       name,
@@ -109,13 +139,14 @@ const HomeCleaning = () => {
     }
   };
 
-  // Helper functions from deepcleaning
+  // Helper functions
   const clearFormFields = () => {
     setSize("");
     setFrequency("");
     setDateTime("");
     setPredictedPrice(0);
     setCleaningTime(0);
+    setHourlyRate(0);
     setName("");
     setEmail("");
     setPhone("");
@@ -126,6 +157,13 @@ const HomeCleaning = () => {
   const handlePopupClose = () => {
     setShowPopup(false);
     window.location.reload();
+  };
+
+  // Get frequency label for display
+  const getFrequencyLabel = () => {
+    if (!frequency) return "Ej angiven";
+    if (frequency === "onetime") return "Enstaka hemstädning";
+    return `${frequency} gång${frequency !== "1" ? "er" : ""} per månad`;
   };
 
   return (
@@ -166,9 +204,10 @@ const HomeCleaning = () => {
                   required
                 >
                   <option value="">Välj frekvens</option>
-                  <option value="1">1 gång/månad (195 kr/h)</option>
-                  <option value="2">2 gånger/månad (190 kr/h)</option>
-                  <option value="4">4 gånger/månad (180 kr/h)</option>
+                  <option value="onetime">Enstaka hemstädning (250 kr/h)</option>
+                  <option value="1">1 gång/månad (220 kr/h)</option>
+                  <option value="2">2 gånger/månad</option>
+                  <option value="4">4 gånger/månad</option>
                 </select>
               </div>
               <div className="form-group">
@@ -183,6 +222,13 @@ const HomeCleaning = () => {
                   step="1800"
                   required
                 />
+                {dateTime && frequency !== "1" && frequency !== "onetime" && (
+                  <small className="form-text text-muted">
+                    Timtaxa för vald dag: {hourlyRate} kr/h
+                    {hourlyRate === 180 && " (Måndag-Onsdag)"}
+                    {hourlyRate === 195 && " (Torsdag-Fredag)"}
+                  </small>
+                )}
               </div>
             </form>
           </div>
@@ -196,14 +242,7 @@ const HomeCleaning = () => {
                   <strong>Storlek:</strong> {size || "Ej angiven"} m²
                 </li>
                 <li>
-                  <strong>Frekvens:</strong>{" "}
-                  {frequency === "1"
-                    ? "1 gång per månad"
-                    : frequency === "2"
-                    ? "2 gånger per månad"
-                    : frequency === "4"
-                    ? "4 gånger per månad"
-                    : "Ej angiven"}
+                  <strong>Frekvens:</strong> {getFrequencyLabel()}
                 </li>
                 <li>
                   <strong>Önskat datum och tid:</strong> {dateTime || "Ej angiven"}
@@ -211,8 +250,13 @@ const HomeCleaning = () => {
                 <li>
                   <strong>Beräknad tid per städning:</strong> {cleaningTime || "0"} timmar
                 </li>
+                {hourlyRate > 0 && (
+                  <li>
+                    <strong>Timtaxa:</strong> {hourlyRate} kr/h
+                  </li>
+                )}
                 <li>
-                  <strong>Totalpris för månaden:</strong> {predictedPrice || "0"} kr
+                  <strong>{frequency === "onetime" ? "Totalpris:" : "Totalpris för månaden:"}</strong> {predictedPrice || "0"} kr
                 </li>
               </ul>
               <button
