@@ -1,4 +1,6 @@
 import React from "react";
+import Navbar from "../components/Layouts/Navbar";
+
 
 const ComingSoon = () => {
   const [days, setDays] = React.useState("");
@@ -14,7 +16,7 @@ const ComingSoon = () => {
   }, []);
 
   const commingSoonTime = () => {
-    let endTime = new Date("August 23, 2023 17:00:00 PDT");
+    let endTime = new Date("November 08, 2025 17:00:00 PDT");
     let endTimeParse = Date.parse(endTime) / 1000;
     let now = new Date();
     let nowParse = Date.parse(now) / 1000;
@@ -41,7 +43,9 @@ const ComingSoon = () => {
   };
 
   return (
+    
     <>
+    <Navbar associates />
       <div className="coming-soon-area">
         <div className="d-table">
           <div className="d-table-cell">

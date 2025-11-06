@@ -111,7 +111,7 @@ const Navbar = ({ associates }) => {
                         </Link>
                       </li>
                       <li>
-                        <Link href="/deepcleaning" className="dropdown-item">
+                        <Link href="/containercleaning" className="dropdown-item">
                           Bod- och Etableringstädning
                         </Link>
                       </li>
@@ -135,27 +135,27 @@ const Navbar = ({ associates }) => {
                     <ul className="dropdown-menu">
                       {/* You can add your other service pages here */}
                       <li>
-                        <Link href="/service-page-1" className="dropdown-item">
+                        <Link href="/coming-soon" className="dropdown-item">
                           Måleri
                         </Link>
                       </li>
                       <li>
-                        <Link href="/service-page-2" className="dropdown-item">
+                        <Link href="/coming-soon" className="dropdown-item">
                           Snickeri
                         </Link>
                       </li>
                                             <li>
-                        <Link href="/service-page-2" className="dropdown-item">
+                        <Link href="/coming-soon" className="dropdown-item">
                           Flytt och transport
                         </Link>
                       </li>
                                             <li>
-                        <Link href="/service-page-2" className="dropdown-item">
+                        <Link href="/coming-soon" className="dropdown-item">
                           Trädgårdsskötsel
                         </Link>
                       </li>
                                             <li>
-                        <Link href="/service-page-2" className="dropdown-item">
+                        <Link href="/coming-soon" className="dropdown-item">
                           El och rörmokare
                         </Link>
                       </li>
