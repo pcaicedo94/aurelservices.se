@@ -7,7 +7,7 @@ import '../styles/fontawesome.min.css';
 import "react-accessible-accordion/dist/fancy-example.css";
 import 'react-tabs/style/react-tabs.css';
 import "swiper/css/bundle";
-import Chatbot from "../components/ChatBot/Chatbot";
+import FAQbot from "../components/ChatBot/FAQbot";
 
 // Globals CSS
 import "../styles/style.css";
@@ -53,7 +53,8 @@ function MyApp({ Component, pageProps }) {
 
       {/* Go Top Button */}
       <GoTop />
-      {/* Chatbot */}
+      {/* FAQ Chatbot */}
+      <FAQbot />
 
     </>
   );

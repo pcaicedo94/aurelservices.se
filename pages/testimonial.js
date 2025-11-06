@@ -12,19 +12,19 @@ const Team = () => {
       <Navbar />
 
       <PageBanner
-        pageTitle="Trappstädning"
-        breadcrumbTextOne="Start"
-        breadcrumbTextTwo="Trappstädning"
+        pageTitle="Team"
+        breadcrumbTextOne="Home"
+        breadcrumbTextTwo="Our Team Member"
         breadcrumbUrl="/"
         bgImage="/images/page-title-bg-5.jpg"
       />
 
-      
+      <TeamMemberContent />
 
-      
+      <Testimonial />
 
       <div className="ptb-100">
-        
+        <SubscribeStyleThree />
       </div>
 
       <Footer />

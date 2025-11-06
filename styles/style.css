@@ -4464,7 +4464,200 @@ Coming Soon Area CSS
   font-size: 14px;
   font-weight: 600;
 }
+/*================================================
+FaqChat Section CSS
+=================================================*/
+.faq-chat-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
 
+.faq-chat-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.faq-chat-button.hidden {
+  display: none;
+}
+
+.chat-button-text {
+  display: none;
+}
+
+.faq-chat-window {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 380px;
+  height: 600px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.faq-chat-header {
+  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-chat-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.faq-close-button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.faq-close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.faq-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.faq-message {
+  margin-bottom: 15px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-message.bot .faq-message-content {
+  background: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  max-width: 80%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.faq-message.user .faq-message-content {
+  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  max-width: 80%;
+  margin-left: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.faq-message-content p {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.faq-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.faq-option-button {
+  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.faq-option-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.faq-chat-footer {
+  padding: 15px 20px;
+  background: white;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.faq-chat-footer p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.faq-chat-footer a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.faq-chat-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .faq-chat-window {
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    right: 0;
+    border-radius: 0;
+  }
+
+  .faq-chat-button {
+    bottom: 20px;
+    right: 20px;
+  }
+}
 /*================================================
 Faq Section CSS
 =================================================*/

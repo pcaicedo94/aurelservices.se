@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
 import baseUrl from "../../utils/baseUrl";
-import Chatbot from "../ChatBot/Chatbot";
+
 
 const alertContent = () => {
   MySwal.fire({
@@ -41,7 +41,6 @@ const ContactForm = () => {
       const { name, email, number, subject, text } = contact;
       const payload = { name, email, number, subject, text };
       const response = await axios.post(url, payload);
-      // console.log(response);
       setContact(INITIAL_STATE);
       alertContent();
     } catch (error) {
@@ -50,34 +49,100 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="contact-section ptb-50">
-      <div className="container">
-        <div className="about-content">
-          <h2>Hör av dig!</h2>
-          <p className="pb-100">
-          Låt oss ta hand om städningen så att du kan fokusera på 
-          det som verkligen betyder något. Kontakta oss idag för att 
-          begära en offert eller boka en konsultation. Vi är här 
-          för att hjälpa dig att hålla ditt utrymme fläckfritt!
-          </p>
-        </div>
-        <div className="row align-items-center">
-          <div className="col-lg-6">
-            <div className="contact-image">
-              <img src="/images/contact.png" alt="image" />
-            </div>
+    <>
+      <div className="contact-section ptb-50">
+        <div className="container">
+          <div className="about-content">
+            <h2>Hör av dig!</h2>
+            <p className="pb-100">
+              Låt oss ta hand om städningen så att du kan fokusera på
+              det som verkligen betyder något. Kontakta oss idag för att
+              begära en offert eller boka en konsultation. Vi är här
+              för att hjälpa dig att hålla ditt utrymme fläckfritt!
+            </p>
           </div>
+          <div className="row align-items-center">
+            <div className="col-lg-6">
+              <div className="contact-image">
+                <img src="/images/contact.png" alt="image" />
+              </div>
+            </div>
 
-          <div className="col-lg-6">
-            <div className="contact-form">
-            
+            <div className="col-lg-6">
+              <div className="contact-form">
+                <form onSubmit={handleSubmit}>
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Ditt namn"
+                      className="form-control"
+                      value={contact.name}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
+                  <div className="form-group">
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Din e-post"
+                      className="form-control"
+                      value={contact.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      name="number"
+                      placeholder="Ditt telefonnummer"
+                      className="form-control"
+                      value={contact.number}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      name="subject"
+                      placeholder="Ämne"
+                      className="form-control"
+                      value={contact.subject}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <textarea
+                      name="text"
+                      cols="30"
+                      rows="5"
+                      placeholder="Ditt meddelande"
+                      className="form-control"
+                      value={contact.text}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <button type="submit" className="default-btn">
+                    Skicka meddelande
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+    </>
   );
 };
 
