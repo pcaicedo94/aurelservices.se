@@ -13,7 +13,7 @@ const HomeCleaning = () => {
   const [cleaningTime, setCleaningTime] = useState(0);
   const [hourlyRate, setHourlyRate] = useState(0);
 
-  // Contact form and webhook state
+  // Contact form state
   const [showContactForm, setShowContactForm] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,7 +22,7 @@ const HomeCleaning = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
-  const webhookUrl = "https://cjsports.app.n8n.cloud/webhook/b2595e41-0fff-46b9-aeff-4b54e879b2d8";
+  const bookingUrl = "/api/booking";
 
   // Calendar constraints (preserved)
   useEffect(() => {
@@ -124,7 +124,7 @@ const HomeCleaning = () => {
     };
 
     try {
-      const response = await fetch(webhookUrl, {
+      const response = await fetch(bookingUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

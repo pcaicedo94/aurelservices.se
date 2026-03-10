@@ -28,7 +28,7 @@ const DeepCleaning = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
-  const webhookUrl = "https://cjsports.app.n8n.cloud/webhook/b2595e41-0fff-46b9-aeff-4b54e879b2d8";
+  const bookingUrl = "/api/booking";
 
   // Calculate base price based on area
   const calculateBasePrice = (area) => {
@@ -69,7 +69,7 @@ const DeepCleaning = () => {
     calculateBasePrice(area);
   };
 
-  // Function to send data to the webhook
+  // Function to send booking data
   const sendToWebhook = async (e) => {
     e.preventDefault();
 
@@ -97,7 +97,7 @@ const DeepCleaning = () => {
     };
 
     try {
-      const response = await fetch(webhookUrl, {
+      const response = await fetch(bookingUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

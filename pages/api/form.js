@@ -1,26 +1,35 @@
-import { createClient } from "@libsql/client";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(500).json({ message: "Not POST method", error: true });
   }
 
-  const { address, email, size, service_type, clean_type } = req.body;
+  const { address, email, size, service_type, clean_type, price } = req.body;
 
-  const client = createClient({
-    url: process.env.TURSO_DATABASE_URL,
-    authToken: process.env.TURSO_AUTH_TOKEN,
-  });
-
-  const bdResponse = await client.execute({
-    sql: "INSERT INTO home_form_submits (address, email, size, service_type, clean_type) VALUES (?, ?, ?, ?, ?)",
-    args: [address, email, size, service_type, clean_type],
-  });
-
-  if (bdResponse.rowsAffected === 1) {
-    res.status(200).json({
-      error: false,
-      message: "Created succesfully",
+  try {
+    const { error } = await supabase.from("quotes").insert({
+      address,
+      email,
+      size,
+      service_type,
+      clean_type,
+      price: price || null,
     });
-  } else res.status(500).json({ message: "Error", error: true });
+
+    if (error) {
+      console.error("Supabase insert error:", error);
+      return res.status(500).json({ message: "Error", error: true });
+    }
+
+    res.status(200).json({ error: false, message: "Created succesfully" });
+  } catch (err) {
+    console.error("Form error:", err);
+    res.status(500).json({ message: "Error", error: true });
+  }
 }

@@ -1,9 +1,6 @@
 import React from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
-import TeamMemberContent from "../components/Team/TeamMemberContent";
-import Testimonial from "../components/Common/Testimonial";
-import SubscribeStyleThree from "../components/Common/SubscribeStyleThree";
 import Footer from "../components/Layouts/Footer";
 
 const Team = () => {

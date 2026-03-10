@@ -7,7 +7,7 @@ class MyDocument extends Document {
   }
   render() {
     return (
-      <Html lang="es">
+      <Html lang="sv">
         <Head>
           <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap"
@@ -19,23 +19,22 @@ class MyDocument extends Document {
           />
           <meta
             name="description"
-            content="Cooperativa Multiactiva y de Transporte de Santander."
+            content="Aurel Städ AB - Din pålitliga partner för städning. Hemstädning, flyttstädning, storstädning och mer."
           />
-          <meta name="keywords" content="Aurel" />
-          <meta property="og:title" content="Aurel - Din pålitliga partner för städning sedan 2007. " />
+          <meta name="keywords" content="Aurel, städning, hemstädning, flyttstädning, storstädning, fönsterputsning, Stockholm" />
+          <meta property="og:title" content="Aurel - Din pålitliga partner för städning sedan 2007" />
           <meta
             property="og:description"
-            content="1. Hemstädning 2. Flyttstädning 3. Storstädning "
+            content="Hemstädning, Flyttstädning, Storstädning, Fönsterputsning och mer"
           />
           <meta
             property="og:image"
             content="https://ebdd2f72b3.clvaw-cdnwnd.com/ca2b33d3f3f599895a9560be0604adf7/200000001-40b5b40b5d/450/logotyp.webp?ph=ebdd2f72b3"
           />
           <meta property="og:type" content="website" />
-          <meta property="og:url" content="www.aurelservice.se" />
-          <meta property="og:site_name" content="Aurel" />
-          <meta name="author" content="andrescaicedo@cjsports.co" />
-          <link rel="preconnect" type="image/png" href="images/favicon.png" />
+          <meta property="og:url" content="https://www.aurelservice.se" />
+          <meta property="og:site_name" content="Aurel Städ AB" />
+          <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>
           <Main />

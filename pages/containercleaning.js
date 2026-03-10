@@ -20,7 +20,7 @@ const ContainerCleaning = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
-  const webhookUrl = "https://cjsports.app.n8n.cloud/webhook/b2595e41-0fff-46b9-aeff-4b54e879b2d8";
+  const bookingUrl = "/api/booking";
 
   // Pricing logic based on image
   const calculatePrice = (units, freq) => {
@@ -89,7 +89,7 @@ const ContainerCleaning = () => {
       numberOfUnits: numberOfUnits,
       frequency: `${frequency} gånger/vecka`,
       pricePerUnit: pricePerUnit,
-      monthlyPrice: predictedPrice,
+      totalPrice: predictedPrice,
       dateTime,
       contactPreference,
       name,
@@ -99,7 +99,7 @@ const ContainerCleaning = () => {
     };
 
     try {
-      const response = await fetch(webhookUrl, {
+      const response = await fetch(bookingUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
