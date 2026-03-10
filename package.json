@@ -14,7 +14,7 @@
     "fslightbox-react": "^1.6.2-2",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.4",
-    "next": "^15.2.2",
+    "next": "^15.5.12",
     "react": "^18.2.0",
     "react-accessible-accordion": "^5.0.0",
     "react-confetti": "^6.1.0",
