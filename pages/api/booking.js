@@ -125,15 +125,34 @@ export default async function handler(req, res) {
       to: email,
       subject: `Bokningsbekräftelse - ${cleaningType}`,
       html: `
-        <h2>Tack för din bokning!</h2>
-        <p>Hej ${name},</p>
-        <p>Vi har mottagit din bokning för <strong>${cleaningType}</strong>.</p>
-        <p><strong>Datum och tid:</strong> ${dateTime || "Ej angiven"}</p>
-        <p><strong>Adress:</strong> ${address}</p>
-        <p><strong>Uppskattat pris:</strong> ${totalPrice} kr</p>
-        <p>Vi återkommer med en bekräftelse inom kort.</p>
-        <br/>
-        <p>Med vänliga hälsningar,<br/>Aurel Städ AB<br/>Tel: 076-045 02 28<br/>info@aurelservice.se</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #2d9070, #34a783); padding: 25px 30px; border-radius: 12px 12px 0 0;">
+            <h2 style="color: #fff; margin: 0; font-size: 22px;">Tack för din bokning!</h2>
+          </div>
+          <div style="background: #f8f9fa; padding: 25px 30px; border-radius: 0 0 12px 12px; border: 1px solid #e9ecef; border-top: none;">
+            <p style="font-size: 16px;">Hej <strong>${name}</strong>,</p>
+            <p>Vi har mottagit din bokning för <strong>${cleaningType}</strong>. Här är en sammanfattning:</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d; width: 130px;">Datum/tid</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">${dateTime ? new Date(dateTime).toLocaleString("sv-SE", { dateStyle: "long", timeStyle: "short" }) : "Ej angiven"}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Adress</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">${address}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; color: #6c757d;">Uppskattat pris</td>
+                <td style="padding: 10px 0; font-weight: bold; font-size: 18px; color: #2d9070;">${totalPrice} kr</td>
+              </tr>
+            </table>
+            <p>Vi återkommer med en bekräftelse inom kort.</p>
+            <hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;" />
+            <p style="margin: 0; font-size: 14px;">Med vänliga hälsningar,</p>
+            <p style="margin: 5px 0 0; font-weight: bold;">Aurel Städ & Allservice AB</p>
+            <p style="margin: 3px 0; font-size: 13px; color: #6c757d;">Tel: 076-045 02 28 | info@aurelservice.se</p>
+          </div>
+        </div>
       `,
     });
 
@@ -144,17 +163,48 @@ export default async function handler(req, res) {
       replyTo: email,
       subject: `Ny bokning - ${cleaningType} - ${name}`,
       html: `
-        <h2>Ny bokning mottagen</h2>
-        <p><strong>Typ:</strong> ${cleaningType}</p>
-        <p><strong>Namn:</strong> ${name}</p>
-        <p><strong>E-post:</strong> ${email}</p>
-        <p><strong>Telefon:</strong> ${phone}</p>
-        <p><strong>Adress:</strong> ${address}</p>
-        <p><strong>Datum/tid:</strong> ${dateTime || "Ej angiven"}</p>
-        <p><strong>Pris:</strong> ${totalPrice} kr</p>
-        <hr/>
-        <p><strong>Alla detaljer:</strong></p>
-        <pre>${JSON.stringify(req.body, null, 2)}</pre>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #2d9070, #34a783); padding: 25px 30px; border-radius: 12px 12px 0 0;">
+            <h2 style="color: #fff; margin: 0; font-size: 22px;">Ny bokning mottagen</h2>
+          </div>
+          <div style="background: #f8f9fa; padding: 25px 30px; border-radius: 0 0 12px 12px; border: 1px solid #e9ecef; border-top: none;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d; width: 130px;">Tjänst</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; font-weight: bold;">${cleaningType}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Kund</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; font-weight: bold;">${name}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">E-post</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;"><a href="mailto:${email}" style="color: #34a783;">${email}</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Telefon</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;"><a href="tel:${phone}" style="color: #34a783;">${phone}</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Adress</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">${address}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Datum/tid</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">${dateTime ? new Date(dateTime).toLocaleString("sv-SE", { dateStyle: "long", timeStyle: "short" }) : "Ej angiven"}</td>
+              </tr>
+              ${rest.area ? `<tr><td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Yta</td><td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">${rest.area} m²</td></tr>` : ""}
+              ${rest.frequency ? `<tr><td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Frekvens</td><td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">${rest.frequency}</td></tr>` : ""}
+              ${rest.estimatedHours ? `<tr><td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Beräknad tid</td><td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">${rest.estimatedHours} timmar</td></tr>` : ""}
+              ${rest.extras ? `<tr><td style="padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;">Tillval</td><td style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">${rest.extras}</td></tr>` : ""}
+              <tr>
+                <td style="padding: 12px 0; color: #6c757d; font-size: 16px;">Pris</td>
+                <td style="padding: 12px 0; font-weight: bold; font-size: 20px; color: #2d9070;">${totalPrice} kr</td>
+              </tr>
+            </table>
+          </div>
+          <p style="color: #adb5bd; font-size: 12px; text-align: center; margin-top: 15px;">Aurel Städ & Allservice AB — info@aurelservice.se</p>
+        </div>
       `,
     });
 
