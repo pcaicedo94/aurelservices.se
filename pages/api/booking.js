@@ -1,26 +1,21 @@
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { google } from "googleapis";
-
-// --- PRODUCCIÓN: Nodemailer + Simply SMTP ---
-// import nodemailer from "nodemailer";
-// const transporter = nodemailer.createTransport({
-//   host: process.env.SMTP_HOST,
-//   port: parseInt(process.env.SMTP_PORT, 10),
-//   secure: false,
-//   auth: {
-//     user: process.env.SMTP_USER,
-//     pass: process.env.SMTP_PASS,
-//   },
-// });
-// --- FIN PRODUCCIÓN ---
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT, 10),
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 function getCalendarClient() {
   const oauth2Client = new google.auth.OAuth2(
@@ -50,7 +45,7 @@ export default async function handler(req, res) {
     const calendarId = process.env.GOOGLE_CALENDAR_ID;
     const durationHours = getEventDuration(req.body);
 
-    // Build start/end times - ensure seconds are included for Google Calendar
+    // Build start/end times
     const startTime = dateTime.length === 16 ? `${dateTime}:00` : dateTime;
     const endDate = new Date(dateTime);
     endDate.setHours(endDate.getHours() + Math.floor(durationHours));
@@ -62,7 +57,7 @@ export default async function handler(req, res) {
     const endMin = String(endDate.getMinutes()).padStart(2, "0");
     const endTime = `${endYear}-${endMonth}-${endDay}T${endHour}:${endMin}:00`;
 
-    // 1. Check availability via events list
+    // 1. Check availability
     const existingEvents = await calendar.events.list({
       calendarId,
       timeMin: new Date(dateTime).toISOString(),
@@ -125,11 +120,9 @@ export default async function handler(req, res) {
     }
 
     // 4. Send confirmation email to customer
-    // --- PRUEBAS: Resend ---
-    await resend.emails.send({
-      from: "Aurel Services <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: '"Aurel Städ & Allservice" <info@aurelservice.se>',
       to: email,
-      replyTo: "info@aurelservice.se",
       subject: `Bokningsbekräftelse - ${cleaningType}`,
       html: `
         <h2>Tack för din bokning!</h2>
@@ -143,29 +136,11 @@ export default async function handler(req, res) {
         <p>Med vänliga hälsningar,<br/>Aurel Städ AB<br/>Tel: 076-045 02 28<br/>info@aurelservice.se</p>
       `,
     });
-    // --- PRODUCCIÓN: Nodemailer ---
-    // await transporter.sendMail({
-    //   from: '"Aurel Städ & Allservice" <info@aurelservice.se>',
-    //   to: email,
-    //   subject: `Bokningsbekräftelse - ${cleaningType}`,
-    //   html: `
-    //     <h2>Tack för din bokning!</h2>
-    //     <p>Hej ${name},</p>
-    //     <p>Vi har mottagit din bokning för <strong>${cleaningType}</strong>.</p>
-    //     <p><strong>Datum och tid:</strong> ${dateTime || "Ej angiven"}</p>
-    //     <p><strong>Adress:</strong> ${address}</p>
-    //     <p><strong>Uppskattat pris:</strong> ${totalPrice} kr</p>
-    //     <p>Vi återkommer med en bekräftelse inom kort.</p>
-    //     <br/>
-    //     <p>Med vänliga hälsningar,<br/>Aurel Städ AB<br/>Tel: 076-045 02 28<br/>info@aurelservice.se</p>
-    //   `,
-    // });
 
     // 5. Send notification email to admin
-    // --- PRUEBAS: Resend ---
-    await resend.emails.send({
-      from: "Aurel Services <onboarding@resend.dev>",
-      to: "pcaicedo94@gmail.com",
+    await transporter.sendMail({
+      from: '"Aurel Städ & Allservice" <info@aurelservice.se>',
+      to: "info@aurelservice.se",
       replyTo: email,
       subject: `Ny bokning - ${cleaningType} - ${name}`,
       html: `
@@ -182,26 +157,6 @@ export default async function handler(req, res) {
         <pre>${JSON.stringify(req.body, null, 2)}</pre>
       `,
     });
-    // --- PRODUCCIÓN: Nodemailer ---
-    // await transporter.sendMail({
-    //   from: '"Aurel Städ & Allservice" <info@aurelservice.se>',
-    //   to: "info@aurelservice.se",
-    //   replyTo: email,
-    //   subject: `Ny bokning - ${cleaningType} - ${name}`,
-    //   html: `
-    //     <h2>Ny bokning mottagen</h2>
-    //     <p><strong>Typ:</strong> ${cleaningType}</p>
-    //     <p><strong>Namn:</strong> ${name}</p>
-    //     <p><strong>E-post:</strong> ${email}</p>
-    //     <p><strong>Telefon:</strong> ${phone}</p>
-    //     <p><strong>Adress:</strong> ${address}</p>
-    //     <p><strong>Datum/tid:</strong> ${dateTime || "Ej angiven"}</p>
-    //     <p><strong>Pris:</strong> ${totalPrice} kr</p>
-    //     <hr/>
-    //     <p><strong>Alla detaljer:</strong></p>
-    //     <pre>${JSON.stringify(req.body, null, 2)}</pre>
-    //   `,
-    // });
 
     res.status(200).json({ message: "Bokning skapad! Vi skickar en bekräftelse till din e-post." });
   } catch (error) {

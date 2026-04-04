@@ -23,7 +23,6 @@
     "react-dom": "^18.2.0",
     "react-select": "^5.8.1",
     "react-tabs": "^5.1.0",
-    "resend": "^6.9.3",
     "sass": "^1.43.5",
     "sweetalert2": "^11.2.1",
     "sweetalert2-react-content": "^5.0.5",
