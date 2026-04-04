@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import Footer from "../components/Layouts/Footer";
@@ -7,6 +7,7 @@ const ContainerCleaning = () => {
   const [numberOfUnits, setNumberOfUnits] = useState("");
   const [frequency, setFrequency] = useState("");
   const [dateTime, setDateTime] = useState("");
+  const [minDateTime, setMinDateTime] = useState("");
   const [contactPreference, setContactPreference] = useState("");
   const [predictedPrice, setPredictedPrice] = useState(0);
   const [pricePerUnit, setPricePerUnit] = useState(0);
@@ -21,6 +22,29 @@ const ContainerCleaning = () => {
   const [popupMessage, setPopupMessage] = useState("");
 
   const bookingUrl = "/api/booking";
+
+  useEffect(() => {
+    const now = new Date();
+    now.setDate(now.getDate() + 2);
+    now.setHours(7, 0, 0, 0);
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const day = now.getDate().toString().padStart(2, "0");
+    setMinDateTime(`${year}-${month}-${day}T07:00`);
+  }, []);
+
+  const handleDateTimeChange = (e) => {
+    const selectedDateTime = e.target.value;
+    if (selectedDateTime) {
+      const selectedHour = new Date(selectedDateTime).getHours();
+      if (selectedHour < 7 || selectedHour >= 17) {
+        alert("Vänligen välj en tid mellan 07:00 och 17:00.");
+        setDateTime("");
+        return;
+      }
+    }
+    setDateTime(selectedDateTime);
+  };
 
   // Pricing logic based on image
   const calculatePrice = (units, freq) => {
@@ -106,11 +130,11 @@ const ContainerCleaning = () => {
       });
       const data = await response.json();
       setPopupMessage(data.message || "Bokning skapad!");
+      setShowPopup(true);
+      if (response.ok) clearFormFields();
     } catch (error) {
       setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-    } finally {
       setShowPopup(true);
-      clearFormFields();
     }
   };
 
@@ -151,19 +175,31 @@ const ContainerCleaning = () => {
         breadcrumbTextOne="Start"
         breadcrumbTextTwo="Bodstädning och etableringsstädning"
         breadcrumbUrl="/"
-        bgImage="/images/page-title-bg-5.jpg"
+        bgImage="/images/Bodstädning.png"
       />
 
       <div className="container ptb-50">
         <div className="row">
           {/* Form Section */}
           <div className="col-lg-6">
-            <h2>Beräkna pris för bodstädning</h2>
+            <h2>Byggstädning i Stockholm – Etableringsstädning, bodstädning och slutstädning vid renovering</h2>
             <p>
-              Vi erbjuder flexibla lösningar för bodstädning och etableringsstädning. 
-              Priserna är exklusive moms och baserade på antal bodar och önskad städfrekvens.
-              Välj ett datum för ett samtal eller besök så hjälper vi dig att skräddarsy 
-              en lösning som passar dina behov.
+              Behöver ni professionell städning i samband med byggprojekt eller renovering? Aurel Städ &amp; Allservice erbjuder byggstädning i Stockholm, anpassad för entreprenörer, byggföretag och fastighetsägare. Vi ser till att arbetsplatsen hålls ren, säker och redo för nästa steg i projektet.
+            </p>
+            <h4>Vad vi erbjuder</h4>
+            <ul>
+              <li>Städning av bodar, baracker och personalutrymmen</li>
+              <li>Löpande städning under byggprojekt</li>
+              <li>Slutstädning inför överlämning</li>
+              <li>Städning efter renoveringar</li>
+              <li>Borttagning av byggdamm och smuts</li>
+              <li>Dammsugning och våttorkning av golv och ytor</li>
+              <li>Rengöring av dörrar, karmar och fasta installationer</li>
+              <li>Rengöring av kök och hygienutrymmen</li>
+              <li>Avfallshantering vid behov</li>
+            </ul>
+            <p>
+              Vi erbjuder både löpande byggstädning under projektets gång samt slutstädning inför färdigställande. Priserna är exklusive moms och baserade på antal bodar och önskad städfrekvens.
             </p>
             <form onSubmit={(e) => e.preventDefault()} className="container-cleaning-form">
               <div className="form-group">
@@ -202,13 +238,15 @@ const ContainerCleaning = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="dateTime">Önskat datum och tid</label>
+                <label htmlFor="dateTime">Önskat datum och tid (Mellan 07:00-17:00)</label>
                 <input
                   type="datetime-local"
                   id="dateTime"
                   className="form-control"
                   value={dateTime}
-                  onChange={(e) => setDateTime(e.target.value)}
+                  onChange={handleDateTimeChange}
+                  min={minDateTime}
+                  step="1800"
                   required
                 />
               </div>

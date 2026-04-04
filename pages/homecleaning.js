@@ -58,16 +58,16 @@ const HomeCleaning = () => {
   // Calculate hourly rate based on day and frequency
   const getHourlyRate = (selectedDateTime, selectedFrequency) => {
     // Special rates for monthly and one-time cleanings
-    if (selectedFrequency === "1") return 220; // Once a month
-    if (selectedFrequency === "onetime") return 250; // One-time cleaning
+    if (selectedFrequency === "1") return 245; // Once a month
+    if (selectedFrequency === "onetime") return 270; // One-time cleaning
 
     // Day-based rates for regular cleanings
     if (selectedDateTime) {
       const dayOfWeek = new Date(selectedDateTime).getDay();
-      // Monday (1), Tuesday (2), Wednesday (3) = 180 kr
-      if (dayOfWeek >= 1 && dayOfWeek <= 3) return 180;
-      // Thursday (4), Friday (5) = 195 kr
-      if (dayOfWeek >= 4 && dayOfWeek <= 5) return 195;
+      // Monday (1), Tuesday (2), Wednesday (3) = 200 kr
+      if (dayOfWeek >= 1 && dayOfWeek <= 3) return 200;
+      // Thursday (4), Friday (5) = 220 kr
+      if (dayOfWeek >= 4 && dayOfWeek <= 5) return 220;
     }
     return 0;
   };
@@ -131,11 +131,11 @@ const HomeCleaning = () => {
       });
       const data = await response.json();
       setPopupMessage(data.message || "Bokning skapad!");
+      setShowPopup(true);
+      if (response.ok) clearFormFields();
     } catch (error) {
       setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-    } finally {
       setShowPopup(true);
-      clearFormFields();
     }
   };
 
@@ -169,18 +169,64 @@ const HomeCleaning = () => {
   return (
     <>
       <Navbar associates />
-      <PageBanner pageTitle="Hemstädning" bgImage="/images/peaceful.jpg" />
+      <PageBanner pageTitle="Hemstädning" bgImage="/images/Hemstädning.png" />
 
+      {/* Descriptive Section */}
       <div className="container ptb-50">
         <div className="row">
-          {/* Form Section */}
-          <div className="col-lg-6">
-            <h2>Beräkna hur mycket hemstädning kostar</h2>
+          <div className="col-lg-7">
+            <h2>Hemstädning i Stockholm – Professionell och pålitlig städservice</h2>
             <p>
-              Se ditt preliminära städpris och boka tjänsten. Vi räknar med att använda dina egna städprodukter och
-              utrustning. Om du föredrar att Aurel Services ska stå för produkter med mera kommer dessa debiteras och
-              finnas specificerade, på månadsfakturan.
+              Letar du efter en pålitlig städfirma för hemstädning i Stockholm? Aurel Städ &amp; Allservice erbjuder noggrann och flexibel hemstädning anpassad efter dina behov, oavsett om du behöver regelbunden städning eller hjälp vid enstaka tillfällen.
             </p>
+          </div>
+          <div className="col-lg-5">
+            <div className="brand-card">
+              <h4>RUT-avdrag</h4>
+              <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="row" style={{ marginTop: "30px" }}>
+          <div className="col-lg-6">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Detta ingår i vår hemstädning</h4>
+              <ul>
+                <li>Dammsugning av golv och mattor</li>
+                <li>Våttorkning av golv</li>
+                <li>Rengöring av kök, inklusive bänkar, spis och diskho</li>
+                <li>Rengöring av badrum och toalett</li>
+                <li>Avtorkning av ytor och möbler</li>
+                <li>Tömning av sopor</li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-lg-6">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Fördelar med vår hemstädning</h4>
+              <ul>
+                <li>Ett rent och hygieniskt hem</li>
+                <li>Mer tid över till familj och fritid</li>
+                <li>Professionell städning med hög kvalitet</li>
+                <li>Trygg och pålitlig service varje gång</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="brand-card-warning">
+              <strong>OBS!</strong> Minsta debitering 2 timmar. Som kund ansvarar ni för att det ska finnas produkter och medel som Bolaget behöver för att utföra tjänsten. Om Kunden föredrar att Bolaget ska stå för produkter med mera kommer dessa debiteras och finnas specificerade på månadsfakturan.
+            </div>
+          </div>
+        </div>
+
+        {/* Form + Summary Section */}
+        <div className="row">
+          <div className="col-lg-6">
+            <h3>Beräkna pris</h3>
             <form onSubmit={(e) => e.preventDefault()} className="home-cleaning-form">
               <div className="form-group">
                 <label htmlFor="size">Storlek i m²</label>
@@ -204,8 +250,8 @@ const HomeCleaning = () => {
                   required
                 >
                   <option value="">Välj frekvens</option>
-                  <option value="onetime">Enstaka hemstädning (250 kr/h)</option>
-                  <option value="1">1 gång/månad (220 kr/h)</option>
+                  <option value="onetime">Enstaka hemstädning (270 kr/h)</option>
+                  <option value="1">1 gång/månad (245 kr/h)</option>
                   <option value="2">2 gånger/månad</option>
                   <option value="4">4 gånger/månad</option>
                 </select>
@@ -225,8 +271,8 @@ const HomeCleaning = () => {
                 {dateTime && frequency !== "1" && frequency !== "onetime" && (
                   <small className="form-text text-muted">
                     Timtaxa för vald dag: {hourlyRate} kr/h
-                    {hourlyRate === 180 && " (Måndag-Onsdag)"}
-                    {hourlyRate === 195 && " (Torsdag-Fredag)"}
+                    {hourlyRate === 200 && " (Måndag-Onsdag)"}
+                    {hourlyRate === 220 && " (Torsdag-Fredag)"}
                   </small>
                 )}
               </div>

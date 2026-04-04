@@ -51,13 +51,13 @@ const MoveCleaning = () => {
       // Calculate base price
       let price = 0;
       if (area >= 1 && area <= 50) {
-        price = 3179;
+        price = 2890;
       } else if (area > 50 && area <= 100) {
-        price = area * 49;
+        price = area * 51;
       } else if (area > 100 && area <= 150) {
-        price = area * 44;
+        price = area * 47;
       } else if (area > 150) {
-        price = area * 39;
+        price = area * 42;
       }
       setBasePrice(price);
       return price;
@@ -136,11 +136,11 @@ const MoveCleaning = () => {
 
       const data = await response.json();
       setPopupMessage(data.message || "Bokning skapad!");
+      setShowPopup(true);
+      if (response.ok) clearFormFields();
     } catch (error) {
       setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-    } finally {
       setShowPopup(true);
-      clearFormFields();
     }
   };
 
@@ -171,13 +171,77 @@ const MoveCleaning = () => {
   return (
     <>
       <Navbar associates />
-      <PageBanner pageTitle="Flyttstädning" bgImage="/images/moving.jpg" />
+      <PageBanner pageTitle="Flyttstädning" bgImage="/images/Flyttstädning.png" />
 
+      {/* Descriptive Section */}
       <div className="container ptb-50">
         <div className="row">
-          {/* First Form Section */}
+          <div className="col-lg-7">
+            <h2>Flyttstädning i Stockholm – Noggrann städning inför besiktning</h2>
+            <p>
+              Ska du flytta och behöver en professionell flyttstädning i Stockholm? Aurel Städ &amp; Allservice erbjuder noggrann och komplett flyttstädning som uppfyller alla krav inför besiktning. Vi ser till att bostaden lämnas i perfekt skick, vilket minskar risken för anmärkningar och gör flytten enklare för dig.
+            </p>
+          </div>
+          <div className="col-lg-5">
+            <div className="brand-card">
+              <h4>RUT-avdrag</h4>
+              <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
+              <p><strong>OBS!</strong> Fönsterputs ingår. Gäller ej spröjsade fönster.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="row" style={{ marginTop: "30px" }}>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Allmänna utrymmen</h4>
+              <ul>
+                <li>Dammsugning och våttorkning av golv</li>
+                <li>Rengöring av golvlister och trösklar</li>
+                <li>Rengöring av dörrar, dörrkarmar och handtag</li>
+                <li>Rengöring av strömbrytare och eluttag</li>
+                <li>Borttagning av synliga fläckar på väggar och tak</li>
+                <li>Fönsterputsning, både invändigt och utvändigt</li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Kök</h4>
+              <ul>
+                <li>Rengöring av alla skåp och lådor, invändigt och utvändigt</li>
+                <li>Djupgående rengöring av ugn och spis inklusive plattor och galler</li>
+                <li>Rengöring av kyl och frys (ska vara tömda och avfrostade)</li>
+                <li>Rengöring av diskmaskin om sådan finns</li>
+                <li>Rengöring av köksfläkt och filter</li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Badrum</h4>
+              <ul>
+                <li>Noggrann rengöring av toalett, handfat, dusch och badkar</li>
+                <li>Borttagning av kalkavlagringar på kranar och kakel</li>
+                <li>Rengöring av speglar och badrumsskåp</li>
+                <li>Rengöring av ventilation och luftgaller</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="row" style={{ marginTop: "10px" }}>
+          <div className="col-lg-12">
+            <div className="brand-card-warning">
+              <strong>Viktig information om pris:</strong> Priset baseras på att bostaden är i normalt skick. Om bostaden visar sig vara mer smutsig än normalt kan ett pristillägg på upp till 20 procent tillkomma. Kunden informeras alltid innan arbetet påbörjas.
+            </div>
+          </div>
+        </div>
+
+        {/* Form + Summary Section */}
+        <div className="row">
           <div className="col-lg-6">
-            <h2>Flyttstädning</h2>
+            <h3>Beräkna pris</h3>
             <form className="move-cleaning-form" onSubmit={(e) => e.preventDefault()}>
               <div className="form-group">
                 <label htmlFor="size">Storlek i m²</label>

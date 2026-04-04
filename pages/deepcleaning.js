@@ -6,6 +6,7 @@ import Footer from "../components/Layouts/Footer";
 const DeepCleaning = () => {
   const [size, setSize] = useState("");
   const [dateTime, setDateTime] = useState("");
+  const [minDateTime, setMinDateTime] = useState("");
   const [contactPreference, setContactPreference] = useState("");
   const [basePrice, setBasePrice] = useState(0);
   const [predictedPrice, setPredictedPrice] = useState(0);
@@ -30,6 +31,29 @@ const DeepCleaning = () => {
 
   const bookingUrl = "/api/booking";
 
+  useEffect(() => {
+    const now = new Date();
+    now.setDate(now.getDate() + 2);
+    now.setHours(7, 0, 0, 0);
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const day = now.getDate().toString().padStart(2, "0");
+    setMinDateTime(`${year}-${month}-${day}T07:00`);
+  }, []);
+
+  const handleDateTimeChange = (e) => {
+    const selectedDateTime = e.target.value;
+    if (selectedDateTime) {
+      const selectedHour = new Date(selectedDateTime).getHours();
+      if (selectedHour < 7 || selectedHour >= 17) {
+        alert("Vänligen välj en tid mellan 07:00 och 17:00.");
+        setDateTime("");
+        return;
+      }
+    }
+    setDateTime(selectedDateTime);
+  };
+
   // Calculate base price based on area
   const calculateBasePrice = (area) => {
     if (!isNaN(area) && area > 0) {
@@ -38,7 +62,7 @@ const DeepCleaning = () => {
       else if (area > 50 && area <= 70) price = 3290;
       else if (area > 70 && area <= 100) price = 3950;
       else if (area > 100 && area <= 150) price = 4750;
-      else if (area > 150) price = 4800;
+      else if (area > 150) price = 0; // Offereras
       setBasePrice(price);
       return price;
     }
@@ -51,11 +75,11 @@ const DeepCleaning = () => {
     let total = basePrice;
     
     // Add extra services
-    if (hasKylFrys) total += 250;
-    if (hasKylFrysDefrost) total += 360;
+    if (hasKylFrys) total += 360;
+    if (hasKylFrysDefrost) total += 500;
     if (hasDiskmaskin) total += 250;
     if (hasKapGarderob) total += 360;
-    if (hasForrad) total += 360;
+    if (hasForrad) total += 300;
     if (hasTvattmaskin) total += 390;
     total += vaggtvattCount * 250;
     
@@ -104,11 +128,11 @@ const DeepCleaning = () => {
       });
       const data = await response.json();
       setPopupMessage(data.message || "Bokning skapad!");
+      setShowPopup(true);
+      if (response.ok) clearFormFields();
     } catch (error) {
       setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-    } finally {
       setShowPopup(true);
-      clearFormFields();
     }
   };
 
@@ -141,18 +165,70 @@ const DeepCleaning = () => {
   return (
     <>
       <Navbar associates />
-      <PageBanner pageTitle="Storstädning" bgImage="/images/deepcleaning.jpg" />
+      <PageBanner pageTitle="Storstädning" bgImage="/images/page-title-bg-5.jpg" />
 
+      {/* Descriptive Section */}
       <div className="container ptb-50">
         <div className="row">
-          {/* Form Section */}
-          <div className="col-lg-6">
-            <h2>Storstädning</h2>
+          <div className="col-lg-7">
+            <h2>Storstädning i Stockholm – Grundlig rengöring av hela hemmet</h2>
             <p>
-              Vi bryr oss om kvaliteten på vårt arbete och strävar alltid efter att överträffa våra kunders förväntningar.
-              Använd formuläret nedan för att beräkna ett preliminärt pris på tjänsten och boka ett möte hos oss via telefon
-              eller ett direkt hembesök.
+              Behöver ditt hem en ordentlig genomgång? Aurel Städ &amp; Allservice erbjuder professionell storstädning i Stockholm där vi rengör ditt hem på djupet, från golv till tak. Perfekt för dig som vill ha en nystart i hemmet eller som inte har tid att göra en grundlig städning själv.
             </p>
+          </div>
+          <div className="col-lg-5">
+            <div className="brand-card">
+              <h4>RUT-avdrag</h4>
+              <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="row" style={{ marginTop: "30px" }}>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Allmän rengöring</h4>
+              <ul>
+                <li>Rengöring av alla ytor från golv till tak</li>
+                <li>Dammsugning och våttorkning av golv, lister, dörrkarmar</li>
+                <li>Borttagning av damm, smuts och fläckar på ytor och skåp</li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Kök och badrum</h4>
+              <ul>
+                <li>Rengöring med fokus på noggrannhet och hygien</li>
+                <li>Rengöring av kyl och frys utvändigt</li>
+                <li>Rengöring av brunnar i toalett, kök och badrum</li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Utrustning och material</h4>
+              <ul>
+                <li>All städutrustning ingår</li>
+                <li>Dammsugare, hinkar, moppar</li>
+                <li>Transport och professionella städprodukter</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="brand-card-warning">
+              <strong>Viktig information:</strong> Om bostaden är hårt nedsmutsad kan en tilläggskostnad på upp till 20 procent tillkomma. Kunden informeras alltid innan arbetet påbörjas. <strong>OBS!</strong> Fönsterputs ingår inte men kan bokas som tilläggstjänst.
+            </div>
+          </div>
+        </div>
+
+        {/* Form + Summary Section */}
+        <div className="row">
+          <div className="col-lg-6">
+            <h3>Beräkna pris</h3>
             <form className="deep-cleaning-form" onSubmit={(e) => e.preventDefault()}>
               <div className="form-group">
                 <label htmlFor="size">Storlek i m²</label>
@@ -178,7 +254,7 @@ const DeepCleaning = () => {
                     onChange={(e) => setHasKylFrys(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="kylfrys">
-                    Kyl/Frys invändigt (ej avfrostning) - 250 kr
+                    Kyl/Frys invändigt (ej avfrostning) - 360 kr
                   </label>
                 </div>
                 <div className="form-check">
@@ -190,7 +266,7 @@ const DeepCleaning = () => {
                     onChange={(e) => setHasKylFrysDefrost(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="kylfrysdefrost">
-                    Kyl/Frys med avfrostning - 360 kr
+                    Kyl/Frys med avfrostning - 500 kr
                   </label>
                 </div>
                 <div className="form-check">
@@ -226,7 +302,7 @@ const DeepCleaning = () => {
                     onChange={(e) => setHasForrad(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="forrad">
-                    Förråd - 360 kr
+                    Balkong/Förråd - 300 kr
                   </label>
                 </div>
                 <div className="form-check">
@@ -256,13 +332,15 @@ const DeepCleaning = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="dateTime">Önskat datum och tid</label>
+                <label htmlFor="dateTime">Önskat datum och tid (Mellan 07:00-17:00)</label>
                 <input
                   type="datetime-local"
                   id="dateTime"
                   className="form-control"
                   value={dateTime}
-                  onChange={(e) => setDateTime(e.target.value)}
+                  onChange={handleDateTimeChange}
+                  min={minDateTime}
+                  step="1800"
                   required
                 />
               </div>
@@ -292,7 +370,7 @@ const DeepCleaning = () => {
                   <strong>Storlek:</strong> {size || "Ej angiven"} m²
                 </li>
                 <li>
-                  <strong>Baspris:</strong> {basePrice || "0"} kr
+                  <strong>Baspris:</strong> {basePrice === 0 && parseFloat(size) > 150 ? "Offereras" : `${basePrice || "0"} kr`}
                 </li>
                 <li>
                   <strong>Önskat datum och tid:</strong> {dateTime || "Ej angiven"}
@@ -306,7 +384,7 @@ const DeepCleaning = () => {
                     : "Ej angiven"}
                 </li>
                 <li>
-                  <strong>Uppskattat totalpris:</strong> {predictedPrice || "0"} kr
+                  <strong>Uppskattat totalpris:</strong> {basePrice === 0 && parseFloat(size) > 150 ? "Offereras" : `${predictedPrice || "0"} kr`}
                 </li>
               </ul>
               <button

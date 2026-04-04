@@ -109,11 +109,11 @@ const WindowCleaning = () => {
       });
       const data = await response.json();
       setPopupMessage(data.message || "Bokning skapad!");
+      setShowPopup(true);
+      if (response.ok) clearFormFields();
     } catch (error) {
       setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-    } finally {
       setShowPopup(true);
-      clearFormFields();
     }
   };
 
@@ -143,15 +143,59 @@ const WindowCleaning = () => {
   return (
     <>
       <Navbar />
-      <PageBanner pageTitle="Fönsterputsning" bgImage="/images/window-cleaning-banner.jpg" />
+      <PageBanner pageTitle="Fönsterputsning" bgImage="/images/fönsterputs.png" />
 
+      {/* Descriptive Section */}
       <div className="container ptb-50">
         <div className="row">
-          {/* Form Section */}
+          <div className="col-lg-7">
+            <h2>Fönsterputsning i Stockholm – Skinande rena fönster</h2>
+            <p>
+              Vill du ha rena fönster utan ränder och fläckar? Aurel Städ &amp; Allservice erbjuder professionell fönsterputsning i Stockholm för privatpersoner. Vi ser till att dina fönster blir skinande rena och ger ett bättre ljusinsläpp i ditt hem.
+            </p>
+          </div>
+          <div className="col-lg-5">
+            <div className="brand-card">
+              <h4>RUT-avdrag</h4>
+              <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="row" style={{ marginTop: "30px" }}>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Vad ingår</h4>
+              <ul>
+                <li>Rengöring av fönstrets in- och utsida</li>
+                <li>Putsning av fönsterglas för klart och fläckfritt resultat</li>
+                <li>Avtorkning av fönsterkarmar och kanter</li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Fördelar</h4>
+              <ul>
+                <li>Klart och randfritt resultat</li>
+                <li>Ökat ljusinsläpp i hemmet</li>
+                <li>Professionell och noggrann service</li>
+                <li>Sparar tid</li>
+              </ul>
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="info-card" style={{ marginBottom: "20px" }}>
+              <h4>Prisinformation</h4>
+              <p>Priser inkl. moms efter RUT-avdrag. I priserna ingår rengöring av fönstrets bågar och dammning av persienner.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Form + Summary Section */}
+        <div className="row">
           <div className="col-lg-6">
-            <h2>Priser för Fönsterputsning</h2>
-            <p>Priser inkl. Moms efter Rut avdrag. I priserna ingår rengöring av fönstrets bågar och dammning av persienner.</p>
-            
+            <h3>Beräkna pris</h3>
             <form onSubmit={(e) => e.preventDefault()} className="window-cleaning-form">
               <div className="form-group">
                 <label htmlFor="rooms">Antal rum</label>

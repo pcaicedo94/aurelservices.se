@@ -67,7 +67,19 @@ const HomeCleaning = () => {
         <div className="row">
           {/* Form Section */}
           <div className="col-lg-6">
-            <h2>Kontorsstädning</h2>
+            <h2>Kontorsstädning i Stockholm – Professionell städservice för företag</h2>
+            <p>
+              Vill ni ha en ren, trivsam och professionell arbetsmiljö? Aurel Städ &amp; Allservice erbjuder kontorsstädning i Stockholm anpassad efter ert företags behov. Vi hjälper er att skapa en ren och välskött arbetsplats för både personal och kunder.
+            </p>
+            <h4>Vad ingår i kontorsstädning</h4>
+            <ul>
+              <li>Dammsugning och våttorkning av golv</li>
+              <li>Tömning av papperskorgar</li>
+              <li>Rengöring av kök och personalutrymmen</li>
+              <li>Rengöring av toaletter och hygienutrymmen</li>
+              <li>Avtorkning av skrivbord och ytor</li>
+              <li>Påfyllning av förbrukningsmaterial vid behov</li>
+            </ul>
             <h5>
               Pris för kontorsstädning varierar beroende på antalet städtillfällen per månad.
               Se ditt preliminära städpris och boka tjänsten.

@@ -97,6 +97,11 @@ const Navbar = ({ associates }) => {
                           Fönsterputsning
                         </Link>
                       </li>
+                      <li>
+                        <Link href="/gardening" className="dropdown-item">
+                          Trädgårdsskötsel
+                        </Link>
+                      </li>
                     </ul>
                   </li>
 
@@ -116,13 +121,23 @@ const Navbar = ({ associates }) => {
                         </Link>
                       </li>
                       <li>
-                        <Link href="/windowcleaning" className="dropdown-item">
+                        <Link href="/windowcleaningbusiness" className="dropdown-item">
                           Fönsterputsning
                         </Link>
                       </li>
                       <li>
                         <Link href="/staircleaning" className="dropdown-item">
                           Trappstädning
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/movecleaningbusiness" className="dropdown-item">
+                          Flyttstädning
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/floorcare" className="dropdown-item">
+                          Golvvård
                         </Link>
                       </li>
                     </ul>
@@ -133,30 +148,24 @@ const Navbar = ({ associates }) => {
                       Andra tjänster
                     </Link>
                     <ul className="dropdown-menu">
-                      {/* You can add your other service pages here */}
                       <li>
-                        <Link href="/coming-soon" className="dropdown-item">
-                          Måleri
+                        <Link href="/construction" className="dropdown-item">
+                          Byggtjänster
                         </Link>
                       </li>
                       <li>
-                        <Link href="/coming-soon" className="dropdown-item">
-                          Snickeri
+                        <Link href="/snowremoval" className="dropdown-item">
+                          Snöröjning och plogning
                         </Link>
                       </li>
-                                            <li>
-                        <Link href="/coming-soon" className="dropdown-item">
-                          Flytt och transport
+                      <li>
+                        <Link href="/movinghelp" className="dropdown-item">
+                          Flytthjälp
                         </Link>
                       </li>
-                                            <li>
-                        <Link href="/coming-soon" className="dropdown-item">
-                          Trädgårdsskötsel
-                        </Link>
-                      </li>
-                                            <li>
-                        <Link href="/coming-soon" className="dropdown-item">
-                          El och rörmokare
+                      <li>
+                        <Link href="/carpetwashing" className="dropdown-item">
+                          Mattvått
                         </Link>
                       </li>
                     </ul>
