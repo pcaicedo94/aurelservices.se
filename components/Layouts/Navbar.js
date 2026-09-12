@@ -7,16 +7,17 @@ const Navbar = ({ associates }) => {
     setMenu(!menu);
   };
 
+  // Every page mounts its own Navbar, so the listener must be removed on
+  // unmount or they pile up with each client-side navigation.
   React.useEffect(() => {
-    let elementId = document.getElementById("navbar");
-    document.addEventListener("scroll", () => {
-      if (window.scrollY > 170) {
-        elementId.classList.add("is-sticky");
-      } else {
-        elementId.classList.remove("is-sticky");
-      }
-    });
-  });
+    const element = document.getElementById("navbar");
+    const onScroll = () => {
+      element.classList.toggle("is-sticky", window.scrollY > 170);
+    };
+    onScroll();
+    document.addEventListener("scroll", onScroll, { passive: true });
+    return () => document.removeEventListener("scroll", onScroll);
+  }, []);
 
   const classOne = menu
     ? "collapse navbar-collapse mean-menu"
