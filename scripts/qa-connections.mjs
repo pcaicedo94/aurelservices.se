@@ -1,6 +1,12 @@
 /**
  * QA: verifies the three external dependencies of the booking system.
- * Read only — it does not send mail, create events or write rows.
+ * Read only — it does not send mail, create events or write rows
+ * (except --send=<address>, which sends one real test mail).
+ *
+ * APP_TEST_MODE=1 does not apply here: this script talks to SMTP, Google and
+ * Supabase directly, not through the API routes. For simulated end to end
+ * runs use qa-booking.mjs / qa-contact.mjs against a server started with
+ * APP_TEST_MODE=1 (see utils/testMode.js).
  *
  *   node --env-file=.env scripts/qa-connections.mjs
  */

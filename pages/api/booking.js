@@ -1,6 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
-import nodemailer from "nodemailer";
-import { google } from "googleapis";
+// Booking endpoint: checks the calendar, creates the event, stores the booking
+// in Supabase and mails the customer and the office.
+//
+// Test mode: with APP_TEST_MODE=1 nothing is sent, created or stored. Mail is
+// rendered by nodemailer's jsonTransport, calendar writes and Supabase inserts
+// are simulated, and only the availability check reads the real calendar.
+// `x-test-scenario: conflict|race|calendar-error|mail-error` forces a path.
+// See utils/testMode.js.
 import { escapeHtml, singleLine } from "../../utils/escapeHtml";
 import { FROM, ADMIN_EMAIL, FOOTER, SIGNATURE, row, shell } from "../../utils/emailLayout";
 import {
@@ -9,36 +14,13 @@ import {
   utcToStockholmWallClock,
   formatStockholm,
 } from "../../utils/timeZone";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT, 10),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+import { startTestTrace, respond } from "../../utils/testMode";
+import { createMailer } from "../../utils/mailer";
+import { createCalendarGateway, createBookingStore } from "../../utils/bookingServices";
 
 const MAX_FIELD_LENGTH = 300;
 const MAX_HOURS = 12;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-function getCalendarClient() {
-  const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET
-  );
-  oauth2Client.setCredentials({
-    refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-  });
-  return google.calendar({ version: "v3", auth: oauth2Client });
-}
 
 function getEventDuration(body) {
   const hours = parseFloat(body.estimatedHours || body.hours || 2);
@@ -131,8 +113,12 @@ function adminEmail(data, extras, when, dbFailed) {
 /* --------------------------------- handler -------------------------------- */
 
 export default async function handler(req, res) {
+  // Null unless APP_TEST_MODE=1; then every side effect below is simulated.
+  const trace = startTestTrace(req);
+  const reply = (status, body) => respond(res, status, body, trace);
+
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+    return reply(405, { message: "Method not allowed" });
   }
 
   const { errors, data } = validate(req.body || {});
@@ -141,7 +127,7 @@ export default async function handler(req, res) {
     const message = errors.includes("dateTime-past")
       ? "Den valda tiden har redan passerat. Vänligen välj en annan tid."
       : "Vänligen fyll i alla uppgifter korrekt.";
-    return res.status(400).json({ message });
+    return reply(400, { message });
   }
 
   const extras = {
@@ -157,25 +143,22 @@ export default async function handler(req, res) {
   const when = formatStockholm(data.startsAt);
 
   try {
-    const calendar = getCalendarClient();
-    const calendarId = process.env.GOOGLE_CALENDAR_ID;
+    const calendar = createCalendarGateway({ trace });
+    const store = createBookingStore({ trace });
+    const mailer = createMailer({ trace });
 
-    // 1. Check availability. Google returns any event whose end is after
-    // timeMin and whose start is before timeMax, so partial overlaps count.
-    const existingEvents = await calendar.events.list({
-      calendarId,
+    // 1. Check availability.
+    const existingEvents = await calendar.listEvents({
       timeMin: data.startsAt.toISOString(),
       timeMax: endsAt.toISOString(),
-      singleEvents: true,
-      showDeleted: false,
     });
 
-    const blocking = (existingEvents.data.items || []).filter(
+    const blocking = existingEvents.filter(
       (item) => item.status !== "cancelled" && item.transparency !== "transparent"
     );
 
     if (blocking.length > 0) {
-      return res.status(409).json({
+      return reply(409, {
         message: "Tyvärr är den valda tiden inte tillgänglig. Vänligen välj en annan tid.",
       });
     }
@@ -194,27 +177,22 @@ export default async function handler(req, res) {
       .filter(Boolean)
       .join("\n");
 
-    const event = await calendar.events.insert({
-      calendarId,
-      requestBody: {
-        summary: `${data.cleaningType} - ${data.name}`,
-        location: data.address,
-        description: eventDescription,
-        start: {
-          dateTime: utcToStockholmWallClock(data.startsAt),
-          timeZone: TIME_ZONE,
-        },
-        end: {
-          dateTime: utcToStockholmWallClock(endsAt),
-          timeZone: TIME_ZONE,
-        },
+    const event = await calendar.insertEvent({
+      summary: `${data.cleaningType} - ${data.name}`,
+      location: data.address,
+      description: eventDescription,
+      start: {
+        dateTime: utcToStockholmWallClock(data.startsAt),
+        timeZone: TIME_ZONE,
+      },
+      end: {
+        dateTime: utcToStockholmWallClock(endsAt),
+        timeZone: TIME_ZONE,
       },
     });
 
-    const eventId = event.data.id;
-
     // 3. Store booking in Supabase
-    const { error: dbError } = await supabase.from("bookings").insert({
+    const { error: dbError } = await store.insert({
       cleaning_type: data.cleaningType,
       name: data.name,
       email: data.email,
@@ -223,7 +201,7 @@ export default async function handler(req, res) {
       date_time: data.startsAt.toISOString(),
       total_price: data.totalPrice,
       details: req.body,
-      event_id: eventId,
+      event_id: event.id,
     });
 
     if (dbError) {
@@ -231,7 +209,7 @@ export default async function handler(req, res) {
     }
 
     // 4. Send confirmation email to customer
-    await transporter.sendMail({
+    await mailer.send({
       from: FROM,
       to: data.email,
       subject: `Bokningsbekräftelse - ${data.cleaningType}`,
@@ -239,7 +217,7 @@ export default async function handler(req, res) {
     });
 
     // 5. Send notification email to admin
-    await transporter.sendMail({
+    await mailer.send({
       from: FROM,
       to: ADMIN_EMAIL,
       replyTo: data.email,
@@ -247,13 +225,13 @@ export default async function handler(req, res) {
       html: adminEmail(data, extras, when, Boolean(dbError)),
     });
 
-    res.status(200).json({ message: "Bokning skapad! Vi skickar en bekräftelse till din e-post." });
+    return reply(200, { message: "Bokning skapad! Vi skickar en bekräftelse till din e-post." });
   } catch (error) {
     // Full detail stays in the server logs; the client only gets a safe message.
     const errData = error?.response?.data?.error || error?.response?.data || {};
     console.error("Booking error:", errData.code || error?.code || "unknown", errData.message || error?.message);
     console.error("Full error details:", JSON.stringify(errData, null, 2));
-    res.status(500).json({
+    return reply(500, {
       message:
         "Något gick fel när bokningen skulle skapas. Vänligen försök igen eller ring oss på 076-045 02 28.",
     });

@@ -1,6 +1,12 @@
 /**
  * QA: end to end test of /api/contact against a running server.
  *
+ * APP_TEST_MODE=1: start the server in test mode before running this.
+ *   bash:       APP_TEST_MODE=1 npx next dev -p 3105
+ *   PowerShell: $env:APP_TEST_MODE="1"; npx next dev -p 3105
+ * The endpoint then renders mail with jsonTransport instead of sending it and
+ * marks its responses with `X-App-Test-Mode: 1`. See utils/testMode.js.
+ *
  *   node --env-file=.env scripts/qa-contact.mjs --url=http://localhost:3100
  *   node --env-file=.env scripts/qa-contact.mjs --url=... --live --email=du@example.com
  *

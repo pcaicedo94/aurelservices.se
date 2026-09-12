@@ -1,16 +1,12 @@
-import nodemailer from "nodemailer";
+// Contact endpoint: mails the office and sends the sender a confirmation.
+//
+// Test mode: with APP_TEST_MODE=1 mail is rendered by nodemailer's
+// jsonTransport and never sent; `x-test-scenario: mail-error` forces the
+// failure path. See utils/testMode.js.
 import { escapeHtml, escapeHtmlMultiline, singleLine } from "../../utils/escapeHtml";
 import { FROM, ADMIN_EMAIL, FOOTER, SIGNATURE, row, shell } from "../../utils/emailLayout";
-
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT, 10),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+import { startTestTrace, respond } from "../../utils/testMode";
+import { createMailer } from "../../utils/mailer";
 
 const MAX_FIELD_LENGTH = 300;
 const MAX_MESSAGE_LENGTH = 5000;
@@ -96,25 +92,31 @@ function adminEmail(data) {
 }
 
 export default async function handler(req, res) {
+  // Null unless APP_TEST_MODE=1; then mail is only simulated.
+  const trace = startTestTrace(req);
+  const reply = (status, body) => respond(res, status, body, trace);
+
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
+    return reply(405, { message: "Method not allowed" });
   }
 
   const { errors, data } = validate(req.body || {});
   if (errors.length > 0) {
     console.warn("Contact validation failed:", errors.join(", "));
-    return res.status(400).json({ message: "Vänligen fyll i alla uppgifter korrekt." });
+    return reply(400, { message: "Vänligen fyll i alla uppgifter korrekt." });
   }
 
   try {
-    await transporter.sendMail({
+    const mailer = createMailer({ trace });
+
+    await mailer.send({
       from: FROM,
       to: data.email,
       subject: "Tack för ditt meddelande - Aurel Städ & Allservice",
       html: customerEmail(data),
     });
 
-    await transporter.sendMail({
+    await mailer.send({
       from: FROM,
       to: ADMIN_EMAIL,
       replyTo: data.email,
@@ -122,11 +124,11 @@ export default async function handler(req, res) {
       html: adminEmail(data),
     });
 
-    res.status(200).json({ message: "Tack! Vi återkommer så snart som möjligt." });
+    return reply(200, { message: "Tack! Vi återkommer så snart som möjligt." });
   } catch (error) {
     // Detail stays in the logs; the browser gets a safe message.
     console.error("Contact error:", error?.code || "unknown", error?.message);
-    res.status(500).json({
+    return reply(500, {
       message:
         "Meddelandet kunde inte skickas. Vänligen försök igen eller ring oss på 076-045 02 28.",
     });

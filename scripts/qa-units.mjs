@@ -3,6 +3,9 @@
  * Europe/Stockholm conversions the availability check depends on.
  * No network, no side effects.
  *
+ * APP_TEST_MODE is not needed here: nothing in this script calls a server or
+ * an external service. It matters for qa-booking.mjs and qa-contact.mjs.
+ *
  *   node scripts/qa-units.mjs
  */
 import { escapeHtml, singleLine } from "../utils/escapeHtml.js";

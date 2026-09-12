@@ -1,6 +1,13 @@
 /**
  * QA: end to end test of /api/booking against a running server.
  *
+ * APP_TEST_MODE=1: start the server in test mode before running this.
+ *   bash:       APP_TEST_MODE=1 npx next dev -p 3105
+ *   PowerShell: $env:APP_TEST_MODE="1"; npx next dev -p 3105
+ * The endpoint then simulates every side effect (mail via jsonTransport, fake
+ * calendar writes, no Supabase rows) and marks its responses with
+ * `X-App-Test-Mode: 1`. See utils/testMode.js.
+ *
  *   node --env-file=.env scripts/qa-booking.mjs                  # safe tests only (no writes)
  *   node --env-file=.env scripts/qa-booking.mjs --live --email=du@example.com
  *
