@@ -4,7 +4,6 @@ import PageBanner from "../components/Common/PageBanner";
 import ContactInfo from "../components/Contact/ContactInfo";
 import ContactForm from "../components/Contact/ContactForm";
 import Footer from "../components/Layouts/Footer";
-import FinancialDetails from "../components/FinancialStatements/FinancialDetails";
 
 const Contact = () => {
   return (

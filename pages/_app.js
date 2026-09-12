@@ -6,7 +6,6 @@ import '../styles/flaticon.css';
 import '../styles/fontawesome.min.css';
 import "react-accessible-accordion/dist/fancy-example.css";
 import 'react-tabs/style/react-tabs.css';
-import "swiper/css/bundle";
 import FAQbot from "../components/ChatBot/FAQbot";
 
 // Globals CSS

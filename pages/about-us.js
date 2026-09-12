@@ -4,8 +4,6 @@ import PageBanner from "../components/Common/PageBanner";
 import AboutUsContent from "../components/AboutUs/AboutUsContent";
 import FunFacts from "../components/Common/FunFacts";
 import GetStartedProject from "../components/Common/GetStartedProject";
-import Testimonial from "../components/Common/Testimonial";
-import TeamMember from "../components/Common/TeamMember";
 import Customers from "../components/Common/Customers";
 import Footer from "../components/Layouts/Footer";
 import OurValues from "../components/HomeOne/OurValues";
