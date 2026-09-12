@@ -79,6 +79,9 @@ summary:focus-visible,
 [tabindex]:focus-visible {
   outline: 3px solid var(--aurel-focus-ring) !important;
   outline-offset: 2px !important;
+  /* Many template rules use "transition: 0.6s" (all properties), which faded
+     the ring in over 0.6s; keyboard focus must show at once. */
+  transition: none !important;
 }
 
 /* White ring on dark or green surfaces */
