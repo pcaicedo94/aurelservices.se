@@ -25,7 +25,7 @@ const PageBanner = ({
           <div className="d-table-cell">
             <div className="container">
               <div className="page-title-content">
-                <h2>{pageTitle}</h2>
+                <h1>{pageTitle}</h1>
                 {breadcrumbUrl && (
                   <ul>
                     <li>

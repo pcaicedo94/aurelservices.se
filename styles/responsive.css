@@ -579,6 +579,7 @@
   .contact-box .single-contact-box .content-title h3 {
     font-size: 20px;
   }
+  .page-title-content h1,
   .page-title-content h2 {
     font-size: 30px;
   }
@@ -1190,6 +1191,7 @@
   .page-title-area {
     height: 300px;
   }
+  .page-title-content h1,
   .page-title-content h2 {
     font-size: 30px;
   }

@@ -3954,6 +3954,7 @@ Page Title Area CSS
   text-align: center;
   margin-top: 45px;
 }
+.page-title-content h1,
 .page-title-content h2 {
   margin-bottom: 0;
   color: #ffffff;
