@@ -1,3 +1,154 @@
+/* Collapsed navbar (hamburger) below 1200px. The Swedish labels already
+   wrapped to two lines between 768 and 1199px, and translated labels will be
+   longer. Keep in sync with DESKTOP_QUERY in components/Layouts/Navbar.js. */
+@media only screen and (max-width: 1199.98px) {
+  .navbar-area {
+    box-shadow: 0 5px 40px 0 rgba(0, 0, 0, 0.8);
+    background-color: #ffffff;
+  }
+  .navbar-area .navbar-light .navbar-toggler {
+    background-color: #ffffff;
+  }
+  .navbar-area .main-nav {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .navbar-area .main-nav .black-logo {
+    display: block;
+  }
+  .navbar-area .main-nav .white-logo {
+    display: none;
+  }
+  .navbar-area .main-nav .navbar .navbar-brand {
+    color: #000000;
+  }
+  .navbar-area .main-nav .navbar .navbar-brand img {
+    max-width: 200px;
+  }
+  .navbar-area .main-nav .navbar .navbar-collapse {
+    margin-left: 0;
+    border-top: 1px solid #eee;
+    margin-top: 15px;
+    /* Submenus start folded, so every item up to "Kontakta oss" fits; the
+       panel only scrolls when an opened submenu does not. */
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);
+    max-height: calc(100dvh - 100px);
+  }
+  /* The panel scrolls, which would clip a ring drawn outside the item */
+  .navbar-area .main-nav .navbar .navbar-collapse :focus-visible {
+    outline-offset: -3px !important;
+  }
+  .navbar-area .main-nav .navbar .navbar-collapse::-webkit-scrollbar {
+    width: 7px;
+  }
+  .navbar-area .main-nav .navbar .navbar-collapse::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  .navbar-area .main-nav .navbar .navbar-collapse::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  .navbar-area
+    .main-nav
+    .navbar
+    .navbar-collapse::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1 1 0;
+    min-height: 44px;
+    margin: 0;
+    padding: 8px 0;
+    color: #100e0e;
+    text-align: left;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .submenu-toggle {
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    color: #100e0e;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .submenu-button i,
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .submenu-toggle i {
+    font-size: 12px;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .submenu-button i {
+    width: 44px;
+    margin-left: 0;
+    text-align: center;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .dropdown-menu {
+    display: none;
+    position: static;
+    flex-basis: 100%;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    opacity: 1;
+    visibility: visible;
+    top: 0;
+    border: 1px solid #eee;
+    box-shadow: none;
+    transition: none;
+    margin: 0 0 10px;
+    padding: 4px 20px;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item.is-open .dropdown-menu {
+    display: block;
+  }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 0;
+  }
+  .navbar-area
+    .main-nav
+    .navbar
+    .navbar-nav
+    .nav-item
+    .dropdown-menu
+    li
+    a::before {
+    display: none;
+  }
+}
+
+/* Expanded navbar on narrow desktops: tighter spacing so the Swedish menu
+   stays on one line and longer translations still fit. */
+@media only screen and (min-width: 1200px) and (max-width: 1399.98px) {
+  .navbar-area .main-nav .container {
+    max-width: none;
+  }
+  .main-nav .navbar .navbar-brand,
+  .main-nav .navbar .navbar-brand img {
+    max-width: 170px;
+  }
+  .main-nav .navbar .navbar-nav .nav-item a,
+  .main-nav .navbar .navbar-nav .nav-item .submenu-button {
+    font-size: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .main-nav .navbar .navbar-nav .nav-item .submenu-toggle {
+    margin: 0 10px 0 -7px;
+  }
+}
+
 @media only screen and (max-width: 767px) {
   .section-title {
     margin-bottom: 30px;
@@ -26,93 +177,6 @@
     padding-top: 50px;
   }
   .other-option {
-    display: none;
-  }
-  .navbar-area {
-    box-shadow: 0 5px 40px 0 rgba(0, 0, 0, 0.8);
-    background-color: #ffffff;
-  }
-  .navbar-area .navbar-light .navbar-toggler {
-    background-color: #ffffff;
-  }
-  .navbar-area .main-nav {
-    padding-top: 15px;
-    padding-bottom: 15px;
-  }
-  .navbar-area .main-nav .black-logo {
-    display: block;
-  }
-  .navbar-area .main-nav .white-logo {
-    display: none;
-  }
-  .navbar-area .main-nav .navbar .navbar-brand {
-    color: #000000;
-  }
-  .navbar-area .main-nav .navbar .navbar-brand img {
-    max-width: 200px;
-  }
-  .navbar-area .main-nav .navbar .navbar-collapse {
-    margin-left: 0;
-    border-top: 1px solid #eee;
-    margin-top: 15px;
-    overflow-y: auto;
-    max-height: 60vh;
-  }
-  .navbar-area .main-nav .navbar .navbar-collapse::-webkit-scrollbar {
-    width: 7px;
-  }
-  .navbar-area .main-nav .navbar .navbar-collapse::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  .navbar-area .main-nav .navbar .navbar-collapse::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-  .navbar-area
-    .main-nav
-    .navbar
-    .navbar-collapse::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-  .navbar-area .main-nav .navbar .navbar-nav {
-    padding-top: 10px;
-    padding-right: 15px;
-  }
-  .navbar-area .main-nav .navbar .navbar-nav .nav-item {
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
-  .navbar-area .main-nav .navbar .navbar-nav .nav-item a {
-    color: #100e0e;
-    margin: 0;
-  }
-  .navbar-area .main-nav .navbar .navbar-nav .nav-item a i {
-    display: none;
-  }
-  .navbar-area .main-nav .navbar .navbar-nav .nav-item .dropdown-menu {
-    position: relative;
-    width: 100%;
-    opacity: 1;
-    visibility: visible;
-    top: 0;
-    border: 1px solid #eee;
-    margin-top: 5px;
-    padding-top: 15px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 15px;
-    margin-bottom: 10px;
-  }
-  .navbar-area .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a {
-    padding: 6px 0;
-  }
-  .navbar-area
-    .main-nav
-    .navbar
-    .navbar-nav
-    .nav-item
-    .dropdown-menu
-    li
-    a::before {
     display: none;
   }
   .navbar-area .main-nav .navbar .others-options {
@@ -769,16 +833,8 @@
   .main-nav .navbar .navbar-brand img {
     max-width: 200px;
   }
-  .navbar-area {
-    box-shadow: 0 5px 40px 0 rgba(0, 0, 0, 0.11);
-  }
   .navbar-area .others-options {
     display: none;
-  }
-  .main-nav .navbar .navbar-nav .nav-item a {
-    font-size: 14px;
-    margin-left: 10px;
-    margin-right: 10px;
   }
   .main-banner-area {
     height: 100%;
@@ -1241,35 +1297,6 @@
   }
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-  .navbar-light .navbar-brand {
-    margin-left: 0;
-    margin-right: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    position: relative;
-    top: -5px;
-    left: -10px;
-  }
-  .navbar-area.is-sticky .navbar-light .navbar-brand {
-    margin-left: 0;
-    margin-right: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    position: relative;
-    top: 0;
-    left: 0;
-  }
-  .navbar-area.is-sticky .main-nav {
-    border-bottom: none;
-  }
-  .main-nav {
-    border-bottom: 1px solid #243184;
-  }
-  .main-nav .navbar .navbar-nav .nav-item a {
-    font-size: 15px;
-    margin-left: 12px;
-    margin-right: 12px;
-  }
   .main-banner-area {
     height: 800px;
   }

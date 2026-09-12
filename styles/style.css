@@ -436,9 +436,9 @@ Navbar Area CSS
   list-style: none;
 }
 
-.nav-item.submenu:hover .dropdown-menu {
-  display: block; /* Show submenu on hover */
-}
+/* Submenus open through the .is-open class that Navbar.js sets on hover,
+   keyboard focus or the toggle button, so aria-expanded always matches what
+   is on screen. */
 
 .dropdown-menu li {
   padding: 5px 20px;
@@ -486,11 +486,11 @@ Navbar Area CSS
   padding-left: 0;
   padding-right: 0;
 }
-.main-nav .navbar .navbar-nav .nav-item a {
+.main-nav .navbar .navbar-nav .nav-item a,
+.main-nav .navbar .navbar-nav .nav-item .submenu-button {
   font-size: 16px;
   font-weight: bolder;
   color:rgb(255, 242, 242);
-  text-transform: capitalize;
   padding-left: 0;
   padding-right: 0;
   padding-top: 0;
@@ -503,10 +503,53 @@ Navbar Area CSS
 .main-nav .navbar .navbar-nav .nav-item a.active {
   color: #34a783;
 }
-@media only screen and (min-width: 768px) {
+.main-nav .navbar .navbar-nav .nav-item .submenu-button,
+.main-nav .navbar .navbar-nav .nav-item .submenu-toggle {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  line-height: inherit;
+  text-align: left;
+}
+.main-nav .navbar .navbar-nav .nav-item.submenu {
+  display: flex;
+  align-items: center;
+}
+/* Chevron button next to a submenu link; sits in the link's right margin */
+.main-nav .navbar .navbar-nav .nav-item .submenu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: 0 15px 0 -11px;
+  padding: 0;
+  color: rgb(255, 242, 242);
+  border-radius: 4px;
+}
+.main-nav .navbar .navbar-nav .nav-item .submenu-button i {
+  margin-left: 6px;
+}
+.main-nav .navbar .navbar-nav .nav-item .submenu-button i,
+.main-nav .navbar .navbar-nav .nav-item .submenu-toggle i {
+  font-size: 10px;
+  transition: transform 0.3s;
+}
+.main-nav .navbar .navbar-nav .nav-item.is-open .submenu-button i,
+.main-nav .navbar .navbar-nav .nav-item.is-open .submenu-toggle i {
+  transform: rotate(180deg);
+}
+.main-nav .navbar .navbar-nav .nav-item .submenu-button:hover,
+.main-nav .navbar .navbar-nav .nav-item .submenu-toggle:hover,
+.main-nav .navbar .navbar-nav .nav-item.is-open > .nav-link,
+.main-nav .navbar .navbar-nav .nav-item.is-open > .submenu-toggle {
+  color: #34a783;
+}
+@media only screen and (min-width: 1200px) {
   /* The bar is dark glass over the hero photo until it turns sticky */
   .navbar-area:not(.is-sticky) .navbar-brand:focus-visible,
-  .navbar-area:not(.is-sticky) .navbar-nav > .nav-item > a:focus-visible {
+  .navbar-area:not(.is-sticky) .navbar-nav > .nav-item > .nav-link:focus-visible,
+  .navbar-area:not(.is-sticky) .navbar-nav > .nav-item > .submenu-toggle:focus-visible {
     outline-color: #ffffff !important;
   }
 }
@@ -528,7 +571,10 @@ Navbar Area CSS
   border: none;
   top: 80px;
   left: 0;
-  width: 230px;
+  /* Grows with longer (translated) labels, then wraps instead of overflowing */
+  width: max-content;
+  min-width: 230px;
+  max-width: 320px;
   z-index: 99;
   display: block;
   opacity: 0;
@@ -544,7 +590,7 @@ Navbar Area CSS
   padding: 0;
 }
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a {
-  text-transform: capitalize;
+  white-space: normal;
   padding: 8px 15px;
   padding-left: 0;
   margin: 0;
@@ -570,6 +616,7 @@ Navbar Area CSS
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a.active {
   color: #34a783;
   padding-left: 10px;
+  padding-right: 5px; /* same total width, so the menu does not resize */
 }
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a:hover::before,
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a:focus::before,
@@ -1203,7 +1250,7 @@ Navbar Area CSS
   top: -15px;
   transition: 0.6s;
 }
-.main-nav .navbar .navbar-nav .nav-item:hover .dropdown-menu {
+.main-nav .navbar .navbar-nav .nav-item.is-open .dropdown-menu {
   opacity: 1;
   visibility: visible;
   top: 100%;
@@ -1266,12 +1313,16 @@ Navbar Area CSS
 .navbar-area.is-sticky.is-sticky .main-nav .navbar .navbar-brand {
   color: #000000;
 }
-.navbar-area.is-sticky .navbar-nav .nav-item a {
+.navbar-area.is-sticky .navbar-nav .nav-item a,
+.navbar-area.is-sticky .navbar-nav .nav-item .submenu-button,
+.navbar-area.is-sticky .navbar-nav .nav-item .submenu-toggle {
   color: #0a8944;
 }
 .navbar-area.is-sticky .navbar-nav .nav-item a:hover,
 .navbar-area.is-sticky .navbar-nav .nav-item a:focus,
-.navbar-area.is-sticky .navbar-nav .nav-item a.active {
+.navbar-area.is-sticky .navbar-nav .nav-item a.active,
+.navbar-area.is-sticky .navbar-nav .nav-item.is-open > .nav-link,
+.navbar-area.is-sticky .navbar-nav .nav-item.is-open > .submenu-toggle {
   color: #34a783;
 }
 .navbar-area.is-sticky .main-nav .navbar-brand .white-logo {
