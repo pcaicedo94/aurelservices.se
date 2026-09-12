@@ -17,7 +17,7 @@ node scripts/qa-browser/run.mjs --url=http://localhost:3100 --suite=all --out=<c
 | `--routes` | limita la suite smoke, p. ej. `--routes=services,contact` (sin barra inicial: Git Bash convierte `/services` en una ruta de Windows; la portada es `/`) |
 | `--timeout` | tiempo máximo por prueba en ms (90000) |
 
-Cada prueba imprime `PASS`, `FAIL` o `ERROR` (la prueba no pudo completarse, p. ej. un selector desaparecido). Al final hay un resumen por suite y por bug. El proceso sale con código 1 si algo falla o si alguna petición llegó a la API real, y con 2 si no pudo arrancar. La suite `all` tarda unos 10 minutos contra el servidor de desarrollo.
+Cada prueba imprime `PASS`, `FAIL` o `ERROR` (la prueba no pudo completarse, p. ej. un selector desaparecido). Al final hay un resumen por suite y por bug. El proceso sale con código 1 si algo falla o si alguna petición llegó a la API real, y con 2 si no pudo arrancar. La suite `all` (219 pruebas) tarda unos 7 minutos contra el servidor de desarrollo; smoke se lleva casi la mitad.
 
 Las pruebas describen el **comportamiento correcto**, no el actual. Un `FAIL` con ID (`{QA-03}`) es un bug conocido pendiente; las pruebas marcadas `(control)` validan que la suite detecta bien lo que ya funciona y deben pasar siempre.
 
