@@ -82,6 +82,12 @@
     margin: 0;
     color: #100e0e;
   }
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .nav-link:hover,
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item .submenu-toggle:hover,
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item.is-open > .nav-link,
+  .navbar-area .main-nav .navbar .navbar-nav .nav-item.is-open > .submenu-toggle {
+    color: var(--aurel-green-action);
+  }
   .navbar-area .main-nav .navbar .navbar-nav .nav-item .submenu-button i,
   .navbar-area .main-nav .navbar .navbar-nav .nav-item .submenu-toggle i {
     font-size: 12px;

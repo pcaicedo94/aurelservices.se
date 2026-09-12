@@ -163,7 +163,7 @@ p:last-child {
   overflow: hidden;
   z-index: 1;
   color: #ffffff;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   transition: 0.6s;
   border-radius: 10px;
   font-weight: 600;
@@ -188,6 +188,7 @@ p:last-child {
 .default-btn:hover,
 .default-btn:focus {
   color: #ffffff;
+  background-color: var(--aurel-green-action-hover);
 }
 .default-btn:hover span,
 .default-btn:focus span {
@@ -203,7 +204,7 @@ p:last-child {
   text-align: center;
   overflow: hidden;
   z-index: 1;
-  color: #34a783;
+  color: var(--aurel-green-action);
   background-color: #ffffff;
   transition: 0.6s;
   border-radius: 10px;
@@ -231,6 +232,8 @@ p:last-child {
 .default-btn-one:hover,
 .default-btn-one:focus {
   color: #ffffff;
+  /* without the template's <span> filler the text turned white on white */
+  background-color: var(--aurel-green-action);
 }
 .default-btn-one:hover span,
 .default-btn-one:focus span {
@@ -614,7 +617,7 @@ Navbar Area CSS
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a:hover,
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a:focus,
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a.active {
-  color: #34a783;
+  color: var(--aurel-green-action);
   padding-left: 10px;
   padding-right: 5px; /* same total width, so the menu does not resize */
 }
@@ -1316,14 +1319,14 @@ Navbar Area CSS
 .navbar-area.is-sticky .navbar-nav .nav-item a,
 .navbar-area.is-sticky .navbar-nav .nav-item .submenu-button,
 .navbar-area.is-sticky .navbar-nav .nav-item .submenu-toggle {
-  color: #0a8944;
+  color: var(--aurel-green-action); /* #0a8944 was 4.49:1 on the white glass */
 }
 .navbar-area.is-sticky .navbar-nav .nav-item a:hover,
 .navbar-area.is-sticky .navbar-nav .nav-item a:focus,
 .navbar-area.is-sticky .navbar-nav .nav-item a.active,
 .navbar-area.is-sticky .navbar-nav .nav-item.is-open > .nav-link,
 .navbar-area.is-sticky .navbar-nav .nav-item.is-open > .submenu-toggle {
-  color: #34a783;
+  color: var(--aurel-green-action-hover);
 }
 .navbar-area.is-sticky .main-nav .navbar-brand .white-logo {
   display: none;
@@ -1343,7 +1346,7 @@ Navbar Area CSS
 .navbar-toggler .icon-bar {
   width: 28px;
   transition: all 0.3s;
-  background: #34a783;
+  background: var(--aurel-green-action);
   height: 2px;
   display: block;
 }
@@ -1527,7 +1530,7 @@ form {
 }
 
 .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -1537,7 +1540,7 @@ form {
 }
 
 .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 /* movecleaning Form Section */
 .move-cleaning-form {
@@ -1559,7 +1562,7 @@ form {
 }
 
 .move-cleaning-form .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -1568,7 +1571,7 @@ form {
 }
 
 .move-cleaning-form .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 /* homecleaning Form Section */
@@ -1591,7 +1594,7 @@ form {
 }
 
 .home-cleaning-form .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -1600,7 +1603,7 @@ form {
 }
 
 .home-cleaning-form .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 /* deepcleaning Form Section */
@@ -1623,7 +1626,7 @@ form {
 }
 
 .deep-cleaning-form .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -1632,7 +1635,7 @@ form {
 }
 
 .deep-cleaning-form .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 /* Summary Section */
@@ -1661,7 +1664,7 @@ form {
 }
 
 .summary-frame .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -1671,7 +1674,7 @@ form {
 }
 
 .summary-frame .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 /*================================================
@@ -3524,7 +3527,7 @@ Productive Section CSS
   overflow: hidden;
   z-index: 1;
   color: #ffffff;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   transition: 0.6s;
   border-radius: 10px;
   font-weight: 600;
@@ -3563,9 +3566,9 @@ Productive Section CSS
   text-align: center;
   overflow: hidden;
   z-index: 1;
-  color: #34a783;
+  color: var(--aurel-green-action);
   background-color: #ffffff;
-  border: 1px solid #34a783;
+  border: 1px solid var(--aurel-green-action);
   transition: 0.6s;
   border-radius: 10px;
   font-weight: 600;
@@ -3593,6 +3596,7 @@ Productive Section CSS
 .productive-content .productive-btn .productive-btn-one:hover,
 .productive-content .productive-btn .productive-btn-one:focus {
   color: #ffffff;
+  background-color: var(--aurel-green-action);
 }
 .productive-content .productive-btn .productive-btn-one:hover span,
 .productive-content .productive-btn .productive-btn-one:focus span {
@@ -3802,8 +3806,8 @@ Contact Section CSS
 .contact-form .submit-btn {
   display: inline-block;
   width: 100%;
-  background-color: #34a783;
-  border: 1px solid #34a783;
+  background-color: var(--aurel-green-action);
+  border: 1px solid var(--aurel-green-action);
   color: #ffffff;
   padding: 12px 50px;
   font-size: 15px;
@@ -3812,7 +3816,7 @@ Contact Section CSS
 }
 .contact-form .submit-btn:hover {
   background-color: #ffffff;
-  color: #34a783;
+  color: var(--aurel-green-action);
 }
 
 .contact-box .single-contact-box {
@@ -3876,7 +3880,7 @@ Partner Area CSS
 Service Info Cards CSS
 =================================================*/
 .brand-card {
-  background: linear-gradient(135deg, #2d9070 0%, #34a783 50%, #278c6b 100%);
+  background: linear-gradient(135deg, #1a6d52 0%, #1f7a5c 50%, #186349 100%);
   border-radius: 12px;
   padding: 30px;
   color: #fff;
@@ -3912,12 +3916,12 @@ Service Info Cards CSS
   background: linear-gradient(135deg, #e8a817 0%, #f0b830 50%, #d49a10 100%);
   border-radius: 12px;
   padding: 20px 30px;
-  color: #fff;
+  color: #1a1a1a; /* white on the yellow was 1.8:1 */
   box-shadow: 0 4px 20px rgba(240, 184, 48, 0.3);
   margin-bottom: 30px;
 }
 .brand-card-warning strong {
-  color: #fff;
+  color: #1a1a1a;
 }
 
 /*================================================
@@ -4661,7 +4665,8 @@ FaqChat Section CSS
 }
 
 .faq-chat-header {
-  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  /* white title and close icon: the light end of the old gradient was 1.4:1 */
+  background: var(--aurel-green-action);
   color: white;
   padding: 20px;
   display: flex;
@@ -4671,6 +4676,7 @@ FaqChat Section CSS
 
 .faq-chat-header h3 {
   margin: 0;
+  color: #ffffff; /* the global h3 navy was 3.6:1 on the header */
   font-size: 18px;
   font-weight: 600;
 }
@@ -4727,7 +4733,7 @@ FaqChat Section CSS
 }
 
 .faq-message.user .faq-message-content {
-  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  background: var(--aurel-green-action);
   color: white;
   padding: 12px 16px;
   border-radius: 12px;
@@ -4750,7 +4756,7 @@ FaqChat Section CSS
 }
 
 .faq-option-button {
-  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  background: var(--aurel-green-action);
   color: white;
   border: none;
   padding: 10px 16px;
@@ -4763,6 +4769,7 @@ FaqChat Section CSS
 }
 
 .faq-option-button:hover {
+  background: var(--aurel-green-action-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -4781,7 +4788,7 @@ FaqChat Section CSS
 }
 
 .faq-chat-footer a {
-  color: #667eea;
+  color: var(--aurel-green-action);
   text-decoration: none;
   font-weight: 600;
 }
@@ -4888,8 +4895,8 @@ Faq Section CSS
 .faq-contact-form .contact-form .submit-btn {
   display: inline-block;
   width: 100%;
-  background-color: #34a783;
-  border: 1px solid #34a783;
+  background-color: var(--aurel-green-action);
+  border: 1px solid var(--aurel-green-action);
   color: #ffffff;
   padding: 15px 50px;
   font-size: 15px;
@@ -4898,7 +4905,7 @@ Faq Section CSS
 }
 .faq-contact-form .contact-form .submit-btn:hover {
   background-color: #ffffff;
-  color: #34a783;
+  color: var(--aurel-green-action);
 }
 
 /*================================================
@@ -5354,7 +5361,8 @@ Footer Section CSS
   position: relative;
   z-index: 1;
   overflow: hidden;
-  background: linear-gradient(135deg, #2d9070 0%, #34a783 50%, #278c6b 100%);
+  /* Darker than the brand green so small white text reaches 4.5:1 */
+  background: linear-gradient(135deg, #1a6d52 0%, #1f7a5c 50%, #186349 100%);
 }
 
 /* Bubble Animation */
@@ -5466,14 +5474,14 @@ Footer Section CSS
   font-size: 16px;
 }
 .single-footer-widget .footer-social a:hover {
-  background-color: #34a783;
-  border-color: #34a783;
-  color: #ffffff;
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: var(--aurel-green-action);
   transform: translateY(-3px);
 }
 .single-footer-widget p {
   font-size: 14px;
-  color: #d1cfcf;
+  color: #ffffff;
   font-weight: 400;
 }
 .single-footer-widget .footer-heading {
@@ -5498,13 +5506,14 @@ Footer Section CSS
 }
 .single-footer-widget .footer-quick-links li a {
   display: inline-block;
-  color: rgba(255, 255, 255, 0.65);
+  color: #ffffff;
   font-size: 14px;
   font-weight: 400;
   transition: color 0.3s, padding-left 0.3s;
 }
 .single-footer-widget .footer-quick-links li a:hover {
-  color: #34a783;
+  color: #ffffff;
+  text-decoration: underline;
   padding-left: 5px;
 }
 .single-footer-widget .footer-info-contact {
@@ -5532,17 +5541,18 @@ Footer Section CSS
 }
 .single-footer-widget .footer-info-contact span {
   font-size: 14px;
-  color: #e0dbdb;
+  color: #ffffff;
   font-weight: 400;
 }
 .single-footer-widget .footer-info-contact span a {
   font-size: 14px;
-  color: #e0dbdb;
+  color: #ffffff;
   font-weight: 400;
   transition: 0.6s;
 }
 .single-footer-widget .footer-info-contact span a:hover {
-  color: #34a783;
+  color: #ffffff;
+  text-decoration: underline;
   letter-spacing: 1px;
 }
 
@@ -5553,7 +5563,7 @@ Footer Section CSS
   text-align: center;
 }
 .footer-bottom p {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.92);
   font-size: 13px;
   margin: 0;
 }
@@ -5981,7 +5991,7 @@ table th {
   padding-top: 5px;
   padding-bottom: 5px;
   text-align: center;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: white;
 }
 
@@ -6108,7 +6118,7 @@ Quote Modal CSS
 }
 
 .quote-modal-header {
-  background: linear-gradient(135deg, #2d9070, #34a783);
+  background: linear-gradient(135deg, #1a6d52, #1f7a5c);
   padding: 22px 60px 22px 28px;
   border-radius: 12px 12px 0 0;
 }
@@ -6209,7 +6219,7 @@ Quote Modal CSS
 
 .quote-modal-body .default-btn {
   width: 100%;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 12px 20px;
@@ -6218,7 +6228,7 @@ Quote Modal CSS
 }
 
 .quote-modal-body .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 .quote-modal-body .default-btn:disabled {
