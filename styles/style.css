@@ -57,11 +57,41 @@ img {
   height: auto;
 }
 
-button {
-  outline: 0 !important;
+/* Brand colours. The original green (#34a783) is only 3.0:1 against white,
+   so text on a green background uses the darker action green instead. */
+:root {
+  --aurel-green: #34a783; /* decorative: icons, borders, shapes */
+  --aurel-green-action: #1f7a5c; /* white text on it: 5.25:1 */
+  --aurel-green-action-hover: #186349; /* white text on it: 7.2:1 */
+  --aurel-focus-ring: #1f7a5c;
 }
-button:focus {
-  outline: 0;
+
+/* Keyboard focus. The template removed every outline; keyboard users now get
+   one consistent ring. Mouse clicks on links and buttons do not match
+   :focus-visible, so pointer users see no change. !important keeps older
+   component rules (outline: 0) from hiding it again. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--aurel-focus-ring) !important;
+  outline-offset: 2px !important;
+}
+
+/* White ring on dark or green surfaces */
+.footer-section :focus-visible,
+.page-title-area :focus-visible,
+.faq-chat-header :focus-visible,
+.quote-modal-close:focus-visible {
+  outline-color: #ffffff !important;
+}
+
+html {
+  /* Keep focused elements clear of the fixed header when tabbing upwards */
+  scroll-padding-top: 120px;
 }
 
 .d-table {
@@ -96,7 +126,6 @@ button:focus {
 a {
   text-decoration: none;
   transition: 0.6s;
-  outline: 0 !important;
   color: #091029;
 }
 a:hover {
@@ -473,6 +502,13 @@ Navbar Area CSS
 .main-nav .navbar .navbar-nav .nav-item a:focus,
 .main-nav .navbar .navbar-nav .nav-item a.active {
   color: #34a783;
+}
+@media only screen and (min-width: 768px) {
+  /* The bar is dark glass over the hero photo until it turns sticky */
+  .navbar-area:not(.is-sticky) .navbar-brand:focus-visible,
+  .navbar-area:not(.is-sticky) .navbar-nav > .nav-item > a:focus-visible {
+    outline-color: #ffffff !important;
+  }
 }
 .main-nav .navbar .navbar-nav .nav-item a i {
   font-size: 10px;
@@ -1343,11 +1379,9 @@ Main Home Form CSS
   padding: 0 0.5rem;
 }
 .home-form input:hover:not(:focus){
-  outline: 0;
   border-color: #c4c4c4;
 }
 .home-form input:focus, .home-form input:active{
-  outline: 0;
   border-color: #34a783;
 }
 .home-form > div:nth-child(2) { 
@@ -1437,9 +1471,8 @@ form {
 }
 
 .form-control:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: var(--aurel-green-action);
+  box-shadow: none;
 }
 
 .default-btn {
@@ -4485,7 +4518,6 @@ Coming Soon Area CSS
     0px 0px 0px 5px rgba(255, 255, 255, 0.3);
   border-radius: 40px;
   padding: 15px 25px;
-  outline: 0 !important;
   background: #f1f2f3;
 }
 .coming-soon-content form .submit-btn {
@@ -4498,7 +4530,6 @@ Coming Soon Area CSS
   border: none;
   border-radius: 40px;
   width: 130px;
-  outline: 0 !important;
   cursor: pointer;
   text-transform: uppercase;
   font-size: 14px;
@@ -4749,9 +4780,6 @@ Faq Section CSS
   display: block;
   border: 1px solid #f5f5f5;
   background-color: #f5f5f5;
-}
-.faq-accordion .accordion .accordion__item .accordion__button:focus {
-  outline: 0;
 }
 .faq-accordion .accordion .accordion__item .accordion__panel {
   background-color: #ffffff;
