@@ -1,6 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
+import { HONEYPOT_FIELD, HONEYPOT_STYLE, STARTED_AT_FIELD } from "../../utils/formGuard";
 
-const EMPTY_FORM = { name: "", email: "", phone: "", address: "", message: "" };
+const EMPTY_FORM = {
+  name: "",
+  email: "",
+  phone: "",
+  address: "",
+  message: "",
+  [HONEYPOT_FIELD]: "",
+};
 
 // Quote requests reserve no time slot, so they go to the contact endpoint
 // (which mails the office and confirms to the customer), not to /api/booking.
@@ -17,9 +25,13 @@ const QuoteModal = ({
   const [status, setStatus] = useState("idle"); // idle | sending | sent
   const [error, setError] = useState("");
   const firstField = useRef(null);
+  const startedAt = useRef(0);
 
   useEffect(() => {
     if (!open) return undefined;
+
+    // Sent along so the API can tell a person from a bot that submits at once.
+    startedAt.current = Date.now();
 
     // A finished request should not greet the visitor on the next opening.
     if (status === "sent") setStatus("idle");
@@ -60,6 +72,8 @@ const QuoteModal = ({
           subject: subject || `Offertförfrågan – ${service}`,
           text: form.message,
           details: { Tjänst: service, Adress: form.address, ...(details || {}) },
+          [HONEYPOT_FIELD]: form[HONEYPOT_FIELD],
+          [STARTED_AT_FIELD]: startedAt.current,
         }),
       });
       const data = await response.json().catch(() => ({}));
@@ -182,6 +196,19 @@ const QuoteModal = ({
                   rows="4"
                   value={form.message}
                   onChange={update("message")}
+                />
+              </div>
+              {/* Honeypot: invisible to people, filled in by bots. */}
+              <div aria-hidden="true" style={HONEYPOT_STYLE}>
+                <label htmlFor="quote-company-website">Lämna detta fält tomt</label>
+                <input
+                  type="text"
+                  id="quote-company-website"
+                  name={HONEYPOT_FIELD}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form[HONEYPOT_FIELD]}
+                  onChange={update(HONEYPOT_FIELD)}
                 />
               </div>
               <button type="submit" className="default-btn" disabled={status === "sending"}>

@@ -1,5 +1,6 @@
 // Booking endpoint: enforces the booking rules, reserves the calendar slot,
 // stores the booking in Supabase and mails the customer and the office.
+// Anti-spam (honeypot, fill time, per-IP limit) runs first: utils/antiSpam.js.
 //
 // Test mode: with APP_TEST_MODE=1 nothing is sent, created or stored. Mail is
 // rendered by nodemailer's jsonTransport, calendar writes and Supabase inserts
@@ -20,8 +21,21 @@ import {
   bookingEventDescription,
 } from "../../utils/bookingRules";
 import { reserveSlot } from "../../utils/reserveSlot";
+import {
+  screenSubmission,
+  createRateLimiter,
+  rateLimitKey,
+  RATE_LIMIT,
+  GENERIC_REJECTION_MESSAGE,
+  RATE_LIMIT_MESSAGE,
+} from "../../utils/antiSpam";
 
 const SLOT_TAKEN_MESSAGE = "Tyvärr är den valda tiden inte tillgänglig. Vänligen välj en annan tid.";
+const SUCCESS_MESSAGE = "Bokning skapad! Vi skickar en bekräftelse till din e-post.";
+
+// 5 bookings per 10 minutes per IP. Kept in memory, so on serverless hosting
+// it is per instance; the PHP version keeps the counters in the database.
+const limiter = createRateLimiter(RATE_LIMIT);
 
 /* ---------------------------------- email --------------------------------- */
 
@@ -82,12 +96,32 @@ export default async function handler(req, res) {
 
   const body = req.body && typeof req.body === "object" ? req.body : {};
 
+  // Honeypot, fill time and, when configured, Turnstile.
+  const screening = await screenSubmission(req, body, { testMode: Boolean(trace) });
+  if (screening) {
+    console.warn("Booking rejected as spam:", screening.reason);
+    if (trace) trace.spam = screening.reason;
+    // A filled honeypot gets the normal answer, so the bot learns nothing.
+    return screening.status === 200
+      ? reply(200, { message: SUCCESS_MESSAGE })
+      : reply(400, { message: GENERIC_REJECTION_MESSAGE });
+  }
+
   // Required fields, a real price, weekday, start window, notice and minimum
   // hours: see utils/bookingRules.js.
   const { errors, data } = validateBooking(body);
   if (errors.length > 0) {
     console.warn("Booking validation failed:", errors.join(", "));
     return reply(400, { message: bookingErrorMessage(errors) });
+  }
+
+  // Only well-formed bookings count: they are the ones that reach the
+  // calendar and send mail.
+  const limit = limiter.hit(rateLimitKey(req, { testMode: Boolean(trace) }));
+  if (!limit.allowed) {
+    console.warn("Booking rate limited");
+    res.setHeader("Retry-After", String(limit.retryAfterSeconds));
+    return reply(429, { message: RATE_LIMIT_MESSAGE });
   }
 
   const details = collectBookingDetails(body);
@@ -164,7 +198,7 @@ export default async function handler(req, res) {
       html: adminEmail(data, details, when, Boolean(dbError)),
     });
 
-    return reply(200, { message: "Bokning skapad! Vi skickar en bekräftelse till din e-post." });
+    return reply(200, { message: SUCCESS_MESSAGE });
   } catch (error) {
     // Full detail stays in the server logs; the client only gets a safe message.
     const errData = error?.response?.data?.error || error?.response?.data || {};

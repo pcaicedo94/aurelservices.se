@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { HONEYPOT_FIELD, HONEYPOT_STYLE, STARTED_AT_FIELD } from "../../utils/formGuard";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
@@ -33,10 +34,18 @@ const INITIAL_STATE = {
   number: "",
   subject: "",
   text: "",
+  [HONEYPOT_FIELD]: "",
 };
 
 const ContactForm = () => {
   const [contact, setContact] = useState(INITIAL_STATE);
+  // When the form was shown, so the API can tell a person from a bot that
+  // submits at once. Set after mount to keep server and client markup equal.
+  const startedAt = useRef(0);
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,9 +57,18 @@ const ContactForm = () => {
     try {
       const { name, email, number, subject, text } = contact;
       // The input is named `number`; the API expects `phone`.
-      const payload = { name, email, phone: number, subject, text };
+      const payload = {
+        name,
+        email,
+        phone: number,
+        subject,
+        text,
+        [HONEYPOT_FIELD]: contact[HONEYPOT_FIELD],
+        [STARTED_AT_FIELD]: startedAt.current,
+      };
       await axios.post("/api/contact", payload);
       setContact(INITIAL_STATE);
+      startedAt.current = Date.now();
       alertContent();
     } catch (error) {
       console.error(error);
@@ -139,6 +157,20 @@ const ContactForm = () => {
                       value={contact.text}
                       onChange={handleChange}
                       required
+                    />
+                  </div>
+
+                  {/* Honeypot: invisible to people, filled in by bots. */}
+                  <div aria-hidden="true" style={HONEYPOT_STYLE}>
+                    <label htmlFor="contact-company-website">Lämna detta fält tomt</label>
+                    <input
+                      type="text"
+                      id="contact-company-website"
+                      name={HONEYPOT_FIELD}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={contact[HONEYPOT_FIELD]}
+                      onChange={handleChange}
                     />
                   </div>
 

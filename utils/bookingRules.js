@@ -1,5 +1,6 @@
 import { escapeHtml, singleLine } from "./escapeHtml.js";
 import { stockholmToUtc, stockholmDateParts, formatStockholm } from "./timeZone.js";
+import { ANTI_SPAM_FIELDS } from "./antiSpam.js";
 
 // Booking rules enforced by /api/booking. Plain constants and pure functions,
 // so the PHP port can copy them one to one; the calculator pages apply the
@@ -186,8 +187,9 @@ export const BOOKING_DETAIL_FIELDS = [
 
 // Rendered on their own, so they are not repeated as details.
 const CORE_FIELDS = ["cleaningType", "name", "email", "phone", "address", "dateTime", "totalPrice"];
-// Form plumbing that means nothing to the office.
-export const IGNORED_FIELDS = [];
+// Form plumbing (honeypot, fill time, Turnstile token) that means nothing to
+// the office and is not stored.
+export const IGNORED_FIELDS = ANTI_SPAM_FIELDS;
 const MAX_EXTRA_FIELDS = 10;
 const MAX_RECORD_FIELDS = 40;
 
