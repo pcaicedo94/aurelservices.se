@@ -38,8 +38,7 @@ export const FAQ_ITEMS = [
     question: "Vad är skillnaden mellan hemstädning och storstädning?",
     answer: [
       "Hemstädning håller hemmet rent i vardagen. Storstädning är en grundlig rengöring av hela bostaden från golv till tak, där vi även tar lister, dörrkarmar och skåp, kyl och frys utvändigt samt brunnar i kök och badrum.",
-      "Vi har med oss all utrustning och alla städprodukter. Fönsterputsning ingår inte, men du kan boka den som tillägg.",
-      "Priset beror på bostadens storlek. Är bostaden hårt nedsmutsad kan ett tillägg på upp till 20 procent tillkomma – det får du alltid veta innan vi börjar.",
+      "Vi har med oss all utrustning och alla städprodukter. Fönsterputsning ingår inte, men du kan boka den som tillägg. Priset beror på bostadens storlek.",
     ],
     link: { href: "/deepcleaning", label: "Läs mer och beräkna pris för storstädning" },
   },
@@ -47,7 +46,7 @@ export const FAQ_ITEMS = [
     id: "flyttstadning",
     question: "Vad ingår i flyttstädning?",
     answer: [
-      "Flyttstädningen omfattar hela bostaden och är anpassad för att klara besiktningen. Vi rengör bland annat golv, lister, dörrar och strömbrytare, skåp och lådor in- och utvändigt, ugn, spis, köksfläkt, kyl och frys, badrum och ventilationsgaller. Fönsterputs ingår, utom för spröjsade fönster.",
+      "Flyttstädningen omfattar hela bostaden och är anpassad för att klara besiktningen. Vi rengör bland annat golv, lister, dörrar och strömbrytare, skåp och lådor in- och utvändigt, ugn, spis, köksfläkt, kyl och frys, badrum och ventilationsgaller. Fönsterputs ingår, både invändigt och utvändigt, men inte för spröjsade fönster.",
       "Kyl och frys ska vara tömda och avfrostade när vi kommer. Synliga fläckar på väggar och tak tar vi bort så långt det går utan att skada ytan, men kraftiga fläckar, missfärgningar, färg, fett och skador ingår inte.",
       "Som tillägg kan du boka avfrostning av kyl och frys, rengöring av persienner, städning av förråd, garage och balkong samt fönsterputs av inglasad balkong.",
     ],
@@ -58,9 +57,16 @@ export const FAQ_ITEMS = [
     question: "Vad ingår i fönsterputsning?",
     answer: [
       "Vi putsar fönstren på in- och utsidan, rengör bågarna, torkar av karmar och kanter och dammar av persiennerna.",
-      "Priset beror på hur många rum bostaden har. Har bostaden fem rum och kök eller fler, eller är den större än 120 kvadratmeter, lämnar vi en offert. Spröjs, takhöjd över 280 cm och treglasfönster ger ett tillägg på 25 procent vardera.",
+      "Priset beror på hur många rum bostaden har. Har bostaden fem rum och kök eller fler, eller är den större än 120 kvadratmeter, lämnar vi en offert. [ATT BEKRÄFTA: om bostäder med fem rum och kök får pris direkt eller offert] Spröjs, takhöjd över 280 cm och treglasfönster ger ett tillägg på 25 procent vardera.",
     ],
     link: { href: "/windowcleaning", label: "Läs mer och beräkna pris för fönsterputsning" },
+  },
+  {
+    id: "nedsmutsad",
+    question: "Vad händer om bostaden är smutsigare än normalt?",
+    answer: [
+      "Priset för storstädning och flyttstädning utgår från att bostaden är i normalt skick. Är den hårt nedsmutsad kan ett tillägg på upp till 20 procent tillkomma, och du får alltid veta det innan vi börjar. [ATT BEKRÄFTA: om tillägget är 20 procent eller upp till 20 procent]",
+    ],
   },
   {
     id: "material",
@@ -129,14 +135,14 @@ export const FAQ_ITEMS = [
     question: "Städar ni även åt företag och bostadsrättsföreningar?",
     answer: [
       "Ja. Vi erbjuder bland annat kontorsstädning, trappstädning, bodstädning, fönsterputsning och flyttstädning för företag samt byggstädning och golvvård.",
-      "Vi bokar ett kostnadsfritt platsbesök och lämnar sedan en offert som är anpassad efter era lokaler och behov.",
+      "Skicka er förfrågan, så bokar vi ett kostnadsfritt platsbesök och tar fram en offert anpassad efter lokalen eller fastigheten.",
     ],
     link: { href: "/services", label: "Se våra tjänster för företag och BRF" },
   },
   {
     id: "sprak",
     question: "Vilka språk talar er personal?",
-    answer: ["Du kan alltid kontakta oss på svenska. [ATT BEKRÄFTA: vilka fler språk personalen talar]"],
+    answer: ["Du kan alltid kontakta oss på svenska. [ATT BEKRÄFTA: vilka fler språk personalen talar, t.ex. engelska och spanska]"],
   },
 ];
 
