@@ -3,16 +3,25 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
-import baseUrl from "../../utils/baseUrl";
 
 const alertContent = () => {
   MySwal.fire({
-    title: "Congratulations!",
-    text: "Your message was successfully send and will back to you soon",
+    title: "Tack!",
+    text: "Ditt meddelande har skickats. Vi återkommer så snart som möjligt.",
     icon: "success",
-    timer: 2000,
+    timer: 2500,
     timerProgressBar: true,
     showConfirmButton: false,
+  });
+};
+
+// Without this the form silently pretended to succeed when the request failed.
+const alertError = (message) => {
+  MySwal.fire({
+    title: "Något gick fel",
+    text: message || "Meddelandet kunde inte skickas. Vänligen försök igen.",
+    icon: "error",
+    confirmButtonColor: "#2d9070",
   });
 };
 
@@ -38,15 +47,15 @@ const FaqContactForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = `${baseUrl}/api/contact`;
       const { name, email, number, subject, text } = contact;
-      const payload = { name, email, number, subject, text };
-      const response = await axios.post(url, payload);
-      // console.log(response);
+      // The input is named `number`; the API expects `phone`.
+      const payload = { name, email, phone: number, subject, text };
+      await axios.post("/api/contact", payload);
       setContact(INITIAL_STATE);
       alertContent();
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      alertError(error?.response?.data?.message);
     }
   };
 
