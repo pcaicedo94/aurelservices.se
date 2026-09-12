@@ -537,6 +537,10 @@ finding(
   "Q21",
   `La Prislista pide oferta desde 5 rum o más de 120 m², pero la calculadora solo pregunta habitaciones: 3 rum de 130 m² → ${kr(windows("3").total)}.`
 );
+finding(
+  "Q21",
+  "5 rum: la Prislista pide oferta y el docx da precio directo \"upp till 5 rum och kök\" (oferta solo si son más); ninguna fuente da precio para 5 rum. La calculadora pide oferta."
+);
 
 // Q22 move-out thresholds
 const drops = [];
@@ -563,10 +567,10 @@ finding(
 // Not in the client questionnaire yet
 const NO_Q = "Sin pregunta asignada (proponer)";
 finding(
-  NO_Q,
-  `Storstädning 150 m²: la Prislista pasa de "101–149 kvm" a "Över 151 kvm"; la calculadora cobra ${kr(deepCleaningPrice({ area: 150 }, prices).basePrice)} hasta 150 m² y oferta por encima.`
+  "Q22",
+  `Storstädning 150 m²: el tramo no existe en la Prislista, que pasa de "101–149 kvm" a "Över 151 kvm"; la calculadora cobra ${kr(deepCleaningPrice({ area: 150 }, prices).basePrice)} hasta 150 m² y oferta por encima.`
 );
-finding(NO_Q, "Recargo por vivienda muy sucia (\"20%\" en la Prislista, \"upp till 20 procent\" en el docx): ninguna calculadora lo contempla; solo aparece como aviso.");
+finding(NO_Q, "Recargo por vivienda muy sucia: hay que aclarar si es 20 % fijo (Prislista: \"tilläggskostnad på 20%\") o hasta 20 % (docx: \"upp till 20 procent\"); ninguna calculadora lo contempla y solo aparece como aviso.");
 finding(NO_Q, "La estimación de horas (1,57 + 0,0167 × m²) no figura en la Prislista y determina el precio de hemstädning, kontorsstädning y del extra biytor.");
 const unrounded = home(120, "2", "2026-09-14T09:00");
 const rounded = Number(unrounded.hoursText) * unrounded.hourlyRate * 2;

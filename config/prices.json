@@ -111,8 +111,8 @@
           "price": 4750,
           "sourceText": "101–149 kvm: 4 750 kr",
           "pendingConfirmation": true,
-          "question": null,
-          "note": "The price list jumps from \"101–149 kvm\" to \"Över 151 kvm: Offereras\", so 150 m2 is undefined. The calculator charges 4 750 kr up to 150 m2 and quotes above."
+          "question": "Q22",
+          "note": "The 150 m2 band the site uses does not exist in the price list, which jumps from \"101–149 kvm\" to \"Över 151 kvm: Offereras\". The calculator charges 4 750 kr up to 150 m2 and quotes above. Filed under the area-threshold question Q22."
         }
       ],
       "quoteAboveSqm": 150,
@@ -123,7 +123,7 @@
         "source": "prislista p. 1; docx Storstädning",
         "pendingConfirmation": true,
         "question": null,
-        "note": "Price list: \"tilläggskostnad på 20%\"; docx: \"upp till 20 procent\". Only shown as a text notice on the page."
+        "note": "Unclear whether it is a flat 20 % or up to 20 %: the price list says \"tilläggskostnad på 20%\", the docx \"upp till 20 procent\". Only shown as a text notice on the page."
       },
       "extras": {
         "kylFrys": {
@@ -256,7 +256,7 @@
         "source": "prislista p. 2; docx Flyttstädning",
         "pendingConfirmation": true,
         "question": null,
-        "note": "Price list: \"tilläggskostnad på 20%\"; docx: \"upp till 20 procent\". Only shown as a text notice on the page."
+        "note": "Unclear whether it is a flat 20 % or up to 20 %: the price list says \"tilläggskostnad på 20%\", the docx \"upp till 20 procent\". Only shown as a text notice on the page."
       },
       "extras": {
         "kylFrysDefrost": {
@@ -318,9 +318,10 @@
         "aboveSqm": 120,
         "calculatorAsksForSqm": false,
         "source": "prislista p. 3: \"5 rum och kök eller större än 120 kvm - Offereras\"",
+        "docxText": "För bostäder upp till 5 rum och kök eller max 120 kvm kan du få ett pris direkt via vårt formulär. För bostäder större än 5 rum och kök eller över 120 kvm lämnas offert.",
         "pendingConfirmation": true,
         "question": "Q21",
-        "note": "The calculator only asks for rooms, so a 3-room home of 130 m2 gets a price instead of a quote."
+        "note": "The sources disagree on 5-room homes: the price list quotes them, the docx prices them directly and quotes only above 5 rooms, and neither gives a 5-room price. The calculator quotes 5 rooms and never asks for m2, so a 3-room home of 130 m2 gets a price instead of a quote."
       },
       "balconyOnly": {
         "price": 450,
