@@ -143,7 +143,7 @@ const WindowCleaning = () => {
   return (
     <>
       <Navbar />
-      <PageBanner pageTitle="Fönsterputsning" bgImage="/images/fönsterputs.png" />
+      <PageBanner pageTitle="Fönsterputsning" bgImage="/images/banners/fonsterputs.webp" />
 
       {/* Descriptive Section */}
       <div className="container ptb-50">

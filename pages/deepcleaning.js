@@ -165,7 +165,7 @@ const DeepCleaning = () => {
   return (
     <>
       <Navbar associates />
-      <PageBanner pageTitle="Storstädning" bgImage="/images/page-title-bg-5.jpg" />
+      <PageBanner pageTitle="Storstädning" bgImage="/images/banners/storstadning.webp" bgPosition="center 25%" />
 
       {/* Descriptive Section */}
       <div className="container ptb-50">
