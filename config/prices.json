@@ -1,0 +1,406 @@
+{
+  "_readme": "Draft single source of truth for prices. NOT wired to the pages yet. Calculations live in lib/pricing.js and scripts/qa-pricing.mjs checks both. Anything with pendingConfirmation: true waits for the client's answer to `question` (null = not in the client questionnaire yet). Amounts are SEK.",
+  "version": "2026-02-19",
+  "sources": {
+    "prislista": "Prislista Ny 2026 privat.pdf, dated 2026-02-19. Only pages 1-3 of 7 were available.",
+    "docx": "Servicios privados .docx (website copy for each service)",
+    "calculator": "Formula found in the page's calculator; it does not appear in the price list"
+  },
+  "services": {
+    "homecleaning": {
+      "label": "Hemstädning",
+      "page": "/homecleaning",
+      "customer": "private",
+      "currency": "SEK",
+      "includesVat": true,
+      "afterRut": true,
+      "source": "prislista p. 2",
+      "pricing": "hourly",
+      "timeEstimate": {
+        "baseHours": 1.57,
+        "hoursPerSqm": 0.0167,
+        "priceUsesRoundedHours": false,
+        "source": "calculator (pages/homecleaning.js)",
+        "pendingConfirmation": true,
+        "question": null,
+        "note": "Hours per visit = 1.57 + 0.0167 x m2. Not in the price list, so the client has never validated it."
+      },
+      "minHours": {
+        "value": 2,
+        "appliesTo": ["4", "2", "1"],
+        "enforcedByCalculator": false,
+        "source": "prislista p. 2: \"Minsta debitering 2 timmar\"",
+        "pendingConfirmation": true,
+        "question": "Q14",
+        "note": "Printed under the weekly/biweekly/monthly rates, before \"Enstaka hemstädning\"; unclear whether it also covers one-off cleaning. The calculator bills homes under about 25.7 m2 for less than 2 hours."
+      },
+      "frequencies": {
+        "4": {
+          "label": "Varje vecka",
+          "sessionsPerMonth": 4,
+          "hourlyRate": null,
+          "source": "prislista p. 2",
+          "pendingConfirmation": true,
+          "question": null,
+          "note": "hourlyRate null = rate by weekday. The calculator counts 4 visits a month, not 4.33."
+        },
+        "2": {
+          "label": "Varannan vecka",
+          "sessionsPerMonth": 2,
+          "hourlyRate": null,
+          "source": "prislista p. 2"
+        },
+        "1": {
+          "label": "En gång i månaden",
+          "sessionsPerMonth": 1,
+          "hourlyRate": 245,
+          "source": "prislista p. 2: \"En gång i månad 245 kr\""
+        },
+        "onetime": {
+          "label": "Enstaka hemstädning",
+          "sessionsPerMonth": null,
+          "hourlyRate": 270,
+          "includesCompanyMaterial": true,
+          "source": "prislista p. 2: \"270 kr/timme ink. moms efter Rut avdrag med Aurel städmaterial\""
+        }
+      },
+      "weekdayRates": {
+        "byDay": {
+          "monday": 200,
+          "tuesday": 200,
+          "wednesday": 200,
+          "thursday": 220,
+          "friday": 220,
+          "saturday": null,
+          "sunday": null
+        },
+        "source": "prislista p. 2: \"Måndag till onsdag: 200 kr/timmen\", \"Torsdag och fredag: 220 kr/timmen\"",
+        "pendingConfirmation": true,
+        "question": "Q13",
+        "note": "No weekend rates in the price list. The calculator shows 0 kr for weekly or biweekly cleaning on Saturday and Sunday."
+      },
+      "material": {
+        "customerProvidesProducts": true,
+        "companyProductsBilledOnMonthlyInvoice": true,
+        "companyProductsPrice": null,
+        "source": "prislista p. 2 (OBS after \"Enstaka hemstädning\")",
+        "pendingConfirmation": true,
+        "question": "Q15",
+        "note": "The customer supplies products and washes the cloths; products supplied by the company are invoiced at an unstated price. One-off cleaning uses the company's material, but it is not stated whether that includes equipment such as a vacuum cleaner, nor whether the OBS applies to one-off cleaning."
+      }
+    },
+
+    "deepcleaning": {
+      "label": "Storstädning",
+      "page": "/deepcleaning",
+      "customer": "private",
+      "currency": "SEK",
+      "includesVat": true,
+      "afterRut": true,
+      "source": "prislista p. 1",
+      "pricing": "areaTiers",
+      "minHours": null,
+      "minSqm": 1,
+      "tiers": [
+        { "maxSqm": 50, "type": "fixed", "price": 2650, "sourceText": "1–50 kvm 2 650 kr (fast pris)" },
+        { "maxSqm": 70, "type": "fixed", "price": 3290, "sourceText": "51–70 kvm: 3 290 kr" },
+        { "maxSqm": 100, "type": "fixed", "price": 3950, "sourceText": "71–100 kvm: 3 950 kr" },
+        {
+          "maxSqm": 150,
+          "type": "fixed",
+          "price": 4750,
+          "sourceText": "101–149 kvm: 4 750 kr",
+          "pendingConfirmation": true,
+          "question": null,
+          "note": "The price list jumps from \"101–149 kvm\" to \"Över 151 kvm: Offereras\", so 150 m2 is undefined. The calculator charges 4 750 kr up to 150 m2 and quotes above."
+        }
+      ],
+      "quoteAboveSqm": 150,
+      "includesWindowCleaning": false,
+      "soilingSurcharge": {
+        "maxPercent": 20,
+        "appliedByCalculator": false,
+        "source": "prislista p. 1; docx Storstädning",
+        "pendingConfirmation": true,
+        "question": null,
+        "note": "Price list: \"tilläggskostnad på 20%\"; docx: \"upp till 20 procent\". Only shown as a text notice on the page."
+      },
+      "extras": {
+        "kylFrys": {
+          "label": "Kyl/Frys invändigt (ej avfrostning)",
+          "type": "fixed",
+          "price": 360,
+          "priceIsFrom": true,
+          "source": "prislista p. 1: \"Från 360 kr\"",
+          "pendingConfirmation": true,
+          "question": "Q18"
+        },
+        "kylFrysDefrost": {
+          "label": "Kyl/Frys med avfrostning",
+          "type": "fixed",
+          "price": 500,
+          "priceIsFrom": true,
+          "source": "prislista p. 1: \"Från 500 kr\"",
+          "pendingConfirmation": true,
+          "question": "Q18"
+        },
+        "diskmaskin": {
+          "label": "Diskmaskin invändigt",
+          "type": "fixed",
+          "price": 250,
+          "priceIsFrom": false,
+          "source": "calculator (pages/deepcleaning.js)",
+          "pendingConfirmation": true,
+          "question": "Q18"
+        },
+        "kapGarderob": {
+          "label": "Skåp och garderober invändigt",
+          "type": "fixed",
+          "price": 360,
+          "priceIsFrom": true,
+          "source": "prislista p. 1: \"Från 360 kr\"",
+          "pendingConfirmation": true,
+          "question": "Q18"
+        },
+        "forrad": {
+          "label": "Balkong/Förråd",
+          "type": "fixed",
+          "price": 300,
+          "priceIsFrom": true,
+          "source": "prislista p. 1: \"Från 300 kr\"",
+          "pendingConfirmation": true,
+          "question": "Q18"
+        },
+        "tvattmaskin": {
+          "label": "Tvättmaskin/torktumlare invändigt",
+          "type": "fixed",
+          "price": 390,
+          "priceIsFrom": false,
+          "source": "calculator (pages/deepcleaning.js)",
+          "pendingConfirmation": true,
+          "question": "Q18"
+        },
+        "vaggtvatt": {
+          "label": "Väggtvätt",
+          "type": "perUnit",
+          "unit": "vägg",
+          "price": 250,
+          "source": "calculator (pages/deepcleaning.js)",
+          "pendingConfirmation": true,
+          "question": "Q18"
+        }
+      }
+    },
+
+    "movecleaning": {
+      "label": "Flyttstädning",
+      "page": "/movecleaning",
+      "customer": "private",
+      "currency": "SEK",
+      "includesVat": true,
+      "afterRut": true,
+      "source": "prislista p. 2",
+      "pricing": "areaTiers",
+      "minHours": null,
+      "minSqm": 1,
+      "tiers": [
+        {
+          "maxSqm": 50,
+          "type": "fixed",
+          "price": 2890,
+          "sourceText": "1-50kvm, 2 890 kr (fast pris)",
+          "pendingConfirmation": true,
+          "question": "Q22"
+        },
+        {
+          "maxSqm": 100,
+          "type": "perSqm",
+          "pricePerSqm": 51,
+          "sourceText": "51-100kvm, 51 kr",
+          "pendingConfirmation": true,
+          "question": "Q22"
+        },
+        {
+          "maxSqm": 150,
+          "type": "perSqm",
+          "pricePerSqm": 47,
+          "sourceText": "101-150kvm, 47 kr",
+          "pendingConfirmation": true,
+          "question": "Q22"
+        },
+        {
+          "maxSqm": null,
+          "type": "perSqm",
+          "pricePerSqm": 42,
+          "sourceText": "151-uppåt 42 kr",
+          "pendingConfirmation": true,
+          "question": "Q22"
+        }
+      ],
+      "tierNote": "The per-m2 rate applies to the whole area, so the price drops when a home crosses a threshold (50 m2 = 2 890 kr but 51 m2 = 2 601 kr).",
+      "quoteAboveSqm": null,
+      "includesWindowCleaning": true,
+      "windowCleaningExcludes": "Spröjsade fönster",
+      "timeEstimate": {
+        "baseHours": 1.57,
+        "hoursPerSqm": 0.0167,
+        "priceUsesRoundedHours": true,
+        "source": "calculator (pages/movecleaning.js)",
+        "pendingConfirmation": true,
+        "question": null,
+        "note": "Only used to price the \"biytor\" extra, with the hours rounded to two decimals."
+      },
+      "soilingSurcharge": {
+        "maxPercent": 20,
+        "appliedByCalculator": false,
+        "source": "prislista p. 2; docx Flyttstädning",
+        "pendingConfirmation": true,
+        "question": null,
+        "note": "Price list: \"tilläggskostnad på 20%\"; docx: \"upp till 20 procent\". Only shown as a text notice on the page."
+      },
+      "extras": {
+        "kylFrysDefrost": {
+          "label": "Kyl/Frys med avfrostning",
+          "type": "fixed",
+          "price": 400,
+          "source": "calculator (pages/movecleaning.js)",
+          "pendingConfirmation": true,
+          "question": "Q17",
+          "note": "Storstädning charges 500 kr for the same extra."
+        },
+        "persienner": {
+          "label": "Rengöring av persienner",
+          "type": "fixed",
+          "price": 360,
+          "source": "calculator (pages/movecleaning.js)",
+          "pendingConfirmation": true,
+          "question": "Q17"
+        },
+        "biytor": {
+          "label": "Städning av biytor såsom förråd, garage och balkonger",
+          "type": "perEstimatedHour",
+          "hourlyRate": 360,
+          "source": "calculator (pages/movecleaning.js)",
+          "pendingConfirmation": true,
+          "question": "Q17",
+          "note": "360 kr per estimated hour of the whole home, not of the extra space."
+        },
+        "inglasadBalkong": {
+          "label": "Fönsterputsning av inglasade balkonger",
+          "type": "fixed",
+          "price": 650,
+          "source": "calculator (pages/movecleaning.js)",
+          "pendingConfirmation": true,
+          "question": "Q17"
+        }
+      }
+    },
+
+    "windowcleaning": {
+      "label": "Fönsterputsning",
+      "page": "/windowcleaning",
+      "customer": "private",
+      "currency": "SEK",
+      "includesVat": true,
+      "afterRut": true,
+      "source": "prislista p. 3",
+      "pricing": "rooms",
+      "minHours": null,
+      "includes": "Rengöring av fönstrets bågar och damning av persienner",
+      "rooms": {
+        "1": 799,
+        "2": 899,
+        "3": 999,
+        "4": 1099
+      },
+      "quote": {
+        "fromRooms": 5,
+        "aboveSqm": 120,
+        "calculatorAsksForSqm": false,
+        "source": "prislista p. 3: \"5 rum och kök eller större än 120 kvm - Offereras\"",
+        "pendingConfirmation": true,
+        "question": "Q21",
+        "note": "The calculator only asks for rooms, so a 3-room home of 130 m2 gets a price instead of a quote."
+      },
+      "balconyOnly": {
+        "price": 450,
+        "priceIsFrom": true,
+        "source": "prislista p. 3: \"Endast balkong – Från 450 kr\"",
+        "pendingConfirmation": true,
+        "question": "Q20",
+        "note": "The calculator charges a flat 450 kr and applies the surcharges to it."
+      },
+      "surcharges": {
+        "stacking": "compound",
+        "source": "prislista p. 3",
+        "pendingConfirmation": true,
+        "question": "Q20",
+        "note": "Each surcharge is +25 %, but the price list does not say how several combine. \"compound\" (what the calculator does) multiplies by 1.25 per surcharge; \"additive\" adds the percentages.",
+        "items": {
+          "sprojs": { "label": "Spröjs", "percent": 25 },
+          "highCeiling": { "label": "Takhöjd över 280 cm", "percent": 25 },
+          "tripleGlass": { "label": "Treglasfönster eller fler", "percent": 25 }
+        }
+      }
+    },
+
+    "officecleaning": {
+      "label": "Kontorsstädning",
+      "page": "/officecleaning",
+      "customer": "business",
+      "currency": "SEK",
+      "includesVat": null,
+      "afterRut": false,
+      "source": "calculator (pages/officecleaning.js); no business price list available",
+      "pendingConfirmation": true,
+      "question": "Q26-Q28",
+      "note": "Rates, VAT basis and minimum charge for businesses are unconfirmed.",
+      "pricing": "hourly",
+      "timeEstimate": {
+        "baseHours": 1.57,
+        "hoursPerSqm": 0.0167,
+        "priceUsesRoundedHours": true,
+        "source": "calculator (pages/officecleaning.js)",
+        "pendingConfirmation": true,
+        "question": null,
+        "note": "Unlike Hemstädning, this page multiplies by the two-decimal hours it displays."
+      },
+      "minHours": {
+        "value": 2,
+        "appliesTo": ["1"],
+        "enforcedByCalculator": false,
+        "source": "calculator option label: \"1 gång per månad (350 kr/h, minst 2 timmar)\"",
+        "pendingConfirmation": true,
+        "question": "Q26-Q28"
+      },
+      "frequencies": {
+        "1": { "label": "1 gång per månad", "sessionsPerMonth": 1, "hourlyRate": 350 },
+        "2": { "label": "2 gånger per månad", "sessionsPerMonth": 2, "hourlyRate": 163 },
+        "4": { "label": "4 gånger per månad", "sessionsPerMonth": 4, "hourlyRate": 150 }
+      }
+    },
+
+    "containercleaning": {
+      "label": "Bodstädning",
+      "page": "/containercleaning",
+      "customer": "business",
+      "currency": "SEK",
+      "includesVat": false,
+      "afterRut": false,
+      "source": "calculator (pages/containercleaning.js, shown \"exkl. moms\"); no business price list available",
+      "pendingConfirmation": true,
+      "question": "Q26-Q28",
+      "note": "Monthly price = price per unit x units x visits per week x 4. Above 50 units the calculator shows 0 kr instead of asking for a quote.",
+      "pricing": "perUnitPerVisit",
+      "minHours": null,
+      "weeksPerMonth": 4,
+      "quoteAboveUnits": 50,
+      "tiers": [
+        { "minUnits": 1, "maxUnits": 10, "pricePerUnitByVisitsPerWeek": { "1": 130, "2": 120, "3": 110, "5": 100 } },
+        { "minUnits": 11, "maxUnits": 20, "pricePerUnitByVisitsPerWeek": { "1": 100, "2": 95, "3": 75, "5": 65 } },
+        { "minUnits": 21, "maxUnits": 30, "pricePerUnitByVisitsPerWeek": { "1": 95, "2": 90, "3": 70, "5": 60 } },
+        { "minUnits": 31, "maxUnits": 50, "pricePerUnitByVisitsPerWeek": { "1": 85, "2": 80, "3": 65, "5": 55 } }
+      ]
+    }
+  }
+}
