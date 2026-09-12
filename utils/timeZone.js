@@ -64,6 +64,23 @@ export function utcToStockholmWallClock(date) {
   return `${parts.year}-${parts.month}-${parts.day}T${hour}:${parts.minute}:${parts.second}`;
 }
 
+// Calendar fields of an instant as seen in Stockholm, as numbers. `weekday`
+// follows Date#getUTCDay: 0 = Sunday ... 6 = Saturday.
+export function stockholmDateParts(date) {
+  const parts = partsOf(date);
+  const year = Number(parts.year);
+  const month = Number(parts.month);
+  const day = Number(parts.day);
+  return {
+    year,
+    month,
+    day,
+    hour: Number(parts.hour) % 24,
+    minute: Number(parts.minute),
+    weekday: new Date(Date.UTC(year, month - 1, day)).getUTCDay(),
+  };
+}
+
 // Human readable Swedish date/time for emails, always in Stockholm time.
 export function formatStockholm(date) {
   return new Intl.DateTimeFormat("sv-SE", {

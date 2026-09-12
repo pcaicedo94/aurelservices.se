@@ -1,6 +1,10 @@
 /**
  * QA: asserts that the `bookings` table matches exactly what /api/booking writes.
- * Read only.
+ * Reads the schema, then inserts ONE real probe row and deletes it again.
+ *
+ * APP_TEST_MODE=1 does not apply here: the script calls Supabase's REST API
+ * directly, so the probe row is real even when the dev server runs in test
+ * mode (see utils/testMode.js).
  *
  *   node --env-file=.env scripts/qa-schema.mjs
  *
