@@ -1,170 +1,146 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
+import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import BookingSummary from "../components/Booking/BookingSummary";
+import BookingContactForm from "../components/Booking/BookingContactForm";
+import BookingConfirmation from "../components/Booking/BookingConfirmation";
+import DateTimeField from "../components/Booking/DateTimeField";
+import FieldError, { invalidClass } from "../components/Booking/FieldError";
+import useBookingFlow from "../lib/booking/useBookingFlow";
+import useBookingDate from "../lib/booking/useBookingDate";
+import { bookingHint, isQuoteOnly, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import {
+  describeDate,
+  formatDateTime,
+  formatPrice,
+  NO_PRICE,
+  NOT_SET,
+  roundKronor,
+} from "../lib/booking/format";
+
+// Above this many site huts the price is quoted ("Offereras").
+const MAX_UNITS_ONLINE = 50;
+
+const FREQUENCY_LABELS = {
+  5: "5 gånger/vecka (Måndag till fredag)",
+  3: "3 gånger/vecka (Måndag/onsdag/fredag)",
+  2: "2 gånger/vecka (Tisdag/torsdag)",
+  1: "1 gång/vecka",
+};
+
+const CONTACT_PREFERENCES = { call: "Bli uppringd", visit: "Få ett hembesök" };
+
+// Pricing logic based on image: price per hut and cleaning
+const getPricePerUnit = (numUnits, numFreq) => {
+  // 1-10 units pricing
+  if (numUnits >= 1 && numUnits <= 10) {
+    if (numFreq === 5) return 100;
+    if (numFreq === 3) return 110;
+    if (numFreq === 2) return 120;
+    if (numFreq === 1) return 130;
+  }
+  // 11-20 units pricing
+  if (numUnits >= 11 && numUnits <= 20) {
+    if (numFreq === 5) return 65;
+    if (numFreq === 3) return 75;
+    if (numFreq === 2) return 95;
+    if (numFreq === 1) return 100;
+  }
+  // 21-30 units pricing
+  if (numUnits >= 21 && numUnits <= 30) {
+    if (numFreq === 5) return 60;
+    if (numFreq === 3) return 70;
+    if (numFreq === 2) return 90;
+    if (numFreq === 1) return 95;
+  }
+  // 31-50 units pricing
+  if (numUnits >= 31 && numUnits <= 50) {
+    if (numFreq === 5) return 55;
+    if (numFreq === 3) return 65;
+    if (numFreq === 2) return 80;
+    if (numFreq === 1) return 85;
+  }
+  return null;
+};
 
 const ContainerCleaning = () => {
   const [numberOfUnits, setNumberOfUnits] = useState("");
   const [frequency, setFrequency] = useState("");
-  const [dateTime, setDateTime] = useState("");
-  const [minDateTime, setMinDateTime] = useState("");
   const [contactPreference, setContactPreference] = useState("");
-  const [predictedPrice, setPredictedPrice] = useState(0);
-  const [pricePerUnit, setPricePerUnit] = useState(0);
+  const [showQuote, setShowQuote] = useState(false);
+  const date = useBookingDate();
 
-  // Contact form states
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
+  // Booking steps (contact form, confirmation) shared by all booking pages
+  const flow = useBookingFlow();
+  const dateInputRef = useRef(null);
 
-  const bookingUrl = "/api/booking";
+  // Derived on every render, so the summary and the payload always follow the
+  // current inputs and never keep a price from values that were cleared.
+  const units = parseCount(numberOfUnits, { min: 1 });
+  const frequencyLabel = FREQUENCY_LABELS[frequency];
+  const pricePerUnit =
+    units.status === "ok" && frequencyLabel ? getPricePerUnit(units.value, Number(frequency)) : null;
+  // Monthly price (4 weeks)
+  const totalPrice =
+    pricePerUnit === null ? null : roundKronor(pricePerUnit * units.value * Number(frequency) * 4);
 
-  useEffect(() => {
-    const now = new Date();
-    now.setDate(now.getDate() + 2);
-    now.setHours(7, 0, 0, 0);
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, "0");
-    const day = now.getDate().toString().padStart(2, "0");
-    setMinDateTime(`${year}-${month}-${day}T07:00`);
-  }, []);
+  const hint = bookingHint([
+    { label: "antal bodar", status: units.status },
+    { label: "frekvens", status: frequencyLabel ? "ok" : "empty" },
+    { label: "datum", status: date.check.status },
+    { label: "kontaktmetod", status: CONTACT_PREFERENCES[contactPreference] ? "ok" : "empty" },
+  ]);
+  const needsQuote = isQuoteOnly({
+    outOfRange: units.status === "ok" && units.value > MAX_UNITS_ONLINE,
+    hint,
+    price: totalPrice,
+  });
 
-  const handleDateTimeChange = (e) => {
-    const selectedDateTime = e.target.value;
-    if (selectedDateTime) {
-      const selectedHour = new Date(selectedDateTime).getHours();
-      if (selectedHour < 7 || selectedHour >= 17) {
-        alert("Vänligen välj en tid mellan 07:00 och 17:00.");
-        setDateTime("");
-        return;
-      }
-    }
-    setDateTime(selectedDateTime);
-  };
+  // Calculator part of the booking payload; the contact form adds the rest.
+  const buildPayload = () => ({
+    cleaningType: "Bodstädning",
+    numberOfUnits: String(units.value),
+    frequency: `${frequency} gånger/vecka`,
+    pricePerUnit,
+    totalPrice,
+    dateTime: date.dateTime,
+    contactPreference,
+  });
 
-  // Pricing logic based on image
-  const calculatePrice = (units, freq) => {
-    const numUnits = parseInt(units);
-    const numFreq = parseInt(freq);
-
-    if (!numUnits || !numFreq) {
-      setPredictedPrice(0);
-      setPricePerUnit(0);
-      return;
-    }
-
-    let pricePerBodar = 0;
-
-    // 1-10 units pricing
-    if (numUnits >= 1 && numUnits <= 10) {
-      if (numFreq === 5) pricePerBodar = 100;
-      else if (numFreq === 3) pricePerBodar = 110;
-      else if (numFreq === 2) pricePerBodar = 120;
-      else if (numFreq === 1) pricePerBodar = 130;
-    }
-    // 11-20 units pricing
-    else if (numUnits >= 11 && numUnits <= 20) {
-      if (numFreq === 5) pricePerBodar = 65;
-      else if (numFreq === 3) pricePerBodar = 75;
-      else if (numFreq === 2) pricePerBodar = 95;
-      else if (numFreq === 1) pricePerBodar = 100;
-    }
-    // 21-30 units pricing
-    else if (numUnits >= 21 && numUnits <= 30) {
-      if (numFreq === 5) pricePerBodar = 60;
-      else if (numFreq === 3) pricePerBodar = 70;
-      else if (numFreq === 2) pricePerBodar = 90;
-      else if (numFreq === 1) pricePerBodar = 95;
-    }
-    // 31-50 units pricing
-    else if (numUnits >= 31 && numUnits <= 50) {
-      if (numFreq === 5) pricePerBodar = 55;
-      else if (numFreq === 3) pricePerBodar = 65;
-      else if (numFreq === 2) pricePerBodar = 80;
-      else if (numFreq === 1) pricePerBodar = 85;
-    }
-
-    setPricePerUnit(pricePerBodar);
-    const totalPrice = pricePerBodar * numUnits * numFreq * 4; // Monthly price (4 weeks)
-    setPredictedPrice(totalPrice.toFixed(2));
-  };
-
-  const handleUnitsChange = (e) => {
-    const value = e.target.value;
-    setNumberOfUnits(value);
-    calculatePrice(value, frequency);
-  };
-
-  const handleFrequencyChange = (e) => {
-    const value = e.target.value;
-    setFrequency(value);
-    calculatePrice(numberOfUnits, value);
-  };
-
-  const sendToWebhook = async (e) => {
-    e.preventDefault();
-
-    const payload = {
-      cleaningType: "Bodstädning",
-      numberOfUnits: numberOfUnits,
-      frequency: `${frequency} gånger/vecka`,
-      pricePerUnit: pricePerUnit,
-      totalPrice: predictedPrice,
-      dateTime,
-      contactPreference,
-      name,
-      email,
-      phone,
-      address,
-    };
-
-    try {
-      const response = await fetch(bookingUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      setPopupMessage(data.message || "Bokning skapad!");
-      setShowPopup(true);
-      if (response.ok) clearFormFields();
-    } catch (error) {
-      setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-      setShowPopup(true);
-    }
-  };
-
-  const clearFormFields = () => {
+  const clearCalculator = () => {
     setNumberOfUnits("");
     setFrequency("");
-    setDateTime("");
+    date.setDateTime("");
     setContactPreference("");
-    setPredictedPrice(0);
-    setPricePerUnit(0);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setAddress("");
-    setShowContactForm(false);
   };
 
-  const handlePopupClose = () => {
-    setShowPopup(false);
-    window.location.reload();
+  const handleBooked = (payload) => {
+    flow.complete({
+      service: payload.cleaningType,
+      when: formatDateTime(payload.dateTime),
+      email: payload.email,
+    });
+    clearCalculator();
   };
 
-  const getFrequencyLabel = () => {
-    if (!frequency) return "Ej angiven";
-    if (frequency === "5") return "5 gånger/vecka (Måndag till fredag)";
-    if (frequency === "3") return "3 gånger/vecka (Måndag/onsdag/fredag)";
-    if (frequency === "2") return "2 gånger/vecka (Tisdag/torsdag)";
-    if (frequency === "1") return "1 gång/vecka";
-    return "Ej angiven";
+  const quoteDetails = {
+    "Antal bodar": String(units.value),
+    ...(frequencyLabel && { Städfrekvens: frequencyLabel }),
+    ...(date.isValid && { "Önskat datum och tid": formatDateTime(date.dateTime) }),
+    ...(CONTACT_PREFERENCES[contactPreference] && {
+      Kontaktmetod: CONTACT_PREFERENCES[contactPreference],
+    }),
   };
+
+  let unitsSummary = units.value;
+  if (units.status === "empty") unitsSummary = NOT_SET;
+  else if (units.status === "invalid") unitsSummary = "Ogiltigt antal";
+
+  let monthlySummary = NO_PRICE;
+  if (needsQuote) monthlySummary = "Offereras";
+  else if (totalPrice !== null) monthlySummary = `${formatPrice(totalPrice)} (exkl. moms)`;
 
   return (
     <>
@@ -207,16 +183,22 @@ const ContainerCleaning = () => {
                 <input
                   type="number"
                   id="numberOfUnits"
-                  className="form-control"
+                  className={`form-control${units.status === "invalid" ? ` ${invalidClass}` : ""}`}
                   placeholder="Ange antal bodar"
                   min="1"
-                  max="50"
+                  step="1"
+                  inputMode="numeric"
                   value={numberOfUnits}
-                  onChange={handleUnitsChange}
+                  onChange={(e) => setNumberOfUnits(e.target.value)}
+                  aria-invalid={units.status === "invalid" || undefined}
+                  aria-describedby={units.status === "invalid" ? "numberOfUnits-error" : undefined}
                   required
                 />
+                <FieldError id="numberOfUnits-error">
+                  {units.status === "invalid" && "Ange antal bodar som ett heltal, minst 1."}
+                </FieldError>
                 <small className="form-text text-muted">
-                  Ange mellan 1-50 bodar för automatisk prisberäkning
+                  Ange mellan 1-50 bodar för automatisk prisberäkning. För fler bodar lämnar vi offert.
                 </small>
               </div>
 
@@ -226,7 +208,7 @@ const ContainerCleaning = () => {
                   id="frequency"
                   className="form-control"
                   value={frequency}
-                  onChange={handleFrequencyChange}
+                  onChange={(e) => setFrequency(e.target.value)}
                   required
                 >
                   <option value="">Välj frekvens</option>
@@ -237,19 +219,11 @@ const ContainerCleaning = () => {
                 </select>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="dateTime">Önskat datum och tid (Mellan 07:00-17:00)</label>
-                <input
-                  type="datetime-local"
-                  id="dateTime"
-                  className="form-control"
-                  value={dateTime}
-                  onChange={handleDateTimeChange}
-                  min={minDateTime}
-                  step="1800"
-                  required
-                />
-              </div>
+              <DateTimeField
+                date={date}
+                inputRef={dateInputRef}
+                conflict={flow.isConflict(date.dateTime)}
+              />
 
               <div className="form-group">
                 <label htmlFor="contactPreference">Kontaktmetod</label>
@@ -267,135 +241,80 @@ const ContainerCleaning = () => {
               </div>
             </form>
 
-            {pricePerUnit > 0 && (
+            {pricePerUnit !== null && (
               <div className="alert alert-info mt-3">
-                <strong>Pris per bod:</strong> {pricePerUnit} kr/bod (exkl. moms)
+                <strong>Pris per bod:</strong> {formatPrice(pricePerUnit)}/bod (exkl. moms)
               </div>
             )}
           </div>
 
           {/* Summary Section */}
           <div className="col-lg-6">
-            <div className="summary-frame">
-              <h3>Summering:</h3>
-              <ul className="summary-list">
+            <BookingSummary
+              mode={needsQuote ? "quote" : "book"}
+              hint={needsQuote ? "" : hint}
+              onBook={flow.openContact}
+              onQuote={() => setShowQuote(true)}
+              quoteNote="För fler än 50 bodar lämnar vi en offert. Skicka en förfrågan så återkommer vi."
+              footer={
+                <p className="mt-3" style={{ fontSize: "13px", color: "#666" }}>
+                  * Priser per timme exklusive moms.<br />
+                  * Månadspriset är beräknat på 4 veckor.
+                </p>
+              }
+            >
+              <li>
+                <strong>Antal bodar:</strong> {unitsSummary}
+              </li>
+              <li>
+                <strong>Städfrekvens:</strong> {frequencyLabel || NOT_SET}
+              </li>
+              <li>
+                <strong>Önskat datum och tid:</strong> {describeDate(date)}
+              </li>
+              <li>
+                <strong>Kontaktmetod:</strong> {CONTACT_PREFERENCES[contactPreference] || NOT_SET}
+              </li>
+              {pricePerUnit !== null && (
                 <li>
-                  <strong>Antal bodar:</strong> {numberOfUnits || "Ej angiven"}
+                  <strong>Pris per bod:</strong> {formatPrice(pricePerUnit)}
                 </li>
-                <li>
-                  <strong>Städfrekvens:</strong> {getFrequencyLabel()}
-                </li>
-                <li>
-                  <strong>Önskat datum och tid:</strong> {dateTime || "Ej angiven"}
-                </li>
-                <li>
-                  <strong>Kontaktmetod:</strong>{" "}
-                  {contactPreference === "call"
-                    ? "Bli uppringd"
-                    : contactPreference === "visit"
-                    ? "Få ett hembesök"
-                    : "Ej angiven"}
-                </li>
-                {pricePerUnit > 0 && (
-                  <li>
-                    <strong>Pris per bod:</strong> {pricePerUnit} kr
-                  </li>
-                )}
-                <li>
-                  <strong>Uppskattat månadspris:</strong> {predictedPrice || "0"} kr (exkl. moms)
-                </li>
-              </ul>
-              <button
-                type="button"
-                className="default-btn"
-                onClick={() => setShowContactForm(true)}
-                disabled={!numberOfUnits || !frequency || !dateTime || !contactPreference}
-              >
-                Boka tjänsten
-              </button>
-              <p className="mt-3" style={{ fontSize: "13px", color: "#666" }}>
-                * Priser per timme exklusive moms.<br />
-                * Månadspriset är beräknat på 4 veckor.
-              </p>
-            </div>
+              )}
+              <li>
+                <strong>Uppskattat månadspris:</strong> {monthlySummary}
+              </li>
+            </BookingSummary>
           </div>
 
-          {/* Contact Form Accordion */}
-          {showContactForm && (
+          {flow.contactOpen && (
             <div className="col-lg-12">
-              <div className="accordion">
-                <h3>Kontaktformulär</h3>
-                <form className="contact-form" onSubmit={sendToWebhook}>
-                  <div className="form-group">
-                    <label htmlFor="name">Namn</label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="form-control"
-                      placeholder="Ange ditt namn"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">E-post</label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="form-control"
-                      placeholder="Ange din e-post"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Telefonnummer</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      className="form-control"
-                      placeholder="Ange ditt telefonnummer"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="address">Adress</label>
-                    <input
-                      type="text"
-                      id="address"
-                      className="form-control"
-                      placeholder="Ange adressen för bodarna"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <button type="submit" className="default-btn">
-                    Skicka
-                  </button>
-                </form>
-              </div>
+              <BookingContactForm
+                buildPayload={buildPayload}
+                blockedHint={needsQuote ? QUOTE_ONLY_HINT : hint}
+                addressPlaceholder="Ange adressen för bodarna"
+                focusSignal={flow.focusSignal}
+                dateInputRef={dateInputRef}
+                onConflict={flow.markConflict}
+                onSuccess={handleBooked}
+              />
+            </div>
+          )}
+
+          {flow.confirmation && (
+            <div className="col-lg-12">
+              <BookingConfirmation {...flow.confirmation} onDismiss={flow.dismissConfirmation} />
             </div>
           )}
         </div>
       </div>
 
-      {/* Popup Window */}
-      {showPopup && (
-        <div className="popup-window">
-          <div className="popup-content">
-            <h3>Bekräftelse</h3>
-            <p>{popupMessage}</p>
-            <button className="default-btn" onClick={handlePopupClose}>
-              OK
-            </button>
-          </div>
-        </div>
-      )}
+      <QuoteModal
+        open={showQuote}
+        onClose={() => setShowQuote(false)}
+        service="Bodstädning"
+        addressPlaceholder="Ange adressen för bodarna"
+        details={quoteDetails}
+      />
 
       <Footer />
     </>

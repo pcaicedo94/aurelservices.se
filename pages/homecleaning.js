@@ -1,169 +1,117 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
+import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import BookingSummary from "../components/Booking/BookingSummary";
+import BookingContactForm from "../components/Booking/BookingContactForm";
+import BookingConfirmation from "../components/Booking/BookingConfirmation";
+import DateTimeField from "../components/Booking/DateTimeField";
+import FieldError, { invalidClass } from "../components/Booking/FieldError";
+import useBookingFlow from "../lib/booking/useBookingFlow";
+import useBookingDate from "../lib/booking/useBookingDate";
+import {
+  billableHours,
+  bookingHint,
+  isQuoteOnly,
+  MIN_BILLABLE_HOURS,
+  parseArea,
+  QUOTE_ONLY_HINT,
+} from "../lib/booking/rules";
+import {
+  describeArea,
+  describeDate,
+  formatArea,
+  formatDateTime,
+  formatHours,
+  formatPrice,
+  NO_PRICE,
+  NOT_SET,
+  roundKronor,
+} from "../lib/booking/format";
+
+const FREQUENCY_LABELS = {
+  onetime: "Enstaka hemstädning",
+  1: "1 gång per månad",
+  2: "2 gånger per månad",
+  4: "4 gånger per månad",
+};
+
+// Calculate hourly rate based on frequency and weekday
+const getHourlyRate = (frequency, weekday) => {
+  // Special rates for monthly and one-time cleanings
+  if (frequency === "1") return 245; // Once a month
+  if (frequency === "onetime") return 270; // One-time cleaning
+
+  // Day-based rates for regular cleanings
+  if (weekday >= 1 && weekday <= 3) return 200; // Monday-Wednesday
+  if (weekday >= 4 && weekday <= 5) return 220; // Thursday-Friday
+  return null; // No weekend rate: weekends cannot be booked online
+};
 
 const HomeCleaning = () => {
-  // States from original HomeCleaning
   const [size, setSize] = useState("");
   const [frequency, setFrequency] = useState("");
-  const [dateTime, setDateTime] = useState("");
-  const [minDateTime, setMinDateTime] = useState("");
-  const [predictedPrice, setPredictedPrice] = useState(0);
-  const [cleaningTime, setCleaningTime] = useState(0);
-  const [hourlyRate, setHourlyRate] = useState(0);
+  const [showQuote, setShowQuote] = useState(false);
+  const date = useBookingDate();
 
-  // Contact form state
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
+  // Booking steps (contact form, confirmation) shared by all booking pages
+  const flow = useBookingFlow();
+  const dateInputRef = useRef(null);
 
-  const bookingUrl = "/api/booking";
+  // Derived on every render, so the summary and the payload always follow the
+  // current inputs and never keep a price from values that were cleared.
+  const area = parseArea(size);
+  const frequencyLabel = FREQUENCY_LABELS[frequency];
+  const hourlyRate = frequencyLabel
+    ? getHourlyRate(frequency, date.isValid ? date.check.parts.weekday : null)
+    : null;
+  const estimatedTime = area.status === "ok" ? 1.57 + 0.0167 * area.value : null;
+  // TODO(cliente Q14): at least MIN_BILLABLE_HOURS are billed per cleaning.
+  const cleaningTime = estimatedTime === null ? null : billableHours(estimatedTime);
+  const sessionsPerMonth = frequency === "onetime" ? 1 : Number(frequency);
+  const totalPrice =
+    cleaningTime !== null && hourlyRate
+      ? roundKronor(cleaningTime * hourlyRate * sessionsPerMonth)
+      : null;
 
-  // Calendar constraints (preserved)
-  useEffect(() => {
-    const now = new Date();
-    now.setDate(now.getDate() + 2);
-    now.setHours(7, 0, 0, 0);
+  const hint = bookingHint([
+    { label: "storlek", status: area.status },
+    { label: "frekvens", status: frequencyLabel ? "ok" : "empty" },
+    { label: "datum", status: date.check.status },
+  ]);
+  const needsQuote = isQuoteOnly({ outOfRange: area.status === "quote", hint, price: totalPrice });
 
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, "0");
-    const day = now.getDate().toString().padStart(2, "0");
-    const hours = now.getHours().toString().padStart(2, "0");
-    const minutes = now.getMinutes().toString().padStart(2, "0");
+  // Calculator part of the booking payload; the contact form adds the rest.
+  const buildPayload = () => ({
+    cleaningType: "Hemstädning",
+    area: String(area.value),
+    frequency: frequencyLabel,
+    dateTime: date.dateTime,
+    hourlyRate,
+    totalPrice,
+    estimatedHours: cleaningTime.toFixed(2),
+  });
 
-    setMinDateTime(`${year}-${month}-${day}T${hours}:${minutes}`);
-  }, []);
-
-  // Time validation (preserved)
-  const handleDateTimeChange = (e) => {
-    const selectedDateTime = e.target.value;
-    if (selectedDateTime) {
-      const selectedHour = new Date(selectedDateTime).getHours();
-      if (selectedHour < 7 || selectedHour >= 17) {
-        alert("Vänligen välj en tid mellan 07:00 och 17:00.");
-        setDateTime("");
-        return;
-      }
-    }
-    setDateTime(selectedDateTime);
-    // Recalculate when date changes
-    updateCalculations(size, frequency, selectedDateTime);
-  };
-
-  // Calculate hourly rate based on day and frequency
-  const getHourlyRate = (selectedDateTime, selectedFrequency) => {
-    // Special rates for monthly and one-time cleanings
-    if (selectedFrequency === "1") return 245; // Once a month
-    if (selectedFrequency === "onetime") return 270; // One-time cleaning
-
-    // Day-based rates for regular cleanings
-    if (selectedDateTime) {
-      const dayOfWeek = new Date(selectedDateTime).getDay();
-      // Monday (1), Tuesday (2), Wednesday (3) = 200 kr
-      if (dayOfWeek >= 1 && dayOfWeek <= 3) return 200;
-      // Thursday (4), Friday (5) = 220 kr
-      if (dayOfWeek >= 4 && dayOfWeek <= 5) return 220;
-    }
-    return 0;
-  };
-
-  // Combined calculation logic
-  const updateCalculations = (currentSize, currentFrequency, currentDateTime) => {
-    if (currentSize && currentFrequency && currentDateTime) {
-      const area = parseFloat(currentSize);
-      const rate = getHourlyRate(currentDateTime, currentFrequency);
-      const time = 1.57 + 0.0167 * area;
-      
-      setHourlyRate(rate);
-      setCleaningTime(time.toFixed(2));
-
-      // Calculate monthly price
-      let monthlyPrice;
-      if (currentFrequency === "onetime") {
-        monthlyPrice = time * rate; // One-time only
-      } else {
-        const sessionsPerMonth = parseInt(currentFrequency, 10);
-        monthlyPrice = time * rate * sessionsPerMonth;
-      }
-      
-      setPredictedPrice(monthlyPrice.toFixed(2));
-    }
-  };
-
-  const handleSizeChange = (e) => {
-    setSize(e.target.value);
-    updateCalculations(e.target.value, frequency, dateTime);
-  };
-
-  const handleFrequencyChange = (e) => {
-    setFrequency(e.target.value);
-    updateCalculations(size, e.target.value, dateTime);
-  };
-
-  // Webhook submission logic
-  const sendToWebhook = async (e) => {
-    e.preventDefault();
-
-    const payload = {
-      cleaningType: "Hemstädning",
-      area: size,
-      frequency: frequency === "onetime" ? "Enstaka hemstädning" : `${frequency} gång/gånger per månad`,
-      dateTime,
-      hourlyRate,
-      totalPrice: predictedPrice,
-      estimatedHours: cleaningTime,
-      name,
-      email,
-      phone,
-      address,
-    };
-
-    try {
-      const response = await fetch(bookingUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      setPopupMessage(data.message || "Bokning skapad!");
-      setShowPopup(true);
-      if (response.ok) clearFormFields();
-    } catch (error) {
-      setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-      setShowPopup(true);
-    }
-  };
-
-  // Helper functions
-  const clearFormFields = () => {
+  const clearCalculator = () => {
     setSize("");
     setFrequency("");
-    setDateTime("");
-    setPredictedPrice(0);
-    setCleaningTime(0);
-    setHourlyRate(0);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setAddress("");
-    setShowContactForm(false);
+    date.setDateTime("");
   };
 
-  const handlePopupClose = () => {
-    setShowPopup(false);
-    window.location.reload();
+  const handleBooked = (payload) => {
+    flow.complete({
+      service: payload.cleaningType,
+      when: formatDateTime(payload.dateTime),
+      email: payload.email,
+    });
+    clearCalculator();
   };
 
-  // Get frequency label for display
-  const getFrequencyLabel = () => {
-    if (!frequency) return "Ej angiven";
-    if (frequency === "onetime") return "Enstaka hemstädning";
-    return `${frequency} gång${frequency !== "1" ? "er" : ""} per månad`;
+  const quoteDetails = {
+    Storlek: formatArea(area.value),
+    ...(frequencyLabel && { Frekvens: frequencyLabel }),
+    ...(date.isValid && { "Önskat datum och tid": formatDateTime(date.dateTime) }),
   };
 
   return (
@@ -233,12 +181,18 @@ const HomeCleaning = () => {
                 <input
                   type="number"
                   id="size"
-                  className="form-control"
+                  className={`form-control${area.status === "invalid" ? ` ${invalidClass}` : ""}`}
                   placeholder="Ange storlek"
+                  min="1"
+                  step="any"
+                  inputMode="decimal"
                   value={size}
-                  onChange={handleSizeChange}
+                  onChange={(e) => setSize(e.target.value)}
+                  aria-invalid={area.status === "invalid" || undefined}
+                  aria-describedby={area.message ? "size-error" : undefined}
                   required
                 />
+                <FieldError id="size-error">{area.message}</FieldError>
               </div>
               <div className="form-group">
                 <label htmlFor="frequency">Frekvens</label>
@@ -246,7 +200,7 @@ const HomeCleaning = () => {
                   id="frequency"
                   className="form-control"
                   value={frequency}
-                  onChange={handleFrequencyChange}
+                  onChange={(e) => setFrequency(e.target.value)}
                   required
                 >
                   <option value="">Välj frekvens</option>
@@ -256,142 +210,84 @@ const HomeCleaning = () => {
                   <option value="4">4 gånger/månad</option>
                 </select>
               </div>
-              <div className="form-group">
-                <label htmlFor="dateTime">Önskat datum och tid (Mellan 07:00-17:00)</label>
-                <input
-                  type="datetime-local"
-                  id="dateTime"
-                  className="form-control"
-                  value={dateTime}
-                  onChange={handleDateTimeChange}
-                  min={minDateTime}
-                  step="1800"
-                  required
-                />
-                {dateTime && frequency !== "1" && frequency !== "onetime" && (
+              <DateTimeField
+                date={date}
+                inputRef={dateInputRef}
+                conflict={flow.isConflict(date.dateTime)}
+              >
+                {hourlyRate && (frequency === "2" || frequency === "4") && (
                   <small className="form-text text-muted">
-                    Timtaxa för vald dag: {hourlyRate} kr/h
+                    Timtaxa för vald dag: {formatPrice(hourlyRate)}/h
                     {hourlyRate === 200 && " (Måndag-Onsdag)"}
                     {hourlyRate === 220 && " (Torsdag-Fredag)"}
                   </small>
                 )}
-              </div>
+              </DateTimeField>
             </form>
           </div>
 
           {/* Summary Section */}
           <div className="col-lg-6">
-            <div className="summary-frame">
-              <h3>Summering:</h3>
-              <ul className="summary-list">
+            <BookingSummary
+              mode={needsQuote ? "quote" : "book"}
+              hint={needsQuote ? "" : hint}
+              onBook={flow.openContact}
+              onQuote={() => setShowQuote(true)}
+              quoteNote="Så stora ytor prissätter vi med en offert. Skicka en förfrågan så återkommer vi."
+            >
+              <li>
+                <strong>Storlek:</strong> {describeArea(area)}
+              </li>
+              <li>
+                <strong>Frekvens:</strong> {frequencyLabel || NOT_SET}
+              </li>
+              <li>
+                <strong>Önskat datum och tid:</strong> {describeDate(date)}
+              </li>
+              <li>
+                <strong>Beräknad tid per städning:</strong>{" "}
+                {cleaningTime === null ? NO_PRICE : formatHours(cleaningTime)}
+                {estimatedTime !== null && estimatedTime < MIN_BILLABLE_HOURS && " (minsta debitering)"}
+              </li>
+              {hourlyRate && !needsQuote && (
                 <li>
-                  <strong>Storlek:</strong> {size || "Ej angiven"} m²
+                  <strong>Timtaxa:</strong> {formatPrice(hourlyRate)}/h
                 </li>
-                <li>
-                  <strong>Frekvens:</strong> {getFrequencyLabel()}
-                </li>
-                <li>
-                  <strong>Önskat datum och tid:</strong> {dateTime || "Ej angiven"}
-                </li>
-                <li>
-                  <strong>Beräknad tid per städning:</strong> {cleaningTime || "0"} timmar
-                </li>
-                {hourlyRate > 0 && (
-                  <li>
-                    <strong>Timtaxa:</strong> {hourlyRate} kr/h
-                  </li>
-                )}
-                <li>
-                  <strong>{frequency === "onetime" ? "Totalpris:" : "Totalpris för månaden:"}</strong> {predictedPrice || "0"} kr
-                </li>
-              </ul>
-              <button
-                type="button"
-                className="default-btn"
-                onClick={() => setShowContactForm(true)}
-                disabled={!size || !frequency || !dateTime}
-              >
-                Boka tjänsten
-              </button>
-            </div>
+              )}
+              <li>
+                <strong>{frequency === "onetime" ? "Totalpris:" : "Totalpris för månaden:"}</strong>{" "}
+                {needsQuote ? "Offereras" : formatPrice(totalPrice)}
+              </li>
+            </BookingSummary>
           </div>
 
-          {/* Contact Form Accordion */}
-          {showContactForm && (
+          {flow.contactOpen && (
             <div className="col-lg-12">
-              <div className="accordion">
-                <h3>Kontaktformulär</h3>
-                <form className="contact-form" onSubmit={sendToWebhook}>
-                  <div className="form-group">
-                    <label htmlFor="name">Namn</label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="form-control"
-                      placeholder="Ange ditt namn"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">E-post</label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="form-control"
-                      placeholder="Ange din e-post"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Telefonnummer</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      className="form-control"
-                      placeholder="Ange ditt telefonnummer"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="address">Adress</label>
-                    <input
-                      type="text"
-                      id="address"
-                      className="form-control"
-                      placeholder="Ange din adress"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <button type="submit" className="default-btn">
-                    Skicka
-                  </button>
-                </form>
-              </div>
+              <BookingContactForm
+                buildPayload={buildPayload}
+                blockedHint={needsQuote ? QUOTE_ONLY_HINT : hint}
+                focusSignal={flow.focusSignal}
+                dateInputRef={dateInputRef}
+                onConflict={flow.markConflict}
+                onSuccess={handleBooked}
+              />
+            </div>
+          )}
+
+          {flow.confirmation && (
+            <div className="col-lg-12">
+              <BookingConfirmation {...flow.confirmation} onDismiss={flow.dismissConfirmation} />
             </div>
           )}
         </div>
       </div>
 
-      {/* Popup Window */}
-      {showPopup && (
-        <div className="popup-window">
-          <div className="popup-content">
-            <h3>Bekräftelse</h3>
-            <p>{popupMessage}</p>
-            <button className="default-btn" onClick={handlePopupClose}>
-              OK
-            </button>
-          </div>
-        </div>
-      )}
+      <QuoteModal
+        open={showQuote}
+        onClose={() => setShowQuote(false)}
+        service="Hemstädning"
+        details={quoteDetails}
+      />
 
       <Footer />
     </>

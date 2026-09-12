@@ -3,6 +3,18 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import BookingSummary from "../components/Booking/BookingSummary";
+import FieldError, { invalidClass } from "../components/Booking/FieldError";
+import { billableHours, bookingHint, MIN_BILLABLE_HOURS, parseArea } from "../lib/booking/rules";
+import {
+  describeArea,
+  formatArea,
+  formatHours,
+  formatPrice,
+  NO_PRICE,
+  NOT_SET,
+  roundKronor,
+} from "../lib/booking/format";
 
 const FREQUENCIES = {
   1: { label: "1 gång per månad", hourlyRate: 350 },
@@ -17,11 +29,31 @@ const OfficeCleaning = () => {
 
   // Derived on every render, so the summary follows the inputs as they change
   // instead of waiting for a "Beräkna pris" click.
-  const area = parseFloat(size);
+  const area = parseArea(size);
   const plan = FREQUENCIES[frequency];
-  const hasArea = !isNaN(area) && area > 0;
-  const cleaningTime = hasArea ? (1.57 + 0.0167 * area).toFixed(2) : 0;
-  const predictedPrice = hasArea && plan ? (plan.hourlyRate * cleaningTime * Number(frequency)).toFixed(2) : 0;
+  const needsQuote = area.status === "quote";
+  const estimatedTime = area.status === "ok" ? Number((1.57 + 0.0167 * area.value).toFixed(2)) : null;
+  // TODO(cliente Q14): at least MIN_BILLABLE_HOURS are billed per cleaning.
+  const cleaningTime = estimatedTime === null ? null : billableHours(estimatedTime);
+  const predictedPrice =
+    cleaningTime !== null && plan ? roundKronor(plan.hourlyRate * cleaningTime * Number(frequency)) : null;
+
+  const hint = bookingHint([
+    { label: "storlek", status: area.status },
+    { label: "frekvens", status: plan ? "ok" : "empty" },
+  ]);
+
+  let details = null;
+  if (needsQuote) {
+    details = { Storlek: formatArea(area.value), ...(plan && { Frekvens: plan.label }) };
+  } else if (plan && cleaningTime !== null) {
+    details = {
+      Storlek: formatArea(area.value),
+      Frekvens: plan.label,
+      "Beräknad tid per städning": formatHours(cleaningTime),
+      "Uppskattat pris per månad": formatPrice(predictedPrice),
+    };
+  }
 
   return (
     <>
@@ -70,13 +102,18 @@ const OfficeCleaning = () => {
                 <input
                   type="number"
                   id="size"
-                  className="form-control"
+                  className={`form-control${area.status === "invalid" ? ` ${invalidClass}` : ""}`}
                   placeholder="Ange storlek"
                   min="1"
+                  step="any"
+                  inputMode="decimal"
                   value={size}
                   onChange={(e) => setSize(e.target.value)}
+                  aria-invalid={area.status === "invalid" || undefined}
+                  aria-describedby={area.message ? "size-error" : undefined}
                   required
                 />
+                <FieldError id="size-error">{area.message}</FieldError>
               </div>
               <div className="form-group">
                 <label htmlFor="frequency">Frekvens</label>
@@ -92,42 +129,44 @@ const OfficeCleaning = () => {
                   <option value="2">2 gånger per månad (163 kr/h)</option>
                   <option value="4">4 gånger per månad (150 kr/h)</option>
                 </select>
+                <small className="form-text text-muted">
+                  Minsta debitering är {MIN_BILLABLE_HOURS} timmar per städtillfälle.
+                </small>
               </div>
             </form>
           </div>
 
           {/* Summary Section */}
           <div className="col-lg-6">
-            <div className="summary-frame" style={{ height: "100%" }}>
-              <h3>Summering:</h3>
-              <ul className="summary-list">
+            <BookingSummary
+              style={{ height: "100%" }}
+              mode={needsQuote ? "quote" : "book"}
+              hint={needsQuote ? "" : hint}
+              onBook={() => setShowQuote(true)}
+              onQuote={() => setShowQuote(true)}
+              quoteNote="Så stora lokaler prissätter vi med en offert. Skicka en förfrågan så återkommer vi."
+            >
+              <li>
+                <strong>Storlek:</strong> {describeArea(area)}
+              </li>
+              <li>
+                <strong>Frekvens:</strong> {plan ? plan.label : NOT_SET}
+              </li>
+              <li>
+                <strong>Beräknad tid per städning:</strong>{" "}
+                {cleaningTime === null ? NO_PRICE : formatHours(cleaningTime)}
+                {estimatedTime !== null && estimatedTime < MIN_BILLABLE_HOURS && " (minsta debitering)"}
+              </li>
+              {plan && !needsQuote && (
                 <li>
-                  <strong>Storlek:</strong> {size || "Ej angiven"} m²
+                  <strong>Timtaxa:</strong> {formatPrice(plan.hourlyRate)}/h
                 </li>
-                <li>
-                  <strong>Frekvens:</strong> {plan ? plan.label : "Ej angiven"}
-                </li>
-                <li>
-                  <strong>Beräknad tid per städning:</strong> {cleaningTime || "0"} timmar
-                </li>
-                {plan && (
-                  <li>
-                    <strong>Timtaxa:</strong> {plan.hourlyRate} kr/h
-                  </li>
-                )}
-                <li>
-                  <strong>Totalpris för månaden:</strong> {predictedPrice || "0"} kr
-                </li>
-              </ul>
-              <button
-                type="button"
-                className="default-btn"
-                onClick={() => setShowQuote(true)}
-                disabled={!hasArea || !plan}
-              >
-                Boka tjänsten
-              </button>
-            </div>
+              )}
+              <li>
+                <strong>Totalpris för månaden:</strong>{" "}
+                {needsQuote ? "Offereras" : formatPrice(predictedPrice)}
+              </li>
+            </BookingSummary>
           </div>
         </div>
       </div>
@@ -136,19 +175,10 @@ const OfficeCleaning = () => {
         open={showQuote}
         onClose={() => setShowQuote(false)}
         service="Kontorsstädning"
-        title="Boka tjänsten"
-        subject="Bokningsförfrågan – Kontorsstädning"
+        title={needsQuote ? "Begär offert" : "Boka tjänsten"}
+        subject={needsQuote ? "Offertförfrågan – Kontorsstädning" : "Bokningsförfrågan – Kontorsstädning"}
         addressPlaceholder="Ange kontorets adress"
-        details={
-          plan
-            ? {
-                Storlek: `${size} m²`,
-                Frekvens: plan.label,
-                "Beräknad tid per städning": `${cleaningTime} timmar`,
-                "Uppskattat pris per månad": `${predictedPrice} kr`,
-              }
-            : null
-        }
+        details={details}
       />
 
       <Footer />

@@ -1,16 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
+import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import BookingSummary from "../components/Booking/BookingSummary";
+import BookingContactForm from "../components/Booking/BookingContactForm";
+import BookingConfirmation from "../components/Booking/BookingConfirmation";
+import DateTimeField from "../components/Booking/DateTimeField";
+import FieldError, { invalidClass } from "../components/Booking/FieldError";
+import useBookingFlow from "../lib/booking/useBookingFlow";
+import useBookingDate from "../lib/booking/useBookingDate";
+import { bookingHint, isQuoteOnly, parseArea, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import {
+  describeArea,
+  describeDate,
+  formatArea,
+  formatDateTime,
+  formatPrice,
+  NOT_SET,
+  roundKronor,
+} from "../lib/booking/format";
+
+// Homes above this size are quoted ("Offereras"), not priced online.
+const QUOTE_ABOVE_AREA = 150;
+const MAX_WALLS = 20;
+
+const CONTACT_PREFERENCES = { call: "Bli uppringd", visit: "Få ett hembesök" };
+
+// Calculate base price based on area
+const getBasePrice = (area) => {
+  if (area >= 1 && area <= 50) return 2650;
+  if (area > 50 && area <= 70) return 3290;
+  if (area > 70 && area <= 100) return 3950;
+  if (area > 100 && area <= 150) return 4750;
+  return null; // Offereras
+};
 
 const DeepCleaning = () => {
   const [size, setSize] = useState("");
-  const [dateTime, setDateTime] = useState("");
-  const [minDateTime, setMinDateTime] = useState("");
   const [contactPreference, setContactPreference] = useState("");
-  const [basePrice, setBasePrice] = useState(0);
-  const [predictedPrice, setPredictedPrice] = useState(0);
-  
+  const [showQuote, setShowQuote] = useState(false);
+  const date = useBookingDate();
+
   // Extra services checkboxes
   const [hasKylFrys, setHasKylFrys] = useState(false);
   const [hasKylFrysDefrost, setHasKylFrysDefrost] = useState(false);
@@ -18,148 +49,87 @@ const DeepCleaning = () => {
   const [hasKapGarderob, setHasKapGarderob] = useState(false);
   const [hasForrad, setHasForrad] = useState(false);
   const [hasTvattmaskin, setHasTvattmaskin] = useState(false);
-  const [vaggtvattCount, setVaggtvattCount] = useState(0);
-  
-  // Contact form states
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
+  const [vaggtvatt, setVaggtvatt] = useState("0");
 
-  const bookingUrl = "/api/booking";
+  // Booking steps (contact form, confirmation) shared by all booking pages
+  const flow = useBookingFlow();
+  const dateInputRef = useRef(null);
 
-  useEffect(() => {
-    const now = new Date();
-    now.setDate(now.getDate() + 2);
-    now.setHours(7, 0, 0, 0);
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, "0");
-    const day = now.getDate().toString().padStart(2, "0");
-    setMinDateTime(`${year}-${month}-${day}T07:00`);
-  }, []);
+  // Derived on every render, so the summary and the payload always follow the
+  // current inputs and never keep a price from values that were cleared.
+  const area = parseArea(size, { max: QUOTE_ABOVE_AREA });
+  const walls = parseCount(vaggtvatt, { min: 0, max: MAX_WALLS, emptyValue: 0 });
+  const wallCount = walls.status === "ok" ? walls.value : 0;
+  const basePrice = area.status === "ok" ? getBasePrice(area.value) : null;
 
-  const handleDateTimeChange = (e) => {
-    const selectedDateTime = e.target.value;
-    if (selectedDateTime) {
-      const selectedHour = new Date(selectedDateTime).getHours();
-      if (selectedHour < 7 || selectedHour >= 17) {
-        alert("Vänligen välj en tid mellan 07:00 och 17:00.");
-        setDateTime("");
-        return;
-      }
-    }
-    setDateTime(selectedDateTime);
-  };
+  const extras = [
+    { selected: hasKylFrys, label: "Kyl/Frys invändigt (ej avfrostning)", price: 360 },
+    { selected: hasKylFrysDefrost, label: "Kyl/Frys med avfrostning", price: 500 },
+    { selected: hasDiskmaskin, label: "Diskmaskin invändigt", price: 250 },
+    { selected: hasKapGarderob, label: "Skåp och garderober invändigt", price: 360 },
+    { selected: hasForrad, label: "Förråd", price: 300 },
+    { selected: hasTvattmaskin, label: "Tvättmaskin/torktumlare invändigt", price: 390 },
+    {
+      selected: wallCount > 0,
+      label: `Väggtvätt (${wallCount} vägg${wallCount > 1 ? "ar" : ""})`,
+      price: wallCount * 250,
+    },
+  ].filter((extra) => extra.selected);
+  const extrasLabel = extras.map((extra) => extra.label).join(", ");
 
-  // Calculate base price based on area
-  const calculateBasePrice = (area) => {
-    if (!isNaN(area) && area > 0) {
-      let price = 0;
-      if (area >= 1 && area <= 50) price = 2650;
-      else if (area > 50 && area <= 70) price = 3290;
-      else if (area > 70 && area <= 100) price = 3950;
-      else if (area > 100 && area <= 150) price = 4750;
-      else if (area > 150) price = 0; // Offereras
-      setBasePrice(price);
-      return price;
-    }
-    setBasePrice(0);
-    return 0;
-  };
+  const totalPrice =
+    basePrice !== null && walls.status === "ok"
+      ? roundKronor(extras.reduce((sum, extra) => sum + extra.price, basePrice))
+      : null;
 
-  // Calculate total price with extras
-  useEffect(() => {
-    let total = basePrice;
-    
-    // Add extra services
-    if (hasKylFrys) total += 360;
-    if (hasKylFrysDefrost) total += 500;
-    if (hasDiskmaskin) total += 250;
-    if (hasKapGarderob) total += 360;
-    if (hasForrad) total += 300;
-    if (hasTvattmaskin) total += 390;
-    total += vaggtvattCount * 250;
-    
-    setPredictedPrice(total.toFixed(2));
-  }, [basePrice, hasKylFrys, hasKylFrysDefrost, hasDiskmaskin, hasKapGarderob, hasForrad, hasTvattmaskin, vaggtvattCount]);
+  const hint = bookingHint([
+    { label: "storlek", status: area.status },
+    { label: "antal väggar", status: walls.status },
+    { label: "datum", status: date.check.status },
+    { label: "kontaktmetod", status: CONTACT_PREFERENCES[contactPreference] ? "ok" : "empty" },
+  ]);
+  const needsQuote = isQuoteOnly({ outOfRange: area.status === "quote", hint, price: totalPrice });
 
-  // Handle size input change
-  const handleSizeChange = (e) => {
-    const area = parseFloat(e.target.value);
-    setSize(e.target.value);
-    calculateBasePrice(area);
-  };
+  // Calculator part of the booking payload; the contact form adds the rest.
+  const buildPayload = () => ({
+    cleaningType: "Storstädning",
+    area: String(area.value),
+    dateTime: date.dateTime,
+    contactPreference,
+    basePrice,
+    extras: extrasLabel,
+    totalPrice,
+  });
 
-  // Function to send booking data
-  const sendToWebhook = async (e) => {
-    e.preventDefault();
-
-    const extras = [];
-    if (hasKylFrys) extras.push("Kyl/Frys invändigt (ej avfrostning)");
-    if (hasKylFrysDefrost) extras.push("Kyl/Frys med avfrostning");
-    if (hasDiskmaskin) extras.push("Diskmaskin invändigt");
-    if (hasKapGarderob) extras.push("Skåp och garderober invändigt");
-    if (hasForrad) extras.push("Förråd");
-    if (hasTvattmaskin) extras.push("Tvättmaskin/torktumlare invändigt");
-    if (vaggtvattCount > 0) extras.push(`Väggtvätt (${vaggtvattCount} vägg${vaggtvattCount > 1 ? 'ar' : ''})`);
-
-    const payload = {
-      cleaningType: "Storstädning",
-      area: size,
-      dateTime,
-      contactPreference,
-      basePrice,
-      extras: extras.join(", "),
-      totalPrice: predictedPrice,
-      name,
-      email,
-      phone,
-      address,
-    };
-
-    try {
-      const response = await fetch(bookingUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      setPopupMessage(data.message || "Bokning skapad!");
-      setShowPopup(true);
-      if (response.ok) clearFormFields();
-    } catch (error) {
-      setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-      setShowPopup(true);
-    }
-  };
-
-  // Function to clear all form fields
-  const clearFormFields = () => {
+  const clearCalculator = () => {
     setSize("");
-    setDateTime("");
+    date.setDateTime("");
     setContactPreference("");
-    setBasePrice(0);
-    setPredictedPrice(0);
     setHasKylFrys(false);
     setHasKylFrysDefrost(false);
     setHasDiskmaskin(false);
     setHasKapGarderob(false);
     setHasForrad(false);
     setHasTvattmaskin(false);
-    setVaggtvattCount(0);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setAddress("");
-    setShowContactForm(false);
+    setVaggtvatt("0");
   };
 
-  const handlePopupClose = () => {
-    setShowPopup(false);
-    window.location.reload();
+  const handleBooked = (payload) => {
+    flow.complete({
+      service: payload.cleaningType,
+      when: formatDateTime(payload.dateTime),
+      email: payload.email,
+    });
+    clearCalculator();
+  };
+
+  const quoteDetails = {
+    Storlek: formatArea(area.value),
+    ...(extrasLabel && { Tillval: extrasLabel }),
+    ...(date.isValid && { "Önskat datum och tid": formatDateTime(date.dateTime) }),
+    ...(CONTACT_PREFERENCES[contactPreference] && {
+      Kontaktmetod: CONTACT_PREFERENCES[contactPreference],
+    }),
   };
 
   return (
@@ -235,14 +205,20 @@ const DeepCleaning = () => {
                 <input
                   type="number"
                   id="size"
-                  className="form-control"
+                  className={`form-control${area.status === "invalid" ? ` ${invalidClass}` : ""}`}
                   placeholder="Ange storlek"
+                  min="1"
+                  step="any"
+                  inputMode="decimal"
                   value={size}
-                  onChange={handleSizeChange}
+                  onChange={(e) => setSize(e.target.value)}
+                  aria-invalid={area.status === "invalid" || undefined}
+                  aria-describedby={area.message ? "size-error" : undefined}
                   required
                 />
+                <FieldError id="size-error">{area.message}</FieldError>
               </div>
-              
+
               <div className="form-group">
                 <label>Tillvalstjänster</label>
                 <div className="form-check">
@@ -251,7 +227,11 @@ const DeepCleaning = () => {
                     className="form-check-input"
                     id="kylfrys"
                     checked={hasKylFrys}
-                    onChange={(e) => setHasKylFrys(e.target.checked)}
+                    onChange={(e) => {
+                      setHasKylFrys(e.target.checked);
+                      // The two fridge options exclude each other.
+                      if (e.target.checked) setHasKylFrysDefrost(false);
+                    }}
                   />
                   <label className="form-check-label" htmlFor="kylfrys">
                     Kyl/Frys invändigt (ej avfrostning) - 360 kr
@@ -263,7 +243,10 @@ const DeepCleaning = () => {
                     className="form-check-input"
                     id="kylfrysdefrost"
                     checked={hasKylFrysDefrost}
-                    onChange={(e) => setHasKylFrysDefrost(e.target.checked)}
+                    onChange={(e) => {
+                      setHasKylFrysDefrost(e.target.checked);
+                      if (e.target.checked) setHasKylFrys(false);
+                    }}
                   />
                   <label className="form-check-label" htmlFor="kylfrysdefrost">
                     Kyl/Frys med avfrostning - 500 kr
@@ -322,28 +305,29 @@ const DeepCleaning = () => {
                   <input
                     type="number"
                     id="vaggtvatt"
-                    className="form-control"
+                    className={`form-control${walls.status === "invalid" ? ` ${invalidClass}` : ""}`}
                     placeholder="Antal väggar"
                     min="0"
-                    value={vaggtvattCount}
-                    onChange={(e) => setVaggtvattCount(parseInt(e.target.value) || 0)}
+                    max={MAX_WALLS}
+                    step="1"
+                    inputMode="numeric"
+                    value={vaggtvatt}
+                    onChange={(e) => setVaggtvatt(e.target.value)}
+                    aria-invalid={walls.status === "invalid" || undefined}
+                    aria-describedby={walls.status === "invalid" ? "vaggtvatt-error" : undefined}
                   />
+                  <FieldError id="vaggtvatt-error">
+                    {walls.status === "invalid" &&
+                      `Ange antal väggar som ett heltal mellan 0 och ${MAX_WALLS}.`}
+                  </FieldError>
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="dateTime">Önskat datum och tid (Mellan 07:00-17:00)</label>
-                <input
-                  type="datetime-local"
-                  id="dateTime"
-                  className="form-control"
-                  value={dateTime}
-                  onChange={handleDateTimeChange}
-                  min={minDateTime}
-                  step="1800"
-                  required
-                />
-              </div>
+              <DateTimeField
+                date={date}
+                inputRef={dateInputRef}
+                conflict={flow.isConflict(date.dateTime)}
+              />
               <div className="form-group">
                 <label htmlFor="contactPreference">Kontaktmetod</label>
                 <select
@@ -363,117 +347,59 @@ const DeepCleaning = () => {
 
           {/* Summary Section */}
           <div className="col-lg-6">
-            <div className="summary-frame">
-              <h3>Summering:</h3>
-              <ul className="summary-list">
-                <li>
-                  <strong>Storlek:</strong> {size || "Ej angiven"} m²
-                </li>
-                <li>
-                  <strong>Baspris:</strong> {basePrice === 0 && parseFloat(size) > 150 ? "Offereras" : `${basePrice || "0"} kr`}
-                </li>
-                <li>
-                  <strong>Önskat datum och tid:</strong> {dateTime || "Ej angiven"}
-                </li>
-                <li>
-                  <strong>Kontaktmetod:</strong>{" "}
-                  {contactPreference === "call"
-                    ? "Bli uppringd"
-                    : contactPreference === "visit"
-                    ? "Få ett hembesök"
-                    : "Ej angiven"}
-                </li>
-                <li>
-                  <strong>Uppskattat totalpris:</strong> {basePrice === 0 && parseFloat(size) > 150 ? "Offereras" : `${predictedPrice || "0"} kr`}
-                </li>
-              </ul>
-              <button
-                type="button"
-                className="default-btn"
-                onClick={() => setShowContactForm(true)}
-                disabled={!size || !dateTime || !contactPreference}
-              >
-                Boka tjänsten
-              </button>
-            </div>
+            <BookingSummary
+              mode={needsQuote ? "quote" : "book"}
+              hint={needsQuote ? "" : hint}
+              onBook={flow.openContact}
+              onQuote={() => setShowQuote(true)}
+              quoteNote="Storstädning av bostäder över 150 m² prissätter vi med en offert. Skicka en förfrågan så återkommer vi."
+            >
+              <li>
+                <strong>Storlek:</strong> {describeArea(area)}
+              </li>
+              <li>
+                <strong>Baspris:</strong> {needsQuote ? "Offereras" : formatPrice(basePrice)}
+              </li>
+              <li>
+                <strong>Önskat datum och tid:</strong> {describeDate(date)}
+              </li>
+              <li>
+                <strong>Kontaktmetod:</strong> {CONTACT_PREFERENCES[contactPreference] || NOT_SET}
+              </li>
+              <li>
+                <strong>Uppskattat totalpris:</strong>{" "}
+                {needsQuote ? "Offereras" : formatPrice(totalPrice)}
+              </li>
+            </BookingSummary>
           </div>
 
-          {/* Contact Form Accordion */}
-          {showContactForm && (
+          {flow.contactOpen && (
             <div className="col-lg-12">
-              <div className="accordion">
-                <h3>Kontaktformulär</h3>
-                <form className="contact-form" onSubmit={sendToWebhook}>
-                  <div className="form-group">
-                    <label htmlFor="name">Namn</label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="form-control"
-                      placeholder="Ange ditt namn"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">E-post</label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="form-control"
-                      placeholder="Ange din e-post"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Telefonnummer</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      className="form-control"
-                      placeholder="Ange ditt telefonnummer"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="address">Adress</label>
-                    <input
-                      type="text"
-                      id="address"
-                      className="form-control"
-                      placeholder="Ange din adress"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <button type="submit" className="default-btn">
-                    Skicka
-                  </button>
-                </form>
-              </div>
+              <BookingContactForm
+                buildPayload={buildPayload}
+                blockedHint={needsQuote ? QUOTE_ONLY_HINT : hint}
+                focusSignal={flow.focusSignal}
+                dateInputRef={dateInputRef}
+                onConflict={flow.markConflict}
+                onSuccess={handleBooked}
+              />
+            </div>
+          )}
+
+          {flow.confirmation && (
+            <div className="col-lg-12">
+              <BookingConfirmation {...flow.confirmation} onDismiss={flow.dismissConfirmation} />
             </div>
           )}
         </div>
       </div>
-      
-      {/* Popup Window */}
-      {showPopup && (
-        <div className="popup-window">
-          <div className="popup-content">
-            <h3>Bekräftelse</h3>
-            <p>{popupMessage}</p>
-            <button className="default-btn" onClick={handlePopupClose}>
-              OK
-            </button>
-          </div>
-        </div>
-      )}
+
+      <QuoteModal
+        open={showQuote}
+        onClose={() => setShowQuote(false)}
+        service="Storstädning"
+        details={quoteDetails}
+      />
 
       <Footer />
     </>
