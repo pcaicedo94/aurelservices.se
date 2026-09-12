@@ -169,7 +169,7 @@ const HomeCleaning = () => {
   return (
     <>
       <Navbar associates />
-      <PageBanner pageTitle="Hemstädning" bgImage="/images/Hemstädning.png" />
+      <PageBanner pageTitle="Hemstädning" bgImage="/images/banners/hemstadning.webp" />
 
       {/* Descriptive Section */}
       <div className="container ptb-50">

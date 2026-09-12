@@ -171,7 +171,7 @@ const MoveCleaning = () => {
   return (
     <>
       <Navbar associates />
-      <PageBanner pageTitle="Flyttstädning" bgImage="/images/Flyttstädning.png" />
+      <PageBanner pageTitle="Flyttstädning" bgImage="/images/banners/flyttstadning.webp" />
 
       {/* Descriptive Section */}
       <div className="container ptb-50">
