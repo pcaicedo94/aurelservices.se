@@ -1,5 +1,4 @@
 import { useState } from "react";
-import baseUrl from "../../utils/baseUrl";
 import DownloadPDF from "../DownloadPDF/DownloadPDF";
 import axios from "axios";
 import Select from "../Select/Select";
@@ -68,39 +67,17 @@ export default function HomeForm() {
     const selectedPriceList = priceLists[userType]?.[userService];
     console.log("Selected Price List:", selectedPriceList);
 
+    // Returns the price as well as storing it: setPrice does not take effect
+    // until the next render, so the submit handler needs the value directly.
+    let matched = 0;
     if (selectedPriceList) {
       const matchedPrice = selectedPriceList.find(
         (item) => userSize >= item.range[0] && userSize <= item.range[1]
       );
-      console.log("Matched Price:", matchedPrice);
-      setPrice(matchedPrice ? matchedPrice.price : 0);
-    } else {
-      setPrice(0); // Default to 0 if no match is found
+      matched = matchedPrice ? matchedPrice.price : 0;
     }
-  };
-
-  const saveDataOnTurso = async () => {
-    const payload = {
-      service_type: type.value,
-      clean_type: service.value,
-      address,
-      email: clientEmail,
-      size,
-      price, // Include calculated price
-    };
-    const response = await fetch(baseUrl + `/api/form`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    const responseData = await response.json();
-    if (response.status === 200 && !responseData.error) {
-      setSubmitted(true);
-    } else {
-      setSubmitted(false);
-    }
+    setPrice(matched);
+    return matched;
   };
 
   const handleSubmit = async (e) => {
@@ -108,25 +85,23 @@ export default function HomeForm() {
     if (submitted) {
       return;
     }
-    calculatePrice(); // Calculate price before submission
+    const calculatedPrice = calculatePrice();
     setSubmitted(true);
     try {
-      await saveDataOnTurso();
-
-      // SEND EMAIL
-      const url = `${baseUrl}/api/contact`;
-      const payload = {
-        size,
-        address,
-        clientEmail,
-        serviceType: type.label,
-        cleanType: service.label,
-        price, // Include calculated price
-      };
-      const response = await axios.post(url, payload);
-      console.log(response);
+      await axios.post("/api/contact", {
+        email: clientEmail,
+        subject: "Prisförfrågan från startsidan",
+        details: {
+          Typ: type.label,
+          Tjänst: service.label,
+          Yta: size ? `${size} m²` : "",
+          Adress: address,
+          "Uppskattat pris": calculatedPrice ? `${calculatedPrice} kr` : "Offereras",
+        },
+      });
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setSubmitted(false);
     }
   };
 
@@ -201,7 +176,9 @@ export default function HomeForm() {
           }}
         ></input>
         {submitted && (
-          <div style={{ color: "#34a783" }}>Sended successfully</div>
+          <div style={{ color: "#34a783" }}>
+            Tack! Vi återkommer så snart som möjligt.
+          </div>
         )}
         <div>
           {submitted && (
@@ -225,7 +202,7 @@ export default function HomeForm() {
             style={{ minWidth: 150 }}
             disabled={submitted}
           >
-            Ask <span></span>
+            Få offert <span></span>
           </button>
         </div>
       </form>
