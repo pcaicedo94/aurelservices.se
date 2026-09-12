@@ -2400,9 +2400,10 @@ Fun Facts Section CSS
   width: 100%;
   left: 0;
   top: 0;
-  background-color: #34a783;
+  /* White figures on top: 5.6:1 even over the lightest part of the photo */
+  background-color: var(--aurel-green-action-hover);
   z-index: -1;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .single-fun-fact {
