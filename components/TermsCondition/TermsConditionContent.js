@@ -64,7 +64,8 @@ const TermsConditionContent = () => {
             <li>
               Priset för storstädning och flyttstädning förutsätter att bostaden är i normalt skick.
               Är bostaden hårt nedsmutsad kan ett tillägg på upp till 20 procent tillkomma. Du får
-              alltid veta det innan arbetet påbörjas.
+              alltid veta det innan arbetet påbörjas.{" "}
+              <mark>[ATT BEKRÄFTA: om tillägget är 20 procent eller upp till 20 procent]</mark>
             </li>
             <li>
               Hemstädning debiteras per timme, med minst 2 timmar per tillfälle.{" "}
