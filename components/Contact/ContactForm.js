@@ -42,6 +42,8 @@ const ContactForm = () => {
   // When the form was shown, so the API can tell a person from a bot that
   // submits at once. Set after mount to keep server and client markup equal.
   const startedAt = useRef(0);
+  const [sending, setSending] = useState(false);
+  const sendingRef = useRef(false);
 
   useEffect(() => {
     startedAt.current = Date.now();
@@ -54,6 +56,11 @@ const ContactForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // A ref, not state: a fast double click fires twice before React re-renders
+    // the disabled button.
+    if (sendingRef.current) return;
+    sendingRef.current = true;
+    setSending(true);
     try {
       const { name, email, number, subject, text } = contact;
       // The input is named `number`; the API expects `phone`.
@@ -73,6 +80,9 @@ const ContactForm = () => {
     } catch (error) {
       console.error(error);
       alertError(error?.response?.data?.message);
+    } finally {
+      sendingRef.current = false;
+      setSending(false);
     }
   };
 
@@ -174,8 +184,8 @@ const ContactForm = () => {
                     />
                   </div>
 
-                  <button type="submit" className="default-btn">
-                    Skicka meddelande
+                  <button type="submit" className="default-btn" disabled={sending}>
+                    {sending ? "Skickar…" : "Skicka meddelande"}
                   </button>
                 </form>
               </div>
