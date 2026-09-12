@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import Footer from "../components/Layouts/Footer";
+import BookingSummary from "../components/Booking/BookingSummary";
+import BookingContactForm from "../components/Booking/BookingContactForm";
+import BookingConfirmation from "../components/Booking/BookingConfirmation";
+import FieldError from "../components/Booking/FieldError";
+import useBookingFlow from "../lib/booking/useBookingFlow";
+import { bookingHint } from "../lib/booking/rules";
 
 const DeepCleaning = () => {
   const [size, setSize] = useState("");
@@ -20,16 +26,9 @@ const DeepCleaning = () => {
   const [hasTvattmaskin, setHasTvattmaskin] = useState(false);
   const [vaggtvattCount, setVaggtvattCount] = useState(0);
   
-  // Contact form states
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
-
-  const bookingUrl = "/api/booking";
+  // Booking steps (contact form, confirmation) shared by all booking pages
+  const flow = useBookingFlow();
+  const dateInputRef = useRef(null);
 
   useEffect(() => {
     const now = new Date();
@@ -93,10 +92,8 @@ const DeepCleaning = () => {
     calculateBasePrice(area);
   };
 
-  // Function to send booking data
-  const sendToWebhook = async (e) => {
-    e.preventDefault();
-
+  // Calculator part of the booking payload; the contact form adds the rest.
+  const buildPayload = () => {
     const extras = [];
     if (hasKylFrys) extras.push("Kyl/Frys invändigt (ej avfrostning)");
     if (hasKylFrysDefrost) extras.push("Kyl/Frys med avfrostning");
@@ -106,7 +103,7 @@ const DeepCleaning = () => {
     if (hasTvattmaskin) extras.push("Tvättmaskin/torktumlare invändigt");
     if (vaggtvattCount > 0) extras.push(`Väggtvätt (${vaggtvattCount} vägg${vaggtvattCount > 1 ? 'ar' : ''})`);
 
-    const payload = {
+    return {
       cleaningType: "Storstädning",
       area: size,
       dateTime,
@@ -114,30 +111,10 @@ const DeepCleaning = () => {
       basePrice,
       extras: extras.join(", "),
       totalPrice: predictedPrice,
-      name,
-      email,
-      phone,
-      address,
     };
-
-    try {
-      const response = await fetch(bookingUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      setPopupMessage(data.message || "Bokning skapad!");
-      setShowPopup(true);
-      if (response.ok) clearFormFields();
-    } catch (error) {
-      setPopupMessage("Kunde inte ansluta till servern. Försök igen.");
-      setShowPopup(true);
-    }
   };
 
-  // Function to clear all form fields
-  const clearFormFields = () => {
+  const clearCalculator = () => {
     setSize("");
     setDateTime("");
     setContactPreference("");
@@ -150,17 +127,18 @@ const DeepCleaning = () => {
     setHasForrad(false);
     setHasTvattmaskin(false);
     setVaggtvattCount(0);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setAddress("");
-    setShowContactForm(false);
   };
 
-  const handlePopupClose = () => {
-    setShowPopup(false);
-    window.location.reload();
+  const handleBooked = (payload) => {
+    flow.complete({ service: payload.cleaningType, when: payload.dateTime, email: payload.email });
+    clearCalculator();
   };
+
+  const hint = bookingHint([
+    { label: "storlek", status: size ? "ok" : "empty" },
+    { label: "datum", status: dateTime ? "ok" : "empty" },
+    { label: "kontaktmetod", status: contactPreference ? "ok" : "empty" },
+  ]);
 
   return (
     <>
@@ -334,6 +312,7 @@ const DeepCleaning = () => {
               <div className="form-group">
                 <label htmlFor="dateTime">Önskat datum och tid (Mellan 07:00-17:00)</label>
                 <input
+                  ref={dateInputRef}
                   type="datetime-local"
                   id="dateTime"
                   className="form-control"
@@ -343,6 +322,11 @@ const DeepCleaning = () => {
                   step="1800"
                   required
                 />
+                {flow.conflictDateTime !== "" && flow.conflictDateTime === dateTime && (
+                  <FieldError id="dateTime-error">
+                    Tiden är tyvärr redan bokad. Välj en annan dag eller tid.
+                  </FieldError>
+                )}
               </div>
               <div className="form-group">
                 <label htmlFor="contactPreference">Kontaktmetod</label>
@@ -363,117 +347,50 @@ const DeepCleaning = () => {
 
           {/* Summary Section */}
           <div className="col-lg-6">
-            <div className="summary-frame">
-              <h3>Summering:</h3>
-              <ul className="summary-list">
-                <li>
-                  <strong>Storlek:</strong> {size || "Ej angiven"} m²
-                </li>
-                <li>
-                  <strong>Baspris:</strong> {basePrice === 0 && parseFloat(size) > 150 ? "Offereras" : `${basePrice || "0"} kr`}
-                </li>
-                <li>
-                  <strong>Önskat datum och tid:</strong> {dateTime || "Ej angiven"}
-                </li>
-                <li>
-                  <strong>Kontaktmetod:</strong>{" "}
-                  {contactPreference === "call"
-                    ? "Bli uppringd"
-                    : contactPreference === "visit"
-                    ? "Få ett hembesök"
-                    : "Ej angiven"}
-                </li>
-                <li>
-                  <strong>Uppskattat totalpris:</strong> {basePrice === 0 && parseFloat(size) > 150 ? "Offereras" : `${predictedPrice || "0"} kr`}
-                </li>
-              </ul>
-              <button
-                type="button"
-                className="default-btn"
-                onClick={() => setShowContactForm(true)}
-                disabled={!size || !dateTime || !contactPreference}
-              >
-                Boka tjänsten
-              </button>
-            </div>
+            <BookingSummary hint={hint} onBook={flow.openContact}>
+              <li>
+                <strong>Storlek:</strong> {size || "Ej angiven"} m²
+              </li>
+              <li>
+                <strong>Baspris:</strong> {basePrice === 0 && parseFloat(size) > 150 ? "Offereras" : `${basePrice || "0"} kr`}
+              </li>
+              <li>
+                <strong>Önskat datum och tid:</strong> {dateTime || "Ej angiven"}
+              </li>
+              <li>
+                <strong>Kontaktmetod:</strong>{" "}
+                {contactPreference === "call"
+                  ? "Bli uppringd"
+                  : contactPreference === "visit"
+                  ? "Få ett hembesök"
+                  : "Ej angiven"}
+              </li>
+              <li>
+                <strong>Uppskattat totalpris:</strong> {basePrice === 0 && parseFloat(size) > 150 ? "Offereras" : `${predictedPrice || "0"} kr`}
+              </li>
+            </BookingSummary>
           </div>
 
-          {/* Contact Form Accordion */}
-          {showContactForm && (
+          {flow.contactOpen && (
             <div className="col-lg-12">
-              <div className="accordion">
-                <h3>Kontaktformulär</h3>
-                <form className="contact-form" onSubmit={sendToWebhook}>
-                  <div className="form-group">
-                    <label htmlFor="name">Namn</label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="form-control"
-                      placeholder="Ange ditt namn"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">E-post</label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="form-control"
-                      placeholder="Ange din e-post"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="phone">Telefonnummer</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      className="form-control"
-                      placeholder="Ange ditt telefonnummer"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="address">Adress</label>
-                    <input
-                      type="text"
-                      id="address"
-                      className="form-control"
-                      placeholder="Ange din adress"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <button type="submit" className="default-btn">
-                    Skicka
-                  </button>
-                </form>
-              </div>
+              <BookingContactForm
+                buildPayload={buildPayload}
+                blockedHint={hint}
+                focusSignal={flow.focusSignal}
+                dateInputRef={dateInputRef}
+                onConflict={flow.markConflict}
+                onSuccess={handleBooked}
+              />
+            </div>
+          )}
+
+          {flow.confirmation && (
+            <div className="col-lg-12">
+              <BookingConfirmation {...flow.confirmation} onDismiss={flow.dismissConfirmation} />
             </div>
           )}
         </div>
       </div>
-      
-      {/* Popup Window */}
-      {showPopup && (
-        <div className="popup-window">
-          <div className="popup-content">
-            <h3>Bekräftelse</h3>
-            <p>{popupMessage}</p>
-            <button className="default-btn" onClick={handlePopupClose}>
-              OK
-            </button>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </>
