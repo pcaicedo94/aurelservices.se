@@ -209,15 +209,38 @@ export class Page {
   }
 
   // Real pointer click at the element centre, the way a user would hit it.
+  // A smooth scroll started by the page itself (e.g. scrollIntoView on a form
+  // that just opened) keeps moving the document after an instant jump, so a
+  // centre measured too early is stale and the click lands elsewhere.
+  async waitScrollIdle(timeout = 2000) {
+    const end = Date.now() + timeout;
+    let last = null;
+    let stable = 0;
+    while (Date.now() < end) {
+      const y = await this.eval(() => Math.round(window.scrollY));
+      stable = y === last ? stable + 1 : 0;
+      if (stable >= 3) return;
+      last = y;
+      await new Promise((r) => setTimeout(r, 50));
+    }
+  }
+
   async click(spec, { clickCount = 1 } = {}) {
-    const target = await this.eval((sp) => {
-      const el = window.__qa.resolve(sp);
-      if (!el) return null;
-      el.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
-      const r = window.__qa.rect(el);
-      const hit = document.elementFromPoint(r.cx, r.cy);
-      return { ...r, hitSelf: !!hit && (hit === el || el.contains(hit)), hitDesc: hit ? window.__qa.describe(hit) : null, disabled: !!el.disabled };
-    }, spec);
+    const measure = () =>
+      this.eval((sp) => {
+        const el = window.__qa.resolve(sp);
+        if (!el) return null;
+        el.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
+        const r = window.__qa.rect(el);
+        const hit = document.elementFromPoint(r.cx, r.cy);
+        return { ...r, hitSelf: !!hit && (hit === el || el.contains(hit)), hitDesc: hit ? window.__qa.describe(hit) : null, disabled: !!el.disabled };
+      }, spec);
+    await this.waitScrollIdle();
+    let target = await measure();
+    if (target && !target.hitSelf) {
+      await this.waitScrollIdle();
+      target = await measure();
+    }
     if (!target) throw new Error(`No se encontró ${JSON.stringify(spec)} para hacer clic`);
     await this.mouseClick(target.cx, target.cy, clickCount);
     return target;
