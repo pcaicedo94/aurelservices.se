@@ -26,6 +26,7 @@ const ServicesDetails = () => {
               <TabList>
                 {tabs.map((value) => (
                   <Tab
+                    key={value}
                     data-aos="fade-up"
                     data-aos-delay="100"
                     data-aos-duration="1200"
