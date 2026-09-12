@@ -20,6 +20,7 @@ import {
   parsePrice,
   parseHours,
   bookingDurationHours,
+  minimumHoursApplied,
   earliestBookableStart,
   checkSchedule,
   checkHours,
@@ -172,13 +173,16 @@ check("hours number", parseHours({ hours: 4 }), 4);
 check("empty estimatedHours falls back to hours", parseHours({ estimatedHours: "", hours: "2.5" }), 2.5);
 check("non numeric hours is NaN", Number.isNaN(parseHours({ hours: "abc" })), true);
 checkJson("absent hours pass", checkHours(undefined), []);
-checkJson("1.5 h is below the minimum", checkHours(1.5), ["min-hours"]);
+checkJson("1.5 h is not an error (the minimum is applied instead)", checkHours(1.5), []);
 checkJson("exactly 2 h passes", checkHours(2), []);
 checkJson("NaN hours is a field error", checkHours(NaN), ["hours"]);
 check("duration defaults to 2 h", bookingDurationHours(undefined), 2);
 check("duration never below 2 h", bookingDurationHours(1.5), 2);
 check("duration capped at 12 h", bookingDurationHours(20), 12);
 check("duration keeps fractions", bookingDurationHours(3.25), 3.25);
+check("minimum flagged for a 1.5 h estimate", minimumHoursApplied(1.5), true);
+check("minimum not flagged for 2 h", minimumHoursApplied(2), false);
+check("minimum not flagged when no estimate is sent", minimumHoursApplied(undefined), false);
 
 console.log("\n=== bookingRules: minimum notice (today + 2 days at 07:00) ===");
 check(
@@ -242,7 +246,12 @@ check(
   messageFor({ dateTime: "2026-09-15T10:00" }),
   "Tidigast bokningsbara tid är 16 september 2026 kl. 07:00. Vänligen välj en senare tid."
 );
-checkTrue("minimum hours message", /Minsta bokningstid är 2 timmar/.test(messageFor({ estimatedHours: "1.5" })));
+const shortHome = validateBooking({ ...validBody, estimatedHours: "1.5" }, monday);
+checkJson("Hemstädning estimatedHours 1.5 is accepted (TODO cliente Q14)", shortHome.errors, []);
+check("Hemstädning 1.5 h is reserved as 2 h", shortHome.data.durationHours, 2);
+const shortMove = validateBooking({ ...validBody, estimatedHours: undefined, hours: "1.25" }, monday);
+checkJson("Flyttstädning hours 1.25 is accepted", shortMove.errors, []);
+check("Flyttstädning 1.25 h is reserved as 2 h", shortMove.data.durationHours, 2);
 check(
   "missing fields win over rule messages",
   messageFor({ name: "", dateTime: "2026-09-19T10:00" }),
@@ -269,6 +278,7 @@ check("contact preference gets its Swedish label", details.Kontaktmetod, "Bli up
 check("add-ons kept verbatim until rendering", details["Tillägg"], "Spröjs, <b>Treglas</b>");
 check("rooms kept", details.Rum, "3 rum och kök");
 check("estimated hours labelled", details["Beräknad tid"], "3 timmar");
+check("no minimum note for a 3 h estimate", details.Debitering, undefined);
 check("base price labelled", details.Grundpris, "1200 kr");
 check("unknown fields are kept under their own key", details.balconies, "2");
 check("core fields are not repeated", details.name, undefined);
@@ -283,6 +293,19 @@ const record = bookingDetailsRecord(detailBody);
 check("details record keeps the original keys", record.contactPreference, "call");
 check("details record keeps numbers as numbers", record.basePrice, 1200);
 check("details record drops objects", record.nested, undefined);
+check("details record keeps the booked hours", record.bookedHours, 3);
+const shortDetails = Object.fromEntries(collectBookingDetails({ ...validBody, estimatedHours: "1.5" }));
+check("short estimate shown as sent", shortDetails["Beräknad tid"], "1.5 timmar");
+check("short estimate notes the billed minimum", shortDetails.Debitering, "Debiteras minst 2 timmar");
+const moveDetails = collectBookingDetails({ ...validBody, estimatedHours: undefined, hours: "1.25" });
+check("move cleaning hours note the billed minimum", Object.fromEntries(moveDetails).Debitering, "Debiteras minst 2 timmar");
+checkTrue(
+  "the note reaches the event description",
+  bookingEventDescription(shortMove.data, moveDetails).includes("Beräknad tid: 1.25 timmar\nDebitering: Debiteras minst 2 timmar")
+);
+const shortRecord = bookingDetailsRecord({ ...validBody, estimatedHours: "1.5" });
+check("record keeps the original estimate", shortRecord.estimatedHours, "1.5");
+check("record books the 2 h minimum", shortRecord.bookedHours, 2);
 
 console.log("\n=== reserveSlot: conflict detection (QA-01) ===");
 const T = "2026-09-12T10:00:00.000Z";

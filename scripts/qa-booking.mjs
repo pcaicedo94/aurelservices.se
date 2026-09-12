@@ -14,7 +14,7 @@
  * Always: the rejection paths that are safe against any server (405 / 400).
  *
  * Only when the server answers with X-App-Test-Mode: 1: booking rules (price,
- * weekday, start window, notice, minimum hours), anti-spam (honeypot, fill
+ * weekday, start window, notice, 2 h billed minimum), anti-spam (honeypot, fill
  * time, per-IP limit), the 409/500 scenarios and the rendered mails. Those
  * tests post valid bookings, so they are skipped against a server that is not
  * in test mode. The full-flow test reads the real calendar (read only) to pick
@@ -298,14 +298,6 @@ async function runTestModeTests() {
     `status ${soon.status}: ${soon.body?.message}`
   );
 
-  const short = await post(booking({ estimatedHours: "1.5" }), CONFLICT);
-  check(
-    "1,5 timmar avvisas med 400 (TODO cliente Q14)",
-    short.status === 400 && /Minsta bokningstid/.test(short.body?.message || ""),
-    `status ${short.status}: ${short.body?.message}`
-  );
-  const twoHours = await post(booking({ estimatedHours: undefined, hours: "2" }), CONFLICT);
-  check("2 timmar godkänns (409 från simulerad kalender)", twoHours.status === 409, `status ${twoHours.status}`);
 
   console.log("\n=== Testläge: scenarier ===");
   const conflict = await post(booking(), CONFLICT);
@@ -337,24 +329,66 @@ async function runTestModeTests() {
   );
   check("500-svar läcker inga interna detaljer", !leaky);
 
-  await runFullFlowInTestMode();
+  const freeSlot = await freeSlotInTestMode();
+  await runFullFlowInTestMode(freeSlot);
+  await runMinimumHoursInTestMode(freeSlot);
 }
 
-// One booking through the whole handler: real availability read, everything
-// else simulated. Proves the fields the forms send reach mail, event and row.
-async function runFullFlowInTestMode() {
-  console.log("\n=== Testläge: hela flödet (kalendern läses, inget skrivs) ===");
-  let slot = null;
+// A free weekday slot from the real calendar (read only), so the server's own
+// availability check passes; far in the future if the calendar is unreachable.
+async function freeSlotInTestMode() {
   if (process.env.GOOGLE_REFRESH_TOKEN && process.env.GOOGLE_CALENDAR_ID) {
     try {
-      slot = await findFreeSlot(calendarClient(), 3, 8);
+      const slot = await findFreeSlot(calendarClient(), 3, 8);
+      if (slot) return slot.wallClock;
     } catch (error) {
       console.log(`      (kunde inte läsa kalendern: ${error.message})`);
     }
   }
+  return `${dayFrom(40, isWeekday)}T10:00`;
+}
 
+function eventHours(event) {
+  const start = stockholmToUtc(event?.start?.dateTime);
+  const end = stockholmToUtc(event?.end?.dateTime);
+  return start && end ? (end.getTime() - start.getTime()) / 3600000 : NaN;
+}
+
+// TODO(cliente Q14): an estimate under 2 h is booked and billed as 2 h, never
+// rejected. Home cleaning sends `estimatedHours`, move cleaning `hours`.
+async function runMinimumHoursInTestMode(dateTime) {
+  console.log("\n=== Testläge: minst 2 timmar debiteras, ingen avvisning ===");
+  for (const [service, field, value] of [
+    ["Hemstädning", "estimatedHours", "1.5"],
+    ["Flyttstädning", "hours", "1.25"],
+  ]) {
+    const r = await post(
+      baseBooking({ dateTime, cleaningType: `QA ${service}`, estimatedHours: undefined, [field]: value })
+    );
+    const test = r.body?.test;
+    const adminHtml = (test?.mails || []).find((m) => m.to === ADMIN_EMAIL)?.html || "";
+    const event = test?.calendar?.inserted?.[0];
+    const details = test?.db?.[0]?.row?.details || {};
+    check(`${service} med ${field} ${value} ger 200`, r.status === 200, `status ${r.status}: ${r.body?.message}`);
+    check(`${service}: kalenderhändelsen är 2 h lång`, eventHours(event) === 2, `${eventHours(event)} h`);
+    check(
+      `${service}: adminmejlet visar ${value} timmar och "Debiteras minst 2 timmar"`,
+      adminHtml.includes(`${value} timmar`) && adminHtml.includes("Debiteras minst 2 timmar")
+    );
+    check(
+      `${service}: raden bokar 2 h och behåller ${field}`,
+      details.bookedHours === 2 && details[field] === value,
+      `bookedHours ${details.bookedHours}, ${field} ${details[field]}`
+    );
+  }
+}
+
+// One booking through the whole handler: real availability read, everything
+// else simulated. Proves the fields the forms send reach mail, event and row.
+async function runFullFlowInTestMode(dateTime) {
+  console.log("\n=== Testläge: hela flödet (kalendern läses, inget skrivs) ===");
   const payload = baseBooking({
-    dateTime: slot?.wallClock || `${dayFrom(40, isWeekday)}T10:00`,
+    dateTime,
     cleaningType: "QA Storstädning",
     contactPreference: "call",
     addOns: "Spröjs, <b>Treglas</b>",

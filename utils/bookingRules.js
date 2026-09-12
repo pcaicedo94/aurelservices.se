@@ -19,7 +19,8 @@ export const BOOKABLE_WEEKDAYS = [1, 2, 3, 4, 5]; // 0 = Sunday ... 6 = Saturday
 export const FIRST_START_MINUTE = 7 * 60;
 export const START_BEFORE_MINUTE = 17 * 60;
 
-// TODO(cliente Q14): confirm the 2 hour billable minimum.
+// TODO(cliente Q14): confirm the 2 hour billable minimum. A shorter estimate
+// is still accepted: it is booked and billed as 2 hours, never rejected.
 export const MIN_BILLABLE_HOURS = 2;
 export const MAX_BOOKING_HOURS = 12;
 
@@ -58,10 +59,18 @@ export function parseHours(body) {
   return Number.isFinite(hours) ? hours : NaN;
 }
 
-// Calendar event length. Forms that send no estimate get the billable minimum.
+// Hours reserved in the calendar and recorded with the booking: the estimate
+// raised to the billable minimum (which is also what forms without an
+// estimate get), capped at MAX_BOOKING_HOURS.
 export function bookingDurationHours(hours) {
   if (hours === undefined || !Number.isFinite(hours)) return MIN_BILLABLE_HOURS;
   return Math.min(MAX_BOOKING_HOURS, Math.max(MIN_BILLABLE_HOURS, hours));
+}
+
+// True when the form's own estimate is below the billable minimum, so the
+// office can see that the minimum was applied.
+export function minimumHoursApplied(hours) {
+  return hours !== undefined && Number.isFinite(hours) && hours < MIN_BILLABLE_HOURS;
 }
 
 /* ---------------------------------- rules --------------------------------- */
@@ -93,10 +102,10 @@ export function checkSchedule(startsAt, now = new Date()) {
   return errors;
 }
 
+// Only an unreadable estimate is an error. A short one is not: the minimum is
+// applied by bookingDurationHours instead (TODO cliente Q14).
 export function checkHours(hours) {
-  if (hours === undefined) return [];
-  if (Number.isNaN(hours)) return ["hours"];
-  return hours < MIN_BILLABLE_HOURS ? ["min-hours"] : [];
+  return Number.isNaN(hours) ? ["hours"] : [];
 }
 
 export function validateBooking(body, now = new Date()) {
@@ -155,9 +164,6 @@ export function bookingErrorMessage(errors, now = new Date()) {
   }
   if (has("weekday")) return "Vi tar emot bokningar måndag till fredag. Vänligen välj en vardag.";
   if (has("start-time")) return "Vänligen välj en starttid mellan 07:00 och 17:00.";
-  if (has("min-hours")) {
-    return `Minsta bokningstid är ${MIN_BILLABLE_HOURS} timmar. Kontakta oss om du vill ha hjälp med ett mindre uppdrag.`;
-  }
   if (has("price")) {
     return `Vi kunde inte räkna fram ett pris för den här bokningen. Begär gärna en offert så återkommer vi med ett pris, eller ring oss på ${PHONE}.`;
   }
@@ -185,8 +191,9 @@ export const BOOKING_DETAIL_FIELDS = [
   { key: "pricePerUnit", label: "Pris per enhet", format: (v) => `${v} kr` },
 ];
 
+const HOURS_FIELDS = ["estimatedHours", "hours"];
 // Rendered on their own, so they are not repeated as details.
-const CORE_FIELDS = ["cleaningType", "name", "email", "phone", "address", "dateTime", "totalPrice"];
+const CORE_FIELDS =["cleaningType", "name", "email", "phone", "address", "dateTime", "totalPrice"];
 // Form plumbing (honeypot, fill time, Turnstile token) that means nothing to
 // the office and is not stored.
 export const IGNORED_FIELDS = ANTI_SPAM_FIELDS;
@@ -209,9 +216,18 @@ export function collectBookingDetails(body) {
   const rows = [];
   const known = new Set(BOOKING_DETAIL_FIELDS.map((field) => field.key));
 
+  const hours = parseHours(body);
+  let minimumNoted = false;
   for (const { key, label, format } of BOOKING_DETAIL_FIELDS) {
     const value = textOf(body[key]);
-    if (value) rows.push([label, format ? format(value) : value]);
+    if (!value) continue;
+    rows.push([label, format ? format(value) : value]);
+    // The estimate is shown as sent, followed by a note when the billable
+    // minimum replaces it.
+    if (HOURS_FIELDS.includes(key) && !minimumNoted && minimumHoursApplied(hours)) {
+      rows.push(["Debitering", `Debiteras minst ${MIN_BILLABLE_HOURS} timmar`]);
+      minimumNoted = true;
+    }
   }
 
   const skipped = new Set([...known, ...CORE_FIELDS, ...IGNORED_FIELDS]);
@@ -240,6 +256,9 @@ export function bookingDetailsRecord(body) {
       if (text) record[cleanField(key)] = text;
     }
   }
+  // What was actually reserved, after the billable minimum. The form's own
+  // estimate stays under its original key.
+  record.bookedHours = bookingDurationHours(parseHours(body));
   return record;
 }
 
