@@ -4,6 +4,9 @@ const FAQbot = () => {
   const [messages, setMessages] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const messagesEndRef = useRef(null);
+  const openButtonRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const wasOpen = useRef(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -23,6 +26,37 @@ const FAQbot = () => {
         );
       }, 500);
     }
+  }, [isOpen]);
+
+  // On phones the window covers the whole screen: lock the page behind it.
+  // Focus moves into the window on open and back to the chat button on close.
+  useEffect(() => {
+    if (!isOpen) {
+      if (wasOpen.current) openButtonRef.current?.focus();
+      wasOpen.current = false;
+      return undefined;
+    }
+    wasOpen.current = true;
+    closeButtonRef.current?.focus();
+
+    const phone = window.matchMedia("(max-width: 480px)");
+    const previousOverflow = document.body.style.overflow;
+    const applyScrollLock = () => {
+      document.body.style.overflow = phone.matches ? "hidden" : previousOverflow;
+    };
+    applyScrollLock();
+    phone.addEventListener("change", applyScrollLock);
+
+    const handleKey = (event) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("keydown", handleKey);
+
+    return () => {
+      phone.removeEventListener("change", applyScrollLock);
+      document.removeEventListener("keydown", handleKey);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [isOpen]);
 
   const addBotMessage = (text, optionsType = null) => {
@@ -447,6 +481,8 @@ const FAQbot = () => {
     <>
       {/* Chat Button */}
       <button
+        ref={openButtonRef}
+        type="button"
         className={`faq-chat-button ${isOpen ? "hidden" : ""}`}
         onClick={() => setIsOpen(true)}
         aria-label="Öppna FAQ chatbot"
@@ -457,10 +493,16 @@ const FAQbot = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="faq-chat-window">
+        <div
+          className="faq-chat-window"
+          role="dialog"
+          aria-labelledby="faq-chat-title"
+        >
           <div className="faq-chat-header">
-            <h3>Aurel Services - FAQ</h3>
+            <h3 id="faq-chat-title">Aurel Services - FAQ</h3>
             <button
+              ref={closeButtonRef}
+              type="button"
               className="faq-close-button"
               onClick={() => setIsOpen(false)}
               aria-label="Stäng chat"

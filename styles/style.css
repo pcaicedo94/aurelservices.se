@@ -57,11 +57,44 @@ img {
   height: auto;
 }
 
-button {
-  outline: 0 !important;
+/* Brand colours. The original green (#34a783) is only 3.0:1 against white,
+   so text on a green background uses the darker action green instead. */
+:root {
+  --aurel-green: #34a783; /* decorative: icons, borders, shapes */
+  --aurel-green-action: #1f7a5c; /* white text on it: 5.25:1 */
+  --aurel-green-action-hover: #186349; /* white text on it: 7.2:1 */
+  --aurel-focus-ring: #1f7a5c;
 }
-button:focus {
-  outline: 0;
+
+/* Keyboard focus. The template removed every outline; keyboard users now get
+   one consistent ring. Mouse clicks on links and buttons do not match
+   :focus-visible, so pointer users see no change. !important keeps older
+   component rules (outline: 0) from hiding it again. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--aurel-focus-ring) !important;
+  outline-offset: 2px !important;
+  /* Many template rules use "transition: 0.6s" (all properties), which faded
+     the ring in over 0.6s; keyboard focus must show at once. */
+  transition: none !important;
+}
+
+/* White ring on dark or green surfaces */
+.footer-section :focus-visible,
+.page-title-area :focus-visible,
+.faq-chat-header :focus-visible,
+.quote-modal-close:focus-visible {
+  outline-color: #ffffff !important;
+}
+
+html {
+  /* Keep focused elements clear of the fixed header when tabbing upwards */
+  scroll-padding-top: 120px;
 }
 
 .d-table {
@@ -96,7 +129,6 @@ button:focus {
 a {
   text-decoration: none;
   transition: 0.6s;
-  outline: 0 !important;
   color: #091029;
 }
 a:hover {
@@ -134,7 +166,7 @@ p:last-child {
   overflow: hidden;
   z-index: 1;
   color: #ffffff;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   transition: 0.6s;
   border-radius: 10px;
   font-weight: 600;
@@ -159,6 +191,7 @@ p:last-child {
 .default-btn:hover,
 .default-btn:focus {
   color: #ffffff;
+  background-color: var(--aurel-green-action-hover);
 }
 .default-btn:hover span,
 .default-btn:focus span {
@@ -174,7 +207,7 @@ p:last-child {
   text-align: center;
   overflow: hidden;
   z-index: 1;
-  color: #34a783;
+  color: var(--aurel-green-action);
   background-color: #ffffff;
   transition: 0.6s;
   border-radius: 10px;
@@ -202,6 +235,8 @@ p:last-child {
 .default-btn-one:hover,
 .default-btn-one:focus {
   color: #ffffff;
+  /* without the template's <span> filler the text turned white on white */
+  background-color: var(--aurel-green-action);
 }
 .default-btn-one:hover span,
 .default-btn-one:focus span {
@@ -407,9 +442,9 @@ Navbar Area CSS
   list-style: none;
 }
 
-.nav-item.submenu:hover .dropdown-menu {
-  display: block; /* Show submenu on hover */
-}
+/* Submenus open through the .is-open class that Navbar.js sets on hover,
+   keyboard focus or the toggle button, so aria-expanded always matches what
+   is on screen. */
 
 .dropdown-menu li {
   padding: 5px 20px;
@@ -457,11 +492,11 @@ Navbar Area CSS
   padding-left: 0;
   padding-right: 0;
 }
-.main-nav .navbar .navbar-nav .nav-item a {
+.main-nav .navbar .navbar-nav .nav-item a,
+.main-nav .navbar .navbar-nav .nav-item .submenu-button {
   font-size: 16px;
   font-weight: bolder;
   color:rgb(255, 242, 242);
-  text-transform: capitalize;
   padding-left: 0;
   padding-right: 0;
   padding-top: 0;
@@ -473,6 +508,56 @@ Navbar Area CSS
 .main-nav .navbar .navbar-nav .nav-item a:focus,
 .main-nav .navbar .navbar-nav .nav-item a.active {
   color: #34a783;
+}
+.main-nav .navbar .navbar-nav .nav-item .submenu-button,
+.main-nav .navbar .navbar-nav .nav-item .submenu-toggle {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  line-height: inherit;
+  text-align: left;
+}
+.main-nav .navbar .navbar-nav .nav-item.submenu {
+  display: flex;
+  align-items: center;
+}
+/* Chevron button next to a submenu link; sits in the link's right margin */
+.main-nav .navbar .navbar-nav .nav-item .submenu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: 0 15px 0 -11px;
+  padding: 0;
+  color: rgb(255, 242, 242);
+  border-radius: 4px;
+}
+.main-nav .navbar .navbar-nav .nav-item .submenu-button i {
+  margin-left: 6px;
+}
+.main-nav .navbar .navbar-nav .nav-item .submenu-button i,
+.main-nav .navbar .navbar-nav .nav-item .submenu-toggle i {
+  font-size: 10px;
+  transition: transform 0.3s;
+}
+.main-nav .navbar .navbar-nav .nav-item.is-open .submenu-button i,
+.main-nav .navbar .navbar-nav .nav-item.is-open .submenu-toggle i {
+  transform: rotate(180deg);
+}
+.main-nav .navbar .navbar-nav .nav-item .submenu-button:hover,
+.main-nav .navbar .navbar-nav .nav-item .submenu-toggle:hover,
+.main-nav .navbar .navbar-nav .nav-item.is-open > .nav-link,
+.main-nav .navbar .navbar-nav .nav-item.is-open > .submenu-toggle {
+  color: #34a783;
+}
+@media only screen and (min-width: 1200px) {
+  /* The bar is dark glass over the hero photo until it turns sticky */
+  .navbar-area:not(.is-sticky) .navbar-brand:focus-visible,
+  .navbar-area:not(.is-sticky) .navbar-nav > .nav-item > .nav-link:focus-visible,
+  .navbar-area:not(.is-sticky) .navbar-nav > .nav-item > .submenu-toggle:focus-visible {
+    outline-color: #ffffff !important;
+  }
 }
 .main-nav .navbar .navbar-nav .nav-item a i {
   font-size: 10px;
@@ -492,7 +577,10 @@ Navbar Area CSS
   border: none;
   top: 80px;
   left: 0;
-  width: 230px;
+  /* Grows with longer (translated) labels, then wraps instead of overflowing */
+  width: max-content;
+  min-width: 230px;
+  max-width: 320px;
   z-index: 99;
   display: block;
   opacity: 0;
@@ -508,7 +596,7 @@ Navbar Area CSS
   padding: 0;
 }
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a {
-  text-transform: capitalize;
+  white-space: normal;
   padding: 8px 15px;
   padding-left: 0;
   margin: 0;
@@ -532,8 +620,9 @@ Navbar Area CSS
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a:hover,
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a:focus,
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a.active {
-  color: #34a783;
+  color: var(--aurel-green-action);
   padding-left: 10px;
+  padding-right: 5px; /* same total width, so the menu does not resize */
 }
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a:hover::before,
 .main-nav .navbar .navbar-nav .nav-item .dropdown-menu li a:focus::before,
@@ -1167,7 +1256,7 @@ Navbar Area CSS
   top: -15px;
   transition: 0.6s;
 }
-.main-nav .navbar .navbar-nav .nav-item:hover .dropdown-menu {
+.main-nav .navbar .navbar-nav .nav-item.is-open .dropdown-menu {
   opacity: 1;
   visibility: visible;
   top: 100%;
@@ -1230,13 +1319,17 @@ Navbar Area CSS
 .navbar-area.is-sticky.is-sticky .main-nav .navbar .navbar-brand {
   color: #000000;
 }
-.navbar-area.is-sticky .navbar-nav .nav-item a {
-  color: #0a8944;
+.navbar-area.is-sticky .navbar-nav .nav-item a,
+.navbar-area.is-sticky .navbar-nav .nav-item .submenu-button,
+.navbar-area.is-sticky .navbar-nav .nav-item .submenu-toggle {
+  color: var(--aurel-green-action); /* #0a8944 was 4.49:1 on the white glass */
 }
 .navbar-area.is-sticky .navbar-nav .nav-item a:hover,
 .navbar-area.is-sticky .navbar-nav .nav-item a:focus,
-.navbar-area.is-sticky .navbar-nav .nav-item a.active {
-  color: #34a783;
+.navbar-area.is-sticky .navbar-nav .nav-item a.active,
+.navbar-area.is-sticky .navbar-nav .nav-item.is-open > .nav-link,
+.navbar-area.is-sticky .navbar-nav .nav-item.is-open > .submenu-toggle {
+  color: var(--aurel-green-action-hover);
 }
 .navbar-area.is-sticky .main-nav .navbar-brand .white-logo {
   display: none;
@@ -1256,7 +1349,7 @@ Navbar Area CSS
 .navbar-toggler .icon-bar {
   width: 28px;
   transition: all 0.3s;
-  background: #34a783;
+  background: var(--aurel-green-action);
   height: 2px;
   display: block;
 }
@@ -1343,11 +1436,9 @@ Main Home Form CSS
   padding: 0 0.5rem;
 }
 .home-form input:hover:not(:focus){
-  outline: 0;
   border-color: #c4c4c4;
 }
 .home-form input:focus, .home-form input:active{
-  outline: 0;
   border-color: #34a783;
 }
 .home-form > div:nth-child(2) { 
@@ -1437,13 +1528,12 @@ form {
 }
 
 .form-control:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: var(--aurel-green-action);
+  box-shadow: none;
 }
 
 .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -1453,7 +1543,7 @@ form {
 }
 
 .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 /* movecleaning Form Section */
 .move-cleaning-form {
@@ -1475,7 +1565,7 @@ form {
 }
 
 .move-cleaning-form .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -1484,7 +1574,7 @@ form {
 }
 
 .move-cleaning-form .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 /* homecleaning Form Section */
@@ -1507,7 +1597,7 @@ form {
 }
 
 .home-cleaning-form .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -1516,7 +1606,7 @@ form {
 }
 
 .home-cleaning-form .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 /* deepcleaning Form Section */
@@ -1539,7 +1629,7 @@ form {
 }
 
 .deep-cleaning-form .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -1548,7 +1638,7 @@ form {
 }
 
 .deep-cleaning-form .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 /* Summary Section */
@@ -1577,7 +1667,7 @@ form {
 }
 
 .summary-frame .default-btn {
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -1587,7 +1677,7 @@ form {
 }
 
 .summary-frame .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 /*================================================
@@ -2310,9 +2400,10 @@ Fun Facts Section CSS
   width: 100%;
   left: 0;
   top: 0;
-  background-color: #34a783;
+  /* White figures on top: 5.6:1 even over the lightest part of the photo */
+  background-color: var(--aurel-green-action-hover);
   z-index: -1;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .single-fun-fact {
@@ -3440,7 +3531,7 @@ Productive Section CSS
   overflow: hidden;
   z-index: 1;
   color: #ffffff;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   transition: 0.6s;
   border-radius: 10px;
   font-weight: 600;
@@ -3479,9 +3570,9 @@ Productive Section CSS
   text-align: center;
   overflow: hidden;
   z-index: 1;
-  color: #34a783;
+  color: var(--aurel-green-action);
   background-color: #ffffff;
-  border: 1px solid #34a783;
+  border: 1px solid var(--aurel-green-action);
   transition: 0.6s;
   border-radius: 10px;
   font-weight: 600;
@@ -3509,6 +3600,7 @@ Productive Section CSS
 .productive-content .productive-btn .productive-btn-one:hover,
 .productive-content .productive-btn .productive-btn-one:focus {
   color: #ffffff;
+  background-color: var(--aurel-green-action);
 }
 .productive-content .productive-btn .productive-btn-one:hover span,
 .productive-content .productive-btn .productive-btn-one:focus span {
@@ -3718,8 +3810,8 @@ Contact Section CSS
 .contact-form .submit-btn {
   display: inline-block;
   width: 100%;
-  background-color: #34a783;
-  border: 1px solid #34a783;
+  background-color: var(--aurel-green-action);
+  border: 1px solid var(--aurel-green-action);
   color: #ffffff;
   padding: 12px 50px;
   font-size: 15px;
@@ -3728,7 +3820,7 @@ Contact Section CSS
 }
 .contact-form .submit-btn:hover {
   background-color: #ffffff;
-  color: #34a783;
+  color: var(--aurel-green-action);
 }
 
 .contact-box .single-contact-box {
@@ -3792,7 +3884,7 @@ Partner Area CSS
 Service Info Cards CSS
 =================================================*/
 .brand-card {
-  background: linear-gradient(135deg, #2d9070 0%, #34a783 50%, #278c6b 100%);
+  background: linear-gradient(135deg, #1a6d52 0%, #1f7a5c 50%, #186349 100%);
   border-radius: 12px;
   padding: 30px;
   color: #fff;
@@ -3828,12 +3920,12 @@ Service Info Cards CSS
   background: linear-gradient(135deg, #e8a817 0%, #f0b830 50%, #d49a10 100%);
   border-radius: 12px;
   padding: 20px 30px;
-  color: #fff;
+  color: #1a1a1a; /* white on the yellow was 1.8:1 */
   box-shadow: 0 4px 20px rgba(240, 184, 48, 0.3);
   margin-bottom: 30px;
 }
 .brand-card-warning strong {
-  color: #fff;
+  color: #1a1a1a;
 }
 
 /*================================================
@@ -3862,6 +3954,7 @@ Page Title Area CSS
   text-align: center;
   margin-top: 45px;
 }
+.page-title-content h1,
 .page-title-content h2 {
   margin-bottom: 0;
   color: #ffffff;
@@ -4485,7 +4578,6 @@ Coming Soon Area CSS
     0px 0px 0px 5px rgba(255, 255, 255, 0.3);
   border-radius: 40px;
   padding: 15px 25px;
-  outline: 0 !important;
   background: #f1f2f3;
 }
 .coming-soon-content form .submit-btn {
@@ -4498,7 +4590,6 @@ Coming Soon Area CSS
   border: none;
   border-radius: 40px;
   width: 130px;
-  outline: 0 !important;
   cursor: pointer;
   text-transform: uppercase;
   font-size: 14px;
@@ -4550,6 +4641,23 @@ FaqChat Section CSS
   transition: all 0.3s ease;
 }
 
+/* Keep the floating buttons off form fields while typing on small screens,
+   and out of the way of the open mobile menu. */
+@media only screen and (max-width: 991.98px) {
+  body:has(input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):focus, select:focus, textarea:focus) .faq-chat-button,
+  body:has(input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):focus, select:focus, textarea:focus) .go-top {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+@media only screen and (max-width: 1199.98px) {
+  body:has(.navbar-collapse.show) .faq-chat-button,
+  body:has(.navbar-collapse.show) .go-top {
+    visibility: hidden;
+  }
+}
+
 .faq-chat-button:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -4574,12 +4682,15 @@ FaqChat Section CSS
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  /* Above the sticky header (999999) so the close button is never covered */
+  z-index: 1000000;
+  max-height: calc(100vh - 60px);
   overflow: hidden;
 }
 
 .faq-chat-header {
-  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  /* white title and close icon: the light end of the old gradient was 1.4:1 */
+  background: var(--aurel-green-action);
   color: white;
   padding: 20px;
   display: flex;
@@ -4589,6 +4700,7 @@ FaqChat Section CSS
 
 .faq-chat-header h3 {
   margin: 0;
+  color: #ffffff; /* the global h3 navy was 3.6:1 on the header */
   font-size: 18px;
   font-weight: 600;
 }
@@ -4600,8 +4712,10 @@ FaqChat Section CSS
   font-size: 24px;
   cursor: pointer;
   padding: 0;
-  width: 30px;
-  height: 30px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin: -7px -7px -7px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4645,7 +4759,7 @@ FaqChat Section CSS
 }
 
 .faq-message.user .faq-message-content {
-  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  background: var(--aurel-green-action);
   color: white;
   padding: 12px 16px;
   border-radius: 12px;
@@ -4668,7 +4782,7 @@ FaqChat Section CSS
 }
 
 .faq-option-button {
-  background: linear-gradient(135deg, #34a783 0%, #c6ecc8 100%);
+  background: var(--aurel-green-action);
   color: white;
   border: none;
   padding: 10px 16px;
@@ -4681,6 +4795,7 @@ FaqChat Section CSS
 }
 
 .faq-option-button:hover {
+  background: var(--aurel-green-action-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -4699,7 +4814,7 @@ FaqChat Section CSS
 }
 
 .faq-chat-footer a {
-  color: #667eea;
+  color: var(--aurel-green-action);
   text-decoration: none;
   font-weight: 600;
 }
@@ -4710,11 +4825,18 @@ FaqChat Section CSS
 
 @media (max-width: 480px) {
   .faq-chat-window {
+    top: 0;
     width: 100%;
     height: 100%;
+    height: 100dvh;
+    max-height: none;
     bottom: 0;
     right: 0;
     border-radius: 0;
+  }
+
+  .faq-chat-header {
+    padding-top: max(20px, env(safe-area-inset-top));
   }
 
   .faq-chat-button {
@@ -4749,9 +4871,6 @@ Faq Section CSS
   display: block;
   border: 1px solid #f5f5f5;
   background-color: #f5f5f5;
-}
-.faq-accordion .accordion .accordion__item .accordion__button:focus {
-  outline: 0;
 }
 .faq-accordion .accordion .accordion__item .accordion__panel {
   background-color: #ffffff;
@@ -4809,8 +4928,8 @@ Faq Section CSS
 .faq-contact-form .contact-form .submit-btn {
   display: inline-block;
   width: 100%;
-  background-color: #34a783;
-  border: 1px solid #34a783;
+  background-color: var(--aurel-green-action);
+  border: 1px solid var(--aurel-green-action);
   color: #ffffff;
   padding: 15px 50px;
   font-size: 15px;
@@ -4819,7 +4938,7 @@ Faq Section CSS
 }
 .faq-contact-form .contact-form .submit-btn:hover {
   background-color: #ffffff;
-  color: #34a783;
+  color: var(--aurel-green-action);
 }
 
 /*================================================
@@ -5275,7 +5394,8 @@ Footer Section CSS
   position: relative;
   z-index: 1;
   overflow: hidden;
-  background: linear-gradient(135deg, #2d9070 0%, #34a783 50%, #278c6b 100%);
+  /* Darker than the brand green so small white text reaches 4.5:1 */
+  background: linear-gradient(135deg, #1a6d52 0%, #1f7a5c 50%, #186349 100%);
 }
 
 /* Bubble Animation */
@@ -5387,14 +5507,14 @@ Footer Section CSS
   font-size: 16px;
 }
 .single-footer-widget .footer-social a:hover {
-  background-color: #34a783;
-  border-color: #34a783;
-  color: #ffffff;
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: var(--aurel-green-action);
   transform: translateY(-3px);
 }
 .single-footer-widget p {
   font-size: 14px;
-  color: #d1cfcf;
+  color: #ffffff;
   font-weight: 400;
 }
 .single-footer-widget .footer-heading {
@@ -5419,13 +5539,14 @@ Footer Section CSS
 }
 .single-footer-widget .footer-quick-links li a {
   display: inline-block;
-  color: rgba(255, 255, 255, 0.65);
+  color: #ffffff;
   font-size: 14px;
   font-weight: 400;
   transition: color 0.3s, padding-left 0.3s;
 }
 .single-footer-widget .footer-quick-links li a:hover {
-  color: #34a783;
+  color: #ffffff;
+  text-decoration: underline;
   padding-left: 5px;
 }
 .single-footer-widget .footer-info-contact {
@@ -5453,17 +5574,18 @@ Footer Section CSS
 }
 .single-footer-widget .footer-info-contact span {
   font-size: 14px;
-  color: #e0dbdb;
+  color: #ffffff;
   font-weight: 400;
 }
 .single-footer-widget .footer-info-contact span a {
   font-size: 14px;
-  color: #e0dbdb;
+  color: #ffffff;
   font-weight: 400;
   transition: 0.6s;
 }
 .single-footer-widget .footer-info-contact span a:hover {
-  color: #34a783;
+  color: #ffffff;
+  text-decoration: underline;
   letter-spacing: 1px;
 }
 
@@ -5474,7 +5596,7 @@ Footer Section CSS
   text-align: center;
 }
 .footer-bottom p {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.92);
   font-size: 13px;
   margin: 0;
 }
@@ -5543,20 +5665,30 @@ Copyright Section CSS
 /*================================================
 Go Top CSS
 =================================================*/
+/* Stacked above the chat button (60px at 30px from the corner) so neither
+   covers the other */
 .go-top {
   position: fixed;
   cursor: pointer;
-  bottom: 15px;
-  right: 15px;
+  bottom: 102px;
+  right: 38px;
   color: #ffffff;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
+  border: 0;
+  padding: 0;
   z-index: 50;
-  width: 40px;
+  width: 44px;
   text-align: center;
-  height: 40px;
-  line-height: 40px;
+  height: 44px;
+  line-height: 44px;
   transition: 0.6s;
   border-radius: 50%;
+}
+@media (max-width: 480px) {
+  .go-top {
+    bottom: 92px;
+    right: 28px;
+  }
 }
 .go-top i {
   position: absolute;
@@ -5902,7 +6034,7 @@ table th {
   padding-top: 5px;
   padding-bottom: 5px;
   text-align: center;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: white;
 }
 
@@ -6014,7 +6146,8 @@ Quote Modal CSS
   align-items: center;
   justify-content: center;
   padding: 20px;
-  z-index: 1050;
+  /* Above the sticky header (999999) and the chat window */
+  z-index: 1000001;
 }
 
 .quote-modal {
@@ -6029,7 +6162,7 @@ Quote Modal CSS
 }
 
 .quote-modal-header {
-  background: linear-gradient(135deg, #2d9070, #34a783);
+  background: linear-gradient(135deg, #1a6d52, #1f7a5c);
   padding: 22px 60px 22px 28px;
   border-radius: 12px 12px 0 0;
 }
@@ -6130,7 +6263,7 @@ Quote Modal CSS
 
 .quote-modal-body .default-btn {
   width: 100%;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
   color: #fff;
   border: none;
   padding: 12px 20px;
@@ -6139,7 +6272,7 @@ Quote Modal CSS
 }
 
 .quote-modal-body .default-btn:hover {
-  background-color: #2a8a6b;
+  background-color: var(--aurel-green-action-hover);
 }
 
 .quote-modal-body .default-btn:disabled {

@@ -28,9 +28,9 @@ const Footer = () => {
                   href="https://www.instagram.com/aurelservices/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Instagram"
+                  aria-label="Aurel Städ AB på Instagram (öppnas i en ny flik)"
                 >
-                  <i className="flaticon-instagram"></i>
+                  <i className="fab fa-instagram" aria-hidden="true"></i>
                 </a>
               </div>
             </div>
@@ -46,7 +46,7 @@ const Footer = () => {
                   <Link href="/about-us">Om oss</Link>
                 </li>
                 <li>
-                  <Link href="/private-services">Privata Tjänster</Link>
+                  <Link href="/private-services">Privata tjänster</Link>
                 </li>
                 <li>
                   <Link href="/services">Företag och BRF</Link>
@@ -55,7 +55,7 @@ const Footer = () => {
                   <Link href="/careers">Jobba hos oss</Link>
                 </li>
                 <li>
-                  <Link href="/contact">Kontakta Oss</Link>
+                  <Link href="/contact">Kontakta oss</Link>
                 </li>
               </ul>
             </div>
