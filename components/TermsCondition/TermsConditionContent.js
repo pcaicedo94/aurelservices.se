@@ -1,113 +1,231 @@
 import React from "react";
+import Link from "next/link";
 
+// Sources: Prislista 2026 (payment terms, notice period, materials, soiling
+// surcharge) and the service copy in "Servicios privados". Every
+// [ATT BEKRÄFTA: …] is unconfirmed by the client and must be resolved before
+// launch.
 const TermsConditionContent = () => {
   return (
-    <>
-      <div className="privacy-policy ptb-100">
-        <div className="container">
-          <div className="single-privacy">
-            <h3 className="mt-0">Welcome to Raxr Terms & Conditions</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
+    <div className="privacy-policy ptb-100">
+      <div className="container">
+        <div className="single-privacy">
+          <h3 className="mt-0">Allmänna villkor för privatpersoner</h3>
+          <p>
+            De här villkoren gäller när du som privatperson köper städtjänster av Aurel Städ &amp;
+            Allservice AB, organisationsnummer 556725-2340{" "}
+            <mark>[ATT BEKRÄFTA: organisationsnummer]</mark>. För företag och
+            bostadsrättsföreningar gäller i första hand den offert eller det avtal som vi har kommit
+            överens om. <mark>[ATT BEKRÄFTA: om villkoren även ska gälla företagskunder]</mark>
+          </p>
+          <p>
+            Som konsument har du alltid de rättigheter som tvingande lag ger dig. Villkoren begränsar
+            inte de rättigheterna.
+          </p>
+          <p>
+            <strong>Senast uppdaterad:</strong>{" "}
+            <mark>[ATT BEKRÄFTA: datum då villkoren publiceras]</mark>
+          </p>
 
-            <p>
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-              quae ab illo inventore veritatis et quasi architecto beatae vitae
-              dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-              aspernatur aut odit aut fugit, sed quia consequuntur magni dolores
-              eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam
-              est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci
-              velit, sed quia non numquam eius modi tempora incidunt ut labore
-              et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima
-              veniam, quis nostrum exercitationem ullam corporis suscipit
-              laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem
-              vel eum iure reprehenderit qui in ea voluptate velit esse quam
-              nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo
-              voluptas nulla pariatur.
-            </p>
+          <h3>1. Bokning och avtal</h3>
+          <ul>
+            <li>
+              Hemstädning, storstädning, flyttstädning och fönsterputsning kan du boka direkt på
+              webbplatsen. Övriga tjänster utförs efter offert.
+            </li>
+            <li>
+              När vi har tagit emot din bokning får du en bekräftelse via e-post.{" "}
+              <mark>
+                [ATT BEKRÄFTA: när avtalet anses ingånget – vid bokningen eller när vi har bekräftat
+                tiden]
+              </mark>
+            </li>
+            <li>
+              Återkommande tjänster, till exempel hemstädning varje vecka, varannan vecka eller en
+              gång i månaden, regleras i ett avtal mellan dig och oss.{" "}
+              <mark>[ATT BEKRÄFTA: hur avtalet tecknas]</mark>
+            </li>
+            <li>
+              Du ansvarar för att uppgifterna du lämnar stämmer, till exempel bostadens storlek och
+              antal rum.
+            </li>
+          </ul>
 
-            <h3>What is Lorem Ipsum?</h3>
-            <p>
-              But I must explain to you how all this mistaken idea of denouncing
-              pleasure and praising pain was born and I will give you a complete
-              account of the system, and expound the actual teachings of the
-              great explorer of the truth, the master-builder of human
-              happiness. No one rejects, dislikes, or avoids pleasure itself,
-              because it is pleasure, but because those who do not know how to
-              pursue pleasure rationally encounter consequences that are
-              extremely painful. Nor again is there anyone who loves or pursues
-              or desires to obtain pain of itself, because it is pain, but
-              because occasionally circumstances occur in which toil and pain
-              can procure him some great pleasure. To take a trivial example,
-              which of us ever undertakes laborious physical exercise, except to
-              obtain some advantage from it? But who has any right to find fault
-              with a man who chooses to enjoy a pleasure that has no annoying
-              consequences, or one who avoids a pain.
-            </p>
+          <h3>2. Priser</h3>
+          <ul>
+            <li>Priser för privatpersoner anges inklusive moms och efter RUT-avdrag.</li>
+            <li>
+              Priset som visas i formuläret bygger på de uppgifter du lämnar.{" "}
+              <mark>
+                [ATT BEKRÄFTA: att priset justeras om uppgifterna inte stämmer, t.ex. om bostaden är
+                större än angivet]
+              </mark>
+            </li>
+            <li>
+              Priset för storstädning och flyttstädning förutsätter att bostaden är i normalt skick.
+              Är bostaden hårt nedsmutsad kan ett tillägg på upp till 20 procent tillkomma. Du får
+              alltid veta det innan arbetet påbörjas.{" "}
+              <mark>[ATT BEKRÄFTA: om tillägget är 20 procent eller upp till 20 procent]</mark>
+            </li>
+            <li>
+              Hemstädning debiteras per timme, med minst 2 timmar per tillfälle.{" "}
+              <mark>[ATT BEKRÄFTA: om minimidebiteringen även gäller enstaka hemstädning]</mark>
+            </li>
+            <li>
+              Tilläggstjänster med ”från”-pris kan bli dyrare beroende på omfattning.{" "}
+              <mark>[ATT BEKRÄFTA: hur ”från”-priser räknas]</mark>
+            </li>
+          </ul>
 
-            <p>
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus id quod
-              maxime placeat facere possimus, omnis voluptas assumenda est,
-              omnis dolor repellendus. Temporibus autem quibusdam et aut
-              officiis debitis aut rerum necessitatibus saepe eveniet ut et
-              voluptates repudiandae sint et molestiae non recusandae. Itaque
-              earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-              voluptatibus maiores alias consequatur aut perferendis doloribus
-              asperiores repellat.
-            </p>
+          <h3>3. RUT-avdrag</h3>
+          <ul>
+            <li>
+              Vi drar av RUT-avdraget direkt på fakturan och ansöker om utbetalningen hos
+              Skatteverket.
+            </li>
+            <li>
+              För att vi ska kunna ansöka behöver du lämna ditt personnummer. Du ansvarar för att du
+              har rätt till avdraget, till exempel att du har betalat tillräckligt med skatt och inte
+              har använt hela årets utrymme.
+            </li>
+            <li>
+              Om Skatteverket helt eller delvis nekar avdraget betalar du mellanskillnaden.{" "}
+              <mark>[ATT BEKRÄFTA]</mark>
+            </li>
+          </ul>
 
-            <h3>Why do we use it?</h3>
-            <p>
-              On the other hand, we denounce with righteous indignation and
-              dislike men who are so beguiled and demoralized by the charms of
-              pleasure of the moment, so blinded by desire, that they cannot
-              foresee the pain and trouble that are bound to ensue; and equal
-              blame belongs to those who fail in their duty through weakness of
-              will, which is the same as saying through shrinking from toil and
-              pain. These cases are perfectly simple and easy to distinguish. In
-              a free hour, when our power of choice is untrammelled and when
-              nothing prevents our being able to do what we like best, every
-              pleasure is to be welcomed and every pain avoided. But in certain
-              circumstances and owing to the claims of duty or the obligations
-              of business it will frequently occur that pleasures have to be
-              repudiated and annoyances accepted. The wise man therefore always
-              holds in these matters to this principle of selection: he rejects
-              pleasures to secure other greater pleasures, or else he endures
-              pains to avoid worse pains.
-            </p>
+          <h3>4. Betalning</h3>
+          <ul>
+            <li>Betalning sker mot faktura med 20 dagars betalningstid.</li>
+            <li>Fakturaavgiften är 45 kr.</li>
+            <li>Vid försenad betalning debiteras dröjsmålsränta enligt räntelagen.</li>
+            <li>
+              Återkommande hemstädning faktureras månadsvis.{" "}
+              <mark>[ATT BEKRÄFTA: hur övriga återkommande tjänster och engångsuppdrag faktureras]</mark>
+            </li>
+          </ul>
 
-            <p>
-              There are many variations of passages of Lorem Ipsum available,
-              but the majority have suffered alteration in some form, by
-              injected humour, or randomised words which don't look even
-              slightly believable. If you are going to use a passage of Lorem
-              Ipsum, you need to be sure there isn't anything embarrassing
-              hidden in the middle of text. All the Lorem Ipsum generators on
-              the Internet tend to repeat predefined chunks as necessary, making
-              this the first true generator on the Internet. It uses a
-              dictionary of over 200 Latin words, combined with a handful of
-              model sentence structures, to generate Lorem Ipsum which looks
-              reasonable. The generated Lorem Ipsum is therefore always free
-              from repetition, injected humour, or non-characteristic words etc
-            </p>
-          </div>
+          <h3>5. Städmaterial och utrustning</h3>
+          <ul>
+            <li>
+              Vid hemstädning står du som kund för de produkter och medel som behövs för att utföra
+              tjänsten. Vill du att vi står för produkterna debiteras de och specificeras på
+              månadsfakturan. <mark>[ATT BEKRÄFTA: pris för våra städprodukter]</mark>
+            </li>
+            <li>Du ansvarar för att trasorna som används är tvättade till nästa städtillfälle.</li>
+            <li>
+              Vid enstaka hemstädning använder vi vårt eget städmaterial.{" "}
+              <mark>[ATT BEKRÄFTA: vad som ingår i städmaterialet]</mark> Vid storstädning ingår all
+              utrustning och alla städprodukter.
+            </li>
+          </ul>
+
+          <h3>6. Förberedelser och tillträde</h3>
+          <ul>
+            <li>
+              Du ser till att vi kan komma in i bostaden vid den bokade tiden.{" "}
+              <mark>[ATT BEKRÄFTA: vad som gäller om vi inte kommer in, t.ex. om besöket debiteras]</mark>
+            </li>
+            <li>Vid flyttstädning ska kyl och frys vara tömda och avfrostade.</li>
+            <li>
+              El och vatten ska vara påslagna under städningen. <mark>[ATT BEKRÄFTA]</mark>
+            </li>
+            <li>
+              Berätta i förväg om det finns känsliga material, till exempel marmor, mässing eller
+              natursten. <mark>[ATT BEKRÄFTA]</mark>
+            </li>
+            <li>
+              Lämnar du en nyckel till oss skriver vi en nyckelkvittens. Nyckeln märks bara med en
+              intern kod och lämnas tillbaka när avtalet upphör. <mark>[ATT BEKRÄFTA]</mark>
+            </li>
+          </ul>
+
+          <h3>7. Vad som ingår</h3>
+          <ul>
+            <li>Vad som ingår i respektive tjänst beskrivs på tjänstens sida på webbplatsen.</li>
+            <li>
+              Fönsterputs ingår i flyttstädning, utom för spröjsade fönster. I storstädning ingår
+              fönsterputs inte, men den kan bokas som tillägg.
+            </li>
+            <li>
+              Vid flyttstädning tar vi bort synliga fläckar på väggar och tak i den mån det går utan
+              att skada ytan. Kraftiga fläckar, missfärgningar, färg, fett och skador på väggar ingår
+              inte.
+            </li>
+          </ul>
+
+          <h3>8. Avbokning och ombokning</h3>
+          <ul>
+            <li>
+              Avbokning eller ombokning ska göras via telefon eller e-post senast{" "}
+              <mark>[ATT BEKRÄFTA: antal dagar – i dag anges 3 dagar på webbplatsen]</mark> före det
+              bokade tillfället.
+            </li>
+            <li>
+              Vid senare avbokning debiteras{" "}
+              <mark>[ATT BEKRÄFTA: avgift – i dag anges 50 procent av priset]</mark>.
+            </li>
+            <li>
+              <mark>[ATT BEKRÄFTA: vad som gäller om vi behöver ställa in eller flytta ett uppdrag]</mark>
+            </li>
+          </ul>
+
+          <h3>9. Uppsägning av återkommande tjänster</h3>
+          <p>
+            Avtal om återkommande tjänster har tre månaders uppsägningstid. Uppsägningen skickar du
+            till info@aurelservice.se.{" "}
+            <mark>
+              [ATT BEKRÄFTA: att uppsägningstiden gäller alla återkommande tjänster och om uppsägningen
+              ska vara skriftlig]
+            </mark>
+          </p>
+
+          <h3>10. Reklamation</h3>
+          <ul>
+            <li>
+              Är du inte nöjd med en utförd tjänst ska du kontakta oss så snart som möjligt efter att
+              du har upptäckt felet, så att vi kan åtgärda det.
+            </li>
+            <li>
+              <mark>
+                [ATT BEKRÄFTA: reklamationsrutin och garanti – webbplatsen anger i dag att vi kommer
+                tillbaka inom 24–48 timmar utan extra kostnad. Rutinen får inte begränsa konsumentens
+                lagstadgade rätt att reklamera.]
+              </mark>
+            </li>
+          </ul>
+
+          <h3>11. Skador</h3>
+          <ul>
+            <li>Om något skadas i samband med vårt arbete ska du meddela oss så snart som möjligt.</li>
+            <li>
+              <mark>[ATT BEKRÄFTA: ansvarsförsäkring – försäkringsbolag, vad den täcker och eventuell självrisk]</mark>
+            </li>
+            <li>
+              Av arbetsmiljöskäl flyttar vi inte tunga vitvaror som kyl, frys eller spis.{" "}
+              <mark>[ATT BEKRÄFTA]</mark>
+            </li>
+          </ul>
+
+          <h3>12. Personuppgifter</h3>
+          <p>
+            Hur vi behandlar dina personuppgifter beskriver vi i vår{" "}
+            <Link href="/privacy-policy">integritetspolicy</Link>.
+          </p>
+
+          <h3>13. Frågor och oenighet</h3>
+          <p>
+            Har du frågor om villkoren är du välkommen att kontakta oss på info@aurelservice.se eller
+            076-045 02 28. Om vi inte kommer överens kan du som konsument vända dig till Allmänna
+            reklamationsnämnden (ARN),{" "}
+            <a href="https://www.arn.se" target="_blank" rel="noopener noreferrer">
+              www.arn.se
+            </a>
+            . <mark>[ATT BEKRÄFTA: att företaget medverkar i ARN:s prövning]</mark>
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

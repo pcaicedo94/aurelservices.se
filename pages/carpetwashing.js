@@ -10,14 +10,14 @@ const CarpetWashing = () => {
   return (
     <>
       <Navbar />
-      <PageBanner pageTitle="Mattvått" bgImage="/images/banners/mattvatt.webp" />
+      <PageBanner pageTitle="Mattvätt" bgImage="/images/banners/mattvatt.webp" />
 
       <div className="container ptb-50">
         <div className="row">
           <div className="col-lg-8">
-            <h2>Mattvått i Stockholm – Professionell rengöring av mattor</h2>
+            <h2>Mattvätt i Stockholm – Professionell rengöring av mattor</h2>
             <p>
-              Har dina mattor blivit smutsiga eller slitna? Aurel Städ &amp; Allservice erbjuder professionell mattvått i Stockholm för privatpersoner, företag och bostadsrättsföreningar. Vi rengör dina mattor på djupet och återställer deras fräschör.
+              Har dina mattor blivit smutsiga eller slitna? Aurel Städ &amp; Allservice erbjuder professionell mattvätt i Stockholm för privatpersoner, företag och bostadsrättsföreningar. Vi rengör dina mattor på djupet och återställer deras fräschör.
             </p>
 
             <h4>Vad vi erbjuder</h4>
@@ -50,7 +50,7 @@ const CarpetWashing = () => {
           <div className="col-lg-4">
             <div className="summary-frame">
               <h3>Kontakta oss</h3>
-              <p>Vill du boka mattvått i Stockholm? Kontakta oss idag för offert och rådgivning.</p>
+              <p>Vill du boka mattvätt i Stockholm? Kontakta oss idag för offert och rådgivning.</p>
               <button type="button" className="default-btn" onClick={() => setShowQuote(true)}>
                 Begär offert
               </button>
@@ -62,7 +62,7 @@ const CarpetWashing = () => {
       <QuoteModal
         open={showQuote}
         onClose={() => setShowQuote(false)}
-        service="Mattvått"
+        service="Mattvätt"
       />
 
       <Footer />
