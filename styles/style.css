@@ -4636,6 +4636,23 @@ FaqChat Section CSS
   transition: all 0.3s ease;
 }
 
+/* Keep the floating buttons off form fields while typing on small screens,
+   and out of the way of the open mobile menu. */
+@media only screen and (max-width: 991.98px) {
+  body:has(input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):focus, select:focus, textarea:focus) .faq-chat-button,
+  body:has(input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not([type="submit"]):focus, select:focus, textarea:focus) .go-top {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+@media only screen and (max-width: 1199.98px) {
+  body:has(.navbar-collapse.show) .faq-chat-button,
+  body:has(.navbar-collapse.show) .go-top {
+    visibility: hidden;
+  }
+}
+
 .faq-chat-button:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -4660,7 +4677,9 @@ FaqChat Section CSS
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  /* Above the sticky header (999999) so the close button is never covered */
+  z-index: 1000000;
+  max-height: calc(100vh - 60px);
   overflow: hidden;
 }
 
@@ -4688,8 +4707,10 @@ FaqChat Section CSS
   font-size: 24px;
   cursor: pointer;
   padding: 0;
-  width: 30px;
-  height: 30px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin: -7px -7px -7px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4799,11 +4820,18 @@ FaqChat Section CSS
 
 @media (max-width: 480px) {
   .faq-chat-window {
+    top: 0;
     width: 100%;
     height: 100%;
+    height: 100dvh;
+    max-height: none;
     bottom: 0;
     right: 0;
     border-radius: 0;
+  }
+
+  .faq-chat-header {
+    padding-top: max(20px, env(safe-area-inset-top));
   }
 
   .faq-chat-button {
@@ -5632,20 +5660,30 @@ Copyright Section CSS
 /*================================================
 Go Top CSS
 =================================================*/
+/* Stacked above the chat button (60px at 30px from the corner) so neither
+   covers the other */
 .go-top {
   position: fixed;
   cursor: pointer;
-  bottom: 15px;
-  right: 15px;
+  bottom: 102px;
+  right: 38px;
   color: #ffffff;
-  background-color: #34a783;
+  background-color: var(--aurel-green-action);
+  border: 0;
+  padding: 0;
   z-index: 50;
-  width: 40px;
+  width: 44px;
   text-align: center;
-  height: 40px;
-  line-height: 40px;
+  height: 44px;
+  line-height: 44px;
   transition: 0.6s;
   border-radius: 50%;
+}
+@media (max-width: 480px) {
+  .go-top {
+    bottom: 92px;
+    right: 28px;
+  }
 }
 .go-top i {
   position: absolute;
@@ -6103,7 +6141,8 @@ Quote Modal CSS
   align-items: center;
   justify-content: center;
   padding: 20px;
-  z-index: 1050;
+  /* Above the sticky header (999999) and the chat window */
+  z-index: 1000001;
 }
 
 .quote-modal {
