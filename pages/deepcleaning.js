@@ -10,7 +10,7 @@ import DateTimeField from "../components/Booking/DateTimeField";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
-import { bookingHint, parseArea, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import { bookingHint, isQuoteOnly, parseArea, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
 import {
   describeArea,
   describeDate,
@@ -58,7 +58,6 @@ const DeepCleaning = () => {
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
   const area = parseArea(size, { max: QUOTE_ABOVE_AREA });
-  const needsQuote = area.status === "quote";
   const walls = parseCount(vaggtvatt, { min: 0, max: MAX_WALLS, emptyValue: 0 });
   const wallCount = walls.status === "ok" ? walls.value : 0;
   const basePrice = area.status === "ok" ? getBasePrice(area.value) : null;
@@ -89,6 +88,7 @@ const DeepCleaning = () => {
     { label: "datum", status: date.check.status },
     { label: "kontaktmetod", status: CONTACT_PREFERENCES[contactPreference] ? "ok" : "empty" },
   ]);
+  const needsQuote = isQuoteOnly({ outOfRange: area.status === "quote", hint, price: totalPrice });
 
   // Calculator part of the booking payload; the contact form adds the rest.
   const buildPayload = () => ({

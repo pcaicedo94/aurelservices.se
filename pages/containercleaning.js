@@ -10,7 +10,7 @@ import DateTimeField from "../components/Booking/DateTimeField";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
-import { bookingHint, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import { bookingHint, isQuoteOnly, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
 import {
   describeDate,
   formatDateTime,
@@ -79,7 +79,6 @@ const ContainerCleaning = () => {
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
   const units = parseCount(numberOfUnits, { min: 1 });
-  const needsQuote = units.status === "ok" && units.value > MAX_UNITS_ONLINE;
   const frequencyLabel = FREQUENCY_LABELS[frequency];
   const pricePerUnit =
     units.status === "ok" && frequencyLabel ? getPricePerUnit(units.value, Number(frequency)) : null;
@@ -93,6 +92,11 @@ const ContainerCleaning = () => {
     { label: "datum", status: date.check.status },
     { label: "kontaktmetod", status: CONTACT_PREFERENCES[contactPreference] ? "ok" : "empty" },
   ]);
+  const needsQuote = isQuoteOnly({
+    outOfRange: units.status === "ok" && units.value > MAX_UNITS_ONLINE,
+    hint,
+    price: totalPrice,
+  });
 
   // Calculator part of the booking payload; the contact form adds the rest.
   const buildPayload = () => ({

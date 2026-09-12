@@ -13,6 +13,7 @@ import useBookingDate from "../lib/booking/useBookingDate";
 import {
   billableHours,
   bookingHint,
+  isQuoteOnly,
   MIN_BILLABLE_HOURS,
   parseArea,
   QUOTE_ONLY_HINT,
@@ -61,7 +62,6 @@ const HomeCleaning = () => {
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
   const area = parseArea(size);
-  const needsQuote = area.status === "quote";
   const frequencyLabel = FREQUENCY_LABELS[frequency];
   const hourlyRate = frequencyLabel
     ? getHourlyRate(frequency, date.isValid ? date.check.parts.weekday : null)
@@ -80,6 +80,7 @@ const HomeCleaning = () => {
     { label: "frekvens", status: frequencyLabel ? "ok" : "empty" },
     { label: "datum", status: date.check.status },
   ]);
+  const needsQuote = isQuoteOnly({ outOfRange: area.status === "quote", hint, price: totalPrice });
 
   // Calculator part of the booking payload; the contact form adds the rest.
   const buildPayload = () => ({

@@ -10,7 +10,7 @@ import DateTimeField from "../components/Booking/DateTimeField";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
-import { bookingHint, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
 import {
   describeArea,
   describeDate,
@@ -48,7 +48,6 @@ const MoveCleaning = () => {
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
   const area = parseArea(size);
-  const needsQuote = area.status === "quote";
   // Rounded to two decimals as before: side areas are billed per estimated hour.
   const cleaningTime = area.status === "ok" ? Number((1.57 + 0.0167 * area.value).toFixed(2)) : null;
   const basePrice = area.status === "ok" ? roundKronor(getBasePrice(area.value)) : null;
@@ -73,6 +72,7 @@ const MoveCleaning = () => {
     { label: "storlek", status: area.status },
     { label: "datum", status: date.check.status },
   ]);
+  const needsQuote = isQuoteOnly({ outOfRange: area.status === "quote", hint, price: totalPrice });
 
   // Calculator part of the booking payload; the contact form adds the rest.
   const buildPayload = () => ({

@@ -9,7 +9,7 @@ import BookingConfirmation from "../components/Booking/BookingConfirmation";
 import DateTimeField from "../components/Booking/DateTimeField";
 import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
-import { bookingHint, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import { bookingHint, isQuoteOnly, QUOTE_ONLY_HINT } from "../lib/booking/rules";
 import { describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../lib/booking/format";
 
 const BASE_PRICES = { 1: 799, 2: 899, 3: 999, 4: 1099 };
@@ -33,7 +33,6 @@ const WindowCleaning = () => {
 
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
-  const needsQuote = !onlyBalcony && rooms === "5";
   const basePrice = onlyBalcony ? BALCONY_PRICE : BASE_PRICES[rooms] || null;
   const addOns = [
     hasSprojs && "Spröjs",
@@ -51,6 +50,7 @@ const WindowCleaning = () => {
     { label: "antal rum", status: onlyBalcony || rooms ? "ok" : "empty" },
     { label: "datum", status: date.check.status },
   ]);
+  const needsQuote = isQuoteOnly({ outOfRange: !onlyBalcony && rooms === "5", hint, price: totalPrice });
 
   // Calculator part of the booking payload; the contact form adds the rest.
   const buildPayload = () => ({
