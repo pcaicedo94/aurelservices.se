@@ -6,7 +6,7 @@ import { defineSuite } from "../lib/runner.mjs";
 import { fillContact, fillFields, readFeedback, submitContact, waitForApiCall } from "../lib/flows.mjs";
 
 export const QUOTE_PAGES = [
-  { route: "/carpetwashing", service: "mattvått" },
+  { route: "/carpetwashing", service: "mattvätt" },
   { route: "/construction", service: "bygg" },
   { route: "/floorcare", service: "golvvård" },
   { route: "/gardening", service: "trädgård" },

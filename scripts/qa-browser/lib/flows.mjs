@@ -167,7 +167,19 @@ export async function attemptBooking(page, api, { route, fields, scenario = "ok"
   await fillFields(page, fields);
   const summary = await readSummary(page);
   const book = await findBookButton(page);
-  if (!book.found) throw new Error(`No se encontró el botón "Boka tjänsten" en ${route}`);
+  if (!book.found) {
+    // Quote-only calculations replace "Boka tjänsten" with "Begär offert", which
+    // cannot create a booking: that is the not-bookable outcome, not an error.
+    const quoteOnly = await page.eval(() =>
+      [...document.querySelectorAll("button, a")].some(
+        (b) => !b.closest("#navbar, footer") && window.__qa.isVisible(b) && /begär offert/i.test(b.textContent)
+      )
+    );
+    if (quoteOnly) {
+      return { summary, bookDisabled: true, reachedContactForm: false, posts: [], otherApi: [], dialogs: [], invalid: [], bookable: false, reason: 'solo oferta ("Begär offert")' };
+    }
+    throw new Error(`No se encontró el botón "Boka tjänsten" en ${route}`);
+  }
   const base = { summary, bookDisabled: book.disabled, reachedContactForm: false, posts: [], otherApi: [], dialogs: [], invalid: [] };
   if (book.disabled) return { ...base, bookable: false, reason: "botón Boka desactivado" };
 
@@ -200,7 +212,7 @@ export async function attemptBooking(page, api, { route, fields, scenario = "ok"
 // Visible feedback after a submit. Tags its first button as data-qa-dismiss.
 export function readFeedback(page) {
   return page.eval(() => {
-    const sels = [".popup-window", ".swal2-popup", "[role=alertdialog]", "[role=alert]", ".alert-danger", ".alert-success", "[aria-live=assertive]", "[aria-live=polite]"];
+    const sels = [".popup-window", ".swal2-popup", "[role=alertdialog]", "[role=alert]", ".alert-danger", ".alert-success", "[aria-live=assertive]", "[aria-live=polite]", ".booking-confirmation", "[role=status]"];
     for (const s of sels) {
       const el = [...document.querySelectorAll(s)].find((e) => window.__qa.isVisible(e) && window.__qa.norm(e.innerText) && !e.closest(".faq-chat-window"));
       if (!el) continue;

@@ -129,7 +129,9 @@ export default defineSuite("a11y", async (test) => {
         }
       }
       if (!expect(how, "el submenú no se abre sin ratón")) return;
-      if (!st.inMenu) {
+      // A disclosure toggle button may sit between the parent link and its
+      // options, so allow a few Tabs while focus stays inside the item.
+      for (let n = 0; n < 3 && !st.inMenu && (n === 0 || st.onParent); n++) {
         await page.press("Tab");
         await sleep(80);
         st = await submenuState(page, label);
