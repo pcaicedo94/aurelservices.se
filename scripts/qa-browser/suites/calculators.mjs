@@ -30,6 +30,16 @@ export default defineSuite("calculators", async (test, ctx) => {
   const d = ctx.dates;
 
   for (const [key, calc] of Object.entries(CALCULATORS)) {
+    if (calc.quoteOnly) {
+      test(`${calc.route} da precio estimado y pide oferta, sin reservar`, async ({ page, api, expect, note }) => {
+        const a = await attemptBooking(page, api, { route: calc.route, fields: calc.valid(d) });
+        expect(!a.bookable && a.posts.length === 0, `no debe reservar (${a.reason}; ${posted(a)})`);
+        expect(!a.summary?.quote && a.summary?.price > 0, `falta el precio estimado: ${priceLine(a.summary)}`);
+        note(priceLine(a.summary));
+      });
+      continue;
+    }
+
     test(`${calc.route} caso válido se puede reservar (control)`, async ({ page, api, expect, note }) => {
       const a = await attemptBooking(page, api, { route: calc.route, fields: calc.valid(d) });
       expect(a.bookable && a.posts.length === 1, `se esperaba 1 POST y hubo ${a.posts.length} (${a.reason}; ${priceLine(a.summary)})`);

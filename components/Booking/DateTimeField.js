@@ -6,7 +6,7 @@ import FieldError, { invalidClass } from "./FieldError";
 // (lead time, weekdays, opening hours) explained inline instead of alert().
 const DateTimeField = ({
   id = "dateTime",
-  label = "Önskat datum och tid (Mellan 07:00-17:00)",
+  label = "Önskat datum och tid (Mellan 07:00-15:00)",
   date,
   conflict = false,
   inputRef,

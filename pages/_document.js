@@ -14,7 +14,7 @@ class MyDocument extends Document {
             content="Aurel Städ AB - Din pålitliga partner för städning. Hemstädning, flyttstädning, storstädning och mer."
           />
           <meta name="keywords" content="Aurel, städning, hemstädning, flyttstädning, storstädning, fönsterputsning, Stockholm" />
-          <meta property="og:title" content="Aurel - Din pålitliga partner för städning sedan 2007" />
+          <meta property="og:title" content="Aurel - Din pålitliga partner för städning i 18 år" />
           <meta
             property="og:description"
             content="Hemstädning, Flyttstädning, Storstädning, Fönsterputsning och mer"

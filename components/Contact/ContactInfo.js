@@ -40,7 +40,7 @@ const ContactInfo = () => {
               <div className="single-contact-box">
                 <i className="fa fa-phone"></i>
                 <div className="content-title">
-                  <a href="tel:+46 76 045 0228">
+                  <a href="tel:+46760450228">
                     <h3>Telefon</h3>
                     <p>+46 76 045 0228</p>
                     <p>&nbsp;</p>
@@ -54,7 +54,7 @@ const ContactInfo = () => {
                 <i className="fab fa-instagram"></i>
                 <div className="content-title">
                   <a
-                    href="https://www.instagram.com/aurelstad_ab/"
+                    href="https://www.instagram.com/aurel.allservice/"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

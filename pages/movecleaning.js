@@ -22,12 +22,15 @@ import {
   roundKronor,
 } from "../lib/booking/format";
 
-// Calculate base price based on area
+// Calculate base price based on area.
+// Q22 (client, confirmed): the 2026 list alone makes 51 m² cheaper than 50 m²
+// (2 601 vs 2 890 kr), and the same happens at 101 and 151 m². The price may
+// never fall below the top of the previous tier, so each tier starts there.
 const getBasePrice = (area) => {
   if (area >= 1 && area <= 50) return 2890;
-  if (area > 50 && area <= 100) return area * 51;
-  if (area > 100 && area <= 150) return area * 47;
-  return area * 42;
+  if (area > 50 && area <= 100) return Math.max(2890, area * 51);
+  if (area > 100 && area <= 150) return Math.max(100 * 51, area * 47);
+  return Math.max(150 * 47, area * 42);
 };
 
 const MoveCleaning = () => {

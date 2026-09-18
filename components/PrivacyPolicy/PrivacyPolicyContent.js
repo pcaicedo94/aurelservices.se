@@ -51,8 +51,7 @@ const PrivacyPolicyContent = () => {
           </p>
           <ul>
             <li>
-              Adress: Bredängs Allé 10, Skärholmen{" "}
-              <mark>[ATT BEKRÄFTA: fullständig adress med postnummer]</mark>
+              Adress: Bredängs Allé 10 NB, 127 32 Skärholmen
             </li>
             <li>
               E-post: <a href="mailto:info@aurelservice.se">info@aurelservice.se</a>

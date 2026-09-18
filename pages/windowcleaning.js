@@ -9,17 +9,23 @@ import BookingConfirmation from "../components/Booking/BookingConfirmation";
 import DateTimeField from "../components/Booking/DateTimeField";
 import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
-import { bookingHint, isQuoteOnly, QUOTE_ONLY_HINT } from "../lib/booking/rules";
-import { describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../lib/booking/format";
+import FieldError, { invalidClass } from "../components/Booking/FieldError";
+import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../lib/booking/format";
 
 const BASE_PRICES = { 1: 799, 2: 899, 3: 999, 4: 1099 };
 const BALCONY_PRICE = 450;
-// Each add-on raises the price by 25 %, applied one after the other.
-const ADD_ON_FACTOR = 1.25;
+// Q21 (client, confirmed): 5 rooms or more than 120 m² is quoted, never priced
+// online. All three price documents agree on this.
+const MAX_AREA_ONLINE = 120;
+// Q20 (client, confirmed): each add-on adds 25 % of the base price, and they
+// add up instead of compounding (two add-ons = +50 %, not +56 %).
+const ADD_ON_RATE = 0.25;
 
 const WindowCleaning = () => {
   // Form state
   const [rooms, setRooms] = useState("");
+  const [size, setSize] = useState("");
   const [hasSprojs, setHasSprojs] = useState(false);
   const [hasHighCeiling, setHasHighCeiling] = useState(false);
   const [hasTripleGlass, setHasTripleGlass] = useState(false);
@@ -33,13 +39,15 @@ const WindowCleaning = () => {
 
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
+  const area = parseArea(size, { max: MAX_AREA_ONLINE });
   const basePrice = onlyBalcony ? BALCONY_PRICE : BASE_PRICES[rooms] || null;
   const addOns = [
     hasSprojs && "Spröjs",
     hasHighCeiling && "Hög takhöjd",
     hasTripleGlass && "Treglasfönster"
   ].filter(Boolean);
-  const totalPrice = basePrice === null ? null : roundKronor(basePrice * ADD_ON_FACTOR ** addOns.length);
+  const totalPrice =
+    basePrice === null ? null : roundKronor(basePrice * (1 + ADD_ON_RATE * addOns.length));
 
   let selection = NOT_SET;
   if (onlyBalcony) selection = "Endast balkong";
@@ -50,12 +58,17 @@ const WindowCleaning = () => {
     { label: "antal rum", status: onlyBalcony || rooms ? "ok" : "empty" },
     { label: "datum", status: date.check.status },
   ]);
-  const needsQuote = isQuoteOnly({ outOfRange: !onlyBalcony && rooms === "5", hint, price: totalPrice });
+  const needsQuote = isQuoteOnly({
+    outOfRange: !onlyBalcony && (rooms === "5" || area.status === "quote"),
+    hint,
+    price: totalPrice,
+  });
 
   // Calculator part of the booking payload; the contact form adds the rest.
   const buildPayload = () => ({
     cleaningType: "Fönsterputsning",
     rooms: onlyBalcony ? "Endast balkong" : `${rooms} rum och kök`,
+    ...(area.status === "ok" && { area: String(area.value) }),
     addOns: addOns.join(", "),
     totalPrice,
     dateTime: date.dateTime,
@@ -63,6 +76,7 @@ const WindowCleaning = () => {
 
   const clearCalculator = () => {
     setRooms("");
+    setSize("");
     setHasSprojs(false);
     setHasHighCeiling(false);
     setHasTripleGlass(false);
@@ -155,6 +169,28 @@ const WindowCleaning = () => {
               </div>
 
               <div className="form-group">
+                <label htmlFor="size">Bostadens storlek i m² (frivilligt)</label>
+                <input
+                  type="number"
+                  id="size"
+                  className={`form-control${area.status === "invalid" ? ` ${invalidClass}` : ""}`}
+                  placeholder="Ange storlek"
+                  min="1"
+                  step="any"
+                  inputMode="decimal"
+                  value={size}
+                  onChange={(e) => setSize(e.target.value)}
+                  disabled={onlyBalcony}
+                  aria-invalid={area.status === "invalid" || undefined}
+                  aria-describedby={area.message ? "size-error" : undefined}
+                />
+                <FieldError id="size-error">{area.message}</FieldError>
+                <small className="form-text text-muted">
+                  Över {MAX_AREA_ONLINE} m² lämnar vi en offert.
+                </small>
+              </div>
+
+              <div className="form-group">
                 <label>Tillägg</label>
                 <div className="form-check">
                   <input type="checkbox" className="form-check-input" id="sprojs" checked={hasSprojs} onChange={(e) => setHasSprojs(e.target.checked)} />
@@ -189,9 +225,10 @@ const WindowCleaning = () => {
               hint={needsQuote ? "" : hint}
               onBook={flow.openContact}
               onQuote={() => setShowQuote(true)}
-              quoteNote="För 5 rum och kök eller större lämnar vi en offert. Skicka en förfrågan så återkommer vi."
+              quoteNote={`För 5 rum och kök eller mer än ${MAX_AREA_ONLINE} m² lämnar vi en offert. Skicka en förfrågan så återkommer vi.`}
             >
               <li><strong>Val:</strong> {selection}</li>
+              <li><strong>Storlek:</strong> {onlyBalcony ? "–" : describeArea(area)}</li>
               <li><strong>Tillägg:</strong> {addOns.join(", ") || "Inga"}</li>
               <li><strong>Önskat datum och tid:</strong> {describeDate(date)}</li>
               <li><strong>Uppskattat pris:</strong> {needsQuote ? "Offereras" : formatPrice(totalPrice)}</li>

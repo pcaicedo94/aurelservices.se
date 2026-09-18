@@ -208,8 +208,11 @@ checkJson("Saturday rejected", checkSchedule(at("2026-09-19T10:00"), monday), ["
 checkJson("Sunday rejected", checkSchedule(at("2026-09-20T10:00"), monday), ["weekday"]);
 checkJson("06:59 rejected", checkSchedule(at("2026-09-21T06:59"), monday), ["start-time"]);
 checkJson("07:00 accepted", checkSchedule(at("2026-09-21T07:00"), monday), []);
-checkJson("16:59 accepted", checkSchedule(at("2026-09-21T16:59"), monday), []);
+checkJson("14:59 accepted", checkSchedule(at("2026-09-21T14:59"), monday), []);
 checkJson("17:00 rejected", checkSchedule(at("2026-09-21T17:00"), monday), ["start-time"]);
+// Q16 (client, confirmed): the last start is 15:00 sharp.
+checkJson("15:00 accepted", checkSchedule(at("2026-09-21T15:00"), monday), []);
+checkJson("15:30 rejected", checkSchedule(at("2026-09-21T15:30"), monday), ["start-time"]);
 checkJson("tomorrow is too soon", checkSchedule(at("2026-09-15T10:00"), monday), ["too-soon"]);
 checkJson("first bookable minute accepted", checkSchedule(at("2026-09-16T07:00"), monday), []);
 checkJson(
@@ -240,7 +243,7 @@ checkJson("price 0 -> price error", rejected({ totalPrice: 0 }).errors, ["price"
 checkJson("price null -> price error", rejected({ totalPrice: null }).errors, ["price"]);
 checkTrue("price message invites a quote", /offert/i.test(messageFor({ totalPrice: "Offereras" })));
 checkTrue("weekend message", /måndag till fredag/.test(messageFor({ dateTime: "2026-09-19T10:00" })));
-checkTrue("start time message", /mellan 07:00 och 17:00/.test(messageFor({ dateTime: "2026-09-21T18:00" })));
+checkTrue("start time message", /mellan 07:00 och 15:00/.test(messageFor({ dateTime: "2026-09-21T18:00" })));
 check(
   "too soon message names the earliest time",
   messageFor({ dateTime: "2026-09-15T10:00" }),

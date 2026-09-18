@@ -271,22 +271,22 @@ async function runTestModeTests() {
 
   const weekend = await post(booking({ dateTime: `${dayFrom(7, isSaturday)}T10:00` }), CONFLICT);
   check(
-    "Lördag avvisas med 400 (TODO cliente Q13)",
+    "Lördag avvisas med 400 (client Q13, bekräftat)",
     weekend.status === 400 && /måndag till fredag/i.test(weekend.body?.message || ""),
     `status ${weekend.status}: ${weekend.body?.message}`
   );
 
   const early = await post(booking({ dateTime: `${weekday}T06:30` }), CONFLICT);
   check(
-    "Start 06:30 avvisas med 400 (TODO cliente Q16)",
-    early.status === 400 && /07:00 och 17:00/.test(early.body?.message || ""),
+    "Start 06:30 avvisas med 400 (client Q16, bekräftat)",
+    early.status === 400 && /07:00 och 15:00/.test(early.body?.message || ""),
     `status ${early.status}: ${early.body?.message}`
   );
-  const late = await post(booking({ dateTime: `${weekday}T17:00` }), CONFLICT);
-  check("Start 17:00 avvisas med 400", late.status === 400, `status ${late.status}: ${late.body?.message}`);
-  const lastStart = await post(booking({ dateTime: `${weekday}T16:30` }), CONFLICT);
+  const late = await post(booking({ dateTime: `${weekday}T15:30` }), CONFLICT);
+  check("Start 15:30 avvisas med 400", late.status === 400, `status ${late.status}: ${late.body?.message}`);
+  const lastStart = await post(booking({ dateTime: `${weekday}T15:00` }), CONFLICT);
   check(
-    "Start 16:30 godkänns av reglerna (409 från simulerad kalender)",
+    "Start 15:00 godkänns av reglerna (409 från simulerad kalender)",
     lastStart.status === 409,
     `status ${lastStart.status}: ${lastStart.body?.message}`
   );

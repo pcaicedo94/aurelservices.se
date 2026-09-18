@@ -20,9 +20,12 @@ export const CALCULATORS = {
   deep: { route: "/deepcleaning", size: "#size", valid: (d) => [["#size", "60"], ["#dateTime", d.weekday], ["#contactPreference", "call"]] },
   move: { route: "/movecleaning", size: "#size", valid: (d) => [["#size", "60"], ["#dateTime", d.weekday]] },
   window: { route: "/windowcleaning", size: null, valid: (d) => [["#rooms", "3"], ["#dateTime", d.weekday]] },
+  // Business services are negotiated (client Q29): the page estimates a price
+  // and asks for a quote, it never books a slot.
   container: {
     route: "/containercleaning",
     size: "#numberOfUnits",
+    quoteOnly: true,
     valid: (d) => [["#numberOfUnits", "10"], ["#frequency", "5"], ["#dateTime", d.weekday], ["#contactPreference", "call"]],
   },
 };

@@ -19,13 +19,13 @@ const Footer = () => {
                 <h3>Aurel Städ AB</h3>
               </div>
               <p>
-                Din pålitliga partner för professionell städning sedan 2007.
+                Din pålitliga partner för professionell städning i 18 år.
                 Vi levererar kvalitet, pålitlighet och noggrannhet i varje
                 uppdrag.
               </p>
               <div className="footer-social">
                 <a
-                  href="https://www.instagram.com/aurelservices/"
+                  href="https://www.instagram.com/aurel.allservice/"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Aurel Städ AB på Instagram (öppnas i en ny flik)"

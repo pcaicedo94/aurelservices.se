@@ -14,10 +14,10 @@ export const MIN_NOTICE_TIME = "07:00";
 // TODO(cliente Q13): confirm that bookings are Monday to Friday only.
 export const BOOKABLE_WEEKDAYS = [1, 2, 3, 4, 5]; // 0 = Sunday ... 6 = Saturday
 
-// TODO(cliente Q16): confirm the start window. A booking may start from 07:00
-// up to, but not including, 17:00 (the forms reject hour >= 17).
+// Q16 (client, confirmed): a booking may start from 07:00 to 15:00 inclusive.
+// The forms apply the same window.
 export const FIRST_START_MINUTE = 7 * 60;
-export const START_BEFORE_MINUTE = 17 * 60;
+export const LAST_START_MINUTE = 15 * 60;
 
 // TODO(cliente Q14): confirm the 2 hour billable minimum. A shorter estimate
 // is still accepted: it is booked and billed as 2 hours, never rejected.
@@ -95,7 +95,7 @@ export function checkSchedule(startsAt, now = new Date()) {
   if (!BOOKABLE_WEEKDAYS.includes(weekday)) errors.push("weekday");
 
   const startMinute = hour * 60 + minute;
-  if (startMinute < FIRST_START_MINUTE || startMinute >= START_BEFORE_MINUTE) {
+  if (startMinute < FIRST_START_MINUTE || startMinute > LAST_START_MINUTE) {
     errors.push("start-time");
   }
 
@@ -163,7 +163,7 @@ export function bookingErrorMessage(errors, now = new Date()) {
     return `Tidigast bokningsbara tid är ${formatStockholm(earliestBookableStart(now))}. Vänligen välj en senare tid.`;
   }
   if (has("weekday")) return "Vi tar emot bokningar måndag till fredag. Vänligen välj en vardag.";
-  if (has("start-time")) return "Vänligen välj en starttid mellan 07:00 och 17:00.";
+  if (has("start-time")) return "Vänligen välj en starttid mellan 07:00 och 15:00.";
   if (has("price")) {
     return `Vi kunde inte räkna fram ett pris för den här bokningen. Begär gärna en offert så återkommer vi med ett pris, eller ring oss på ${PHONE}.`;
   }

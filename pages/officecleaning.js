@@ -145,6 +145,12 @@ const OfficeCleaning = () => {
               onBook={() => setShowQuote(true)}
               onQuote={() => setShowQuote(true)}
               quoteNote="Så stora lokaler prissätter vi med en offert. Skicka en förfrågan så återkommer vi."
+              footer={
+                <p className="mt-3" style={{ fontSize: "13px", color: "#666" }}>
+                  * Priserna är exklusive moms och en uppskattning. Slutpris sätter vi efter ett
+                  kostnadsfritt platsbesök.
+                </p>
+              }
             >
               <li>
                 <strong>Storlek:</strong> {describeArea(area)}

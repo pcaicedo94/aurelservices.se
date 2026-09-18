@@ -1,16 +1,13 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
 import BookingSummary from "../components/Booking/BookingSummary";
-import BookingContactForm from "../components/Booking/BookingContactForm";
-import BookingConfirmation from "../components/Booking/BookingConfirmation";
 import DateTimeField from "../components/Booking/DateTimeField";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
-import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
-import { bookingHint, isQuoteOnly, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import { bookingHint, isQuoteOnly, parseCount } from "../lib/booking/rules";
 import {
   describeDate,
   formatDateTime,
@@ -72,9 +69,6 @@ const ContainerCleaning = () => {
   const [showQuote, setShowQuote] = useState(false);
   const date = useBookingDate();
 
-  // Booking steps (contact form, confirmation) shared by all booking pages
-  const flow = useBookingFlow();
-  const dateInputRef = useRef(null);
 
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
@@ -86,44 +80,18 @@ const ContainerCleaning = () => {
   const totalPrice =
     pricePerUnit === null ? null : roundKronor(pricePerUnit * units.value * Number(frequency) * 4);
 
+  // Q29 (client, confirmed): every business service is negotiated, so the page
+  // only estimates a price and asks for a quote. Date and contact method are
+  // optional extras for that request, not requirements.
   const hint = bookingHint([
     { label: "antal bodar", status: units.status },
     { label: "frekvens", status: frequencyLabel ? "ok" : "empty" },
-    { label: "datum", status: date.check.status },
-    { label: "kontaktmetod", status: CONTACT_PREFERENCES[contactPreference] ? "ok" : "empty" },
   ]);
   const needsQuote = isQuoteOnly({
     outOfRange: units.status === "ok" && units.value > MAX_UNITS_ONLINE,
     hint,
     price: totalPrice,
   });
-
-  // Calculator part of the booking payload; the contact form adds the rest.
-  const buildPayload = () => ({
-    cleaningType: "Bodstädning",
-    numberOfUnits: String(units.value),
-    frequency: `${frequency} gånger/vecka`,
-    pricePerUnit,
-    totalPrice,
-    dateTime: date.dateTime,
-    contactPreference,
-  });
-
-  const clearCalculator = () => {
-    setNumberOfUnits("");
-    setFrequency("");
-    date.setDateTime("");
-    setContactPreference("");
-  };
-
-  const handleBooked = (payload) => {
-    flow.complete({
-      service: payload.cleaningType,
-      when: formatDateTime(payload.dateTime),
-      email: payload.email,
-    });
-    clearCalculator();
-  };
 
   const quoteDetails = {
     "Antal bodar": String(units.value),
@@ -219,11 +187,7 @@ const ContainerCleaning = () => {
                 </select>
               </div>
 
-              <DateTimeField
-                date={date}
-                inputRef={dateInputRef}
-                conflict={flow.isConflict(date.dateTime)}
-              />
+              <DateTimeField date={date} label="Önskat startdatum och tid (frivilligt)" />
 
               <div className="form-group">
                 <label htmlFor="contactPreference">Kontaktmetod</label>
@@ -251,15 +215,13 @@ const ContainerCleaning = () => {
           {/* Summary Section */}
           <div className="col-lg-6">
             <BookingSummary
-              mode={needsQuote ? "quote" : "book"}
-              hint={needsQuote ? "" : hint}
-              onBook={flow.openContact}
+              mode="quote"
               onQuote={() => setShowQuote(true)}
-              quoteNote="För fler än 50 bodar lämnar vi en offert. Skicka en förfrågan så återkommer vi."
+              quoteNote="Priset är en uppskattning. Skicka en förfrågan så återkommer vi med en offert."
               footer={
                 <p className="mt-3" style={{ fontSize: "13px", color: "#666" }}>
-                  * Priser per timme exklusive moms.<br />
-                  * Månadspriset är beräknat på 4 veckor.
+                  * Pris per bod och städtillfälle, exklusive moms.<br />
+                  * Månadspriset är beräknat på 4 veckor och är en uppskattning.
                 </p>
               }
             >
@@ -286,25 +248,6 @@ const ContainerCleaning = () => {
             </BookingSummary>
           </div>
 
-          {flow.contactOpen && (
-            <div className="col-lg-12">
-              <BookingContactForm
-                buildPayload={buildPayload}
-                blockedHint={needsQuote ? QUOTE_ONLY_HINT : hint}
-                addressPlaceholder="Ange adressen för bodarna"
-                focusSignal={flow.focusSignal}
-                dateInputRef={dateInputRef}
-                onConflict={flow.markConflict}
-                onSuccess={handleBooked}
-              />
-            </div>
-          )}
-
-          {flow.confirmation && (
-            <div className="col-lg-12">
-              <BookingConfirmation {...flow.confirmation} onDismiss={flow.dismissConfirmation} />
-            </div>
-          )}
         </div>
       </div>
 

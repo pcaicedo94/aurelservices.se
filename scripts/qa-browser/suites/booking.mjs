@@ -92,7 +92,8 @@ async function submitAndCheckKept({ page, api, expect, note }, { calcFields = []
 export default defineSuite("booking", async (test, ctx) => {
   const d = ctx.dates;
 
-  for (const calc of Object.values(CALCULATORS)) {
+  // Quote-only calculators (business services) never post a booking.
+  for (const calc of Object.values(CALCULATORS).filter((c) => !c.quoteOnly)) {
     test(`${calc.route} triple clic en Skicka envía 1 POST`, { bug: "QA-01" }, async ({ page, api, expect }) => {
       await openBookingForm(page, calc, d);
       api.setScenario("slow");
@@ -122,7 +123,7 @@ export default defineSuite("booking", async (test, ctx) => {
     });
   }
 
-  for (const key of ["deep", "move", "window", "container"]) {
+  for (const key of ["deep", "move", "window"]) {
     const calc = CALCULATORS[key];
     test(`${calc.route} error 409: sin recarga y con los datos`, { bug: "QA-02" }, async (t) => {
       const calcFields = await openBookingForm(t.page, calc, d);
@@ -151,7 +152,8 @@ export default defineSuite("booking", async (test, ctx) => {
     expect(n === 1, `${n} POST a /api/contact`);
   });
 
-  for (const calc of Object.values(CALCULATORS)) {
+  // Quote-only calculators (business services) never post a booking.
+  for (const calc of Object.values(CALCULATORS).filter((c) => !c.quoteOnly)) {
     test(`${calc.route} en móvil el formulario queda visible y con foco`, { bug: "QA-15" }, async ({ page, expect, note }) => {
       await page.setViewport("mobile");
       await page.goto(calc.route);
