@@ -67,3 +67,7 @@ build
 # dotenv environment variables file
 .env
 package-lock.json
+
+# Documentos fuente del cliente (viven en Documents/AurelServices, no en el repo)
+/*.pdf
+/*.docx
