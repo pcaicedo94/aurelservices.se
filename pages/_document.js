@@ -8,24 +8,13 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="sv">
+        {/*
+          next/document cannot be deduplicated against next/head, so anything
+          that varies per page (title, description, canonical, Open Graph,
+          Twitter, JSON-LD) is emitted by <Seo> instead. Only document-wide
+          tags belong here.
+        */}
         <Head>
-          <meta
-            name="description"
-            content="Aurel Städ AB - Din pålitliga partner för städning. Hemstädning, flyttstädning, storstädning och mer."
-          />
-          <meta name="keywords" content="Aurel, städning, hemstädning, flyttstädning, storstädning, fönsterputsning, Stockholm" />
-          <meta property="og:title" content="Aurel - Din pålitliga partner för städning i 18 år" />
-          <meta
-            property="og:description"
-            content="Hemstädning, Flyttstädning, Storstädning, Fönsterputsning och mer"
-          />
-          <meta
-            property="og:image"
-            content="https://ebdd2f72b3.clvaw-cdnwnd.com/ca2b33d3f3f599895a9560be0604adf7/200000001-40b5b40b5d/450/logotyp.webp?ph=ebdd2f72b3"
-          />
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://www.aurelservice.se" />
-          <meta property="og:site_name" content="Aurel Städ AB" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>

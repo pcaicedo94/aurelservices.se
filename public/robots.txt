@@ -1,0 +1,6 @@
+# Aurel Städ & Allservice AB - https://aurelservice.se
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://aurelservice.se/sitemap.xml

@@ -11,6 +11,7 @@ import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
 import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import Seo from "../components/Common/Seo";
 import {
   describeArea,
   describeDate,
@@ -114,6 +115,8 @@ const MoveCleaning = () => {
 
   return (
     <>
+      <Seo route="/movecleaning" />
+
       <Navbar associates />
       <PageBanner pageTitle="Flyttstädning" bgImage="/images/banners/flyttstadning.webp" />
 

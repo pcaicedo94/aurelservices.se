@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const WindowCleaningBusiness = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/windowcleaningbusiness" />
+
       <Navbar />
       <PageBanner pageTitle="Fönsterputsning för företag" bgImage="/images/Fönsterputs_kontor.png" />
 

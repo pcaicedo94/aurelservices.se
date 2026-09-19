@@ -2,9 +2,12 @@ import React from "react";
 import Link from "next/link";
 import Navbar from "../components/Layouts/Navbar";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 const CoustomErorPage = () => {
   return (
     <>
+      <Seo route="/404" />
+
       <Navbar />
       <div className="error-area">
         <div className="d-table">

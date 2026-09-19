@@ -12,6 +12,7 @@ import useBookingDate from "../lib/booking/useBookingDate";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
 import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../lib/booking/format";
+import Seo from "../components/Common/Seo";
 
 const BASE_PRICES = { 1: 799, 2: 899, 3: 999, 4: 1099 };
 const BALCONY_PRICE = 450;
@@ -101,6 +102,8 @@ const WindowCleaning = () => {
 
   return (
     <>
+      <Seo route="/windowcleaning" />
+
       <Navbar />
       <PageBanner pageTitle="Fönsterputsning" bgImage="/images/banners/fonsterputs.webp" />
 

@@ -1,16 +1,14 @@
 import React from "react";
-import Head from "next/head";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import PrivacyPolicyContent from "../components/PrivacyPolicy/PrivacyPolicyContent";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const PrivacyPolicy = () => {
   return (
     <>
-      <Head>
-        <title>{"Integritetspolicy – Aurel Städ & Allservice"}</title>
-      </Head>
+      <Seo route="/privacy-policy" />
 
       <Navbar />
 
