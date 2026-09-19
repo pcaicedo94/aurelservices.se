@@ -12,6 +12,11 @@ import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
 import { bookingHint, isQuoteOnly, parseArea, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
 import {
+  deepCleaningBasePrice,
+  DEEP_CLEANING_EXTRAS,
+  DEEP_CLEANING_QUOTE_ABOVE_AREA,
+} from "../lib/pricing";
+import {
   describeArea,
   describeDate,
   formatArea,
@@ -21,20 +26,9 @@ import {
   roundKronor,
 } from "../lib/booking/format";
 
-// Homes above this size are quoted ("Offereras"), not priced online.
-const QUOTE_ABOVE_AREA = 150;
 const MAX_WALLS = 20;
 
 const CONTACT_PREFERENCES = { call: "Bli uppringd", visit: "Få ett hembesök" };
-
-// Calculate base price based on area
-const getBasePrice = (area) => {
-  if (area >= 1 && area <= 50) return 2650;
-  if (area > 50 && area <= 70) return 3290;
-  if (area > 70 && area <= 100) return 3950;
-  if (area > 100 && area <= 150) return 4750;
-  return null; // Offereras
-};
 
 const DeepCleaning = () => {
   const [size, setSize] = useState("");
@@ -57,22 +51,23 @@ const DeepCleaning = () => {
 
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
-  const area = parseArea(size, { max: QUOTE_ABOVE_AREA });
+  // Homes above this size are quoted ("Offereras"), not priced online.
+  const area = parseArea(size, { max: DEEP_CLEANING_QUOTE_ABOVE_AREA });
   const walls = parseCount(vaggtvatt, { min: 0, max: MAX_WALLS, emptyValue: 0 });
   const wallCount = walls.status === "ok" ? walls.value : 0;
-  const basePrice = area.status === "ok" ? getBasePrice(area.value) : null;
+  const basePrice = area.status === "ok" ? deepCleaningBasePrice(area.value) : null;
 
   const extras = [
-    { selected: hasKylFrys, label: "Kyl/Frys invändigt (ej avfrostning)", price: 360 },
-    { selected: hasKylFrysDefrost, label: "Kyl/Frys med avfrostning", price: 500 },
-    { selected: hasDiskmaskin, label: "Diskmaskin invändigt", price: 250 },
-    { selected: hasKapGarderob, label: "Skåp och garderober invändigt", price: 360 },
-    { selected: hasForrad, label: "Förråd", price: 300 },
-    { selected: hasTvattmaskin, label: "Tvättmaskin/torktumlare invändigt", price: 390 },
+    { selected: hasKylFrys, label: "Kyl/Frys invändigt (ej avfrostning)", price: DEEP_CLEANING_EXTRAS.kylFrys },
+    { selected: hasKylFrysDefrost, label: "Kyl/Frys med avfrostning", price: DEEP_CLEANING_EXTRAS.kylFrysDefrost },
+    { selected: hasDiskmaskin, label: "Diskmaskin invändigt", price: DEEP_CLEANING_EXTRAS.diskmaskin },
+    { selected: hasKapGarderob, label: "Skåp och garderober invändigt", price: DEEP_CLEANING_EXTRAS.kapGarderob },
+    { selected: hasForrad, label: "Förråd", price: DEEP_CLEANING_EXTRAS.forrad },
+    { selected: hasTvattmaskin, label: "Tvättmaskin/torktumlare invändigt", price: DEEP_CLEANING_EXTRAS.tvattmaskin },
     {
       selected: wallCount > 0,
       label: `Väggtvätt (${wallCount} vägg${wallCount > 1 ? "ar" : ""})`,
-      price: wallCount * 250,
+      price: wallCount * DEEP_CLEANING_EXTRAS.vaggtvatt,
     },
   ].filter((extra) => extra.selected);
   const extrasLabel = extras.map((extra) => extra.label).join(", ");
@@ -234,7 +229,7 @@ const DeepCleaning = () => {
                     }}
                   />
                   <label className="form-check-label" htmlFor="kylfrys">
-                    Kyl/Frys invändigt (ej avfrostning) - 360 kr
+                    {`Kyl/Frys invändigt (ej avfrostning) - ${DEEP_CLEANING_EXTRAS.kylFrys} kr`}
                   </label>
                 </div>
                 <div className="form-check">
@@ -249,7 +244,7 @@ const DeepCleaning = () => {
                     }}
                   />
                   <label className="form-check-label" htmlFor="kylfrysdefrost">
-                    Kyl/Frys med avfrostning - 500 kr
+                    {`Kyl/Frys med avfrostning - ${DEEP_CLEANING_EXTRAS.kylFrysDefrost} kr`}
                   </label>
                 </div>
                 <div className="form-check">
@@ -261,7 +256,7 @@ const DeepCleaning = () => {
                     onChange={(e) => setHasDiskmaskin(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="diskmaskin">
-                    Diskmaskin invändigt - 250 kr
+                    {`Diskmaskin invändigt - ${DEEP_CLEANING_EXTRAS.diskmaskin} kr`}
                   </label>
                 </div>
                 <div className="form-check">
@@ -273,7 +268,7 @@ const DeepCleaning = () => {
                     onChange={(e) => setHasKapGarderob(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="kapgarderob">
-                    Skåp och garderober invändigt - 360 kr
+                    {`Skåp och garderober invändigt - ${DEEP_CLEANING_EXTRAS.kapGarderob} kr`}
                   </label>
                 </div>
                 <div className="form-check">
@@ -285,7 +280,7 @@ const DeepCleaning = () => {
                     onChange={(e) => setHasForrad(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="forrad">
-                    Balkong/Förråd - 300 kr
+                    {`Balkong/Förråd - ${DEEP_CLEANING_EXTRAS.forrad} kr`}
                   </label>
                 </div>
                 <div className="form-check">
@@ -297,11 +292,11 @@ const DeepCleaning = () => {
                     onChange={(e) => setHasTvattmaskin(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="tvattmaskin">
-                    Tvättmaskin/torktumlare invändigt - 390 kr
+                    {`Tvättmaskin/torktumlare invändigt - ${DEEP_CLEANING_EXTRAS.tvattmaskin} kr`}
                   </label>
                 </div>
                 <div className="form-group mt-3">
-                  <label htmlFor="vaggtvatt">Väggtvätt (250 kr per vägg)</label>
+                  <label htmlFor="vaggtvatt">{`Väggtvätt (${DEEP_CLEANING_EXTRAS.vaggtvatt} kr per vägg)`}</label>
                   <input
                     type="number"
                     id="vaggtvatt"
@@ -352,7 +347,7 @@ const DeepCleaning = () => {
               hint={needsQuote ? "" : hint}
               onBook={flow.openContact}
               onQuote={() => setShowQuote(true)}
-              quoteNote="Storstädning av bostäder över 150 m² prissätter vi med en offert. Skicka en förfrågan så återkommer vi."
+              quoteNote={`Storstädning av bostäder över ${DEEP_CLEANING_QUOTE_ABOVE_AREA} m² prissätter vi med en offert. Skicka en förfrågan så återkommer vi.`}
             >
               <li>
                 <strong>Storlek:</strong> {describeArea(area)}

@@ -9,6 +9,11 @@ import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import useBookingDate from "../lib/booking/useBookingDate";
 import { bookingHint, isQuoteOnly, parseCount } from "../lib/booking/rules";
 import {
+  containerCleaningPricePerUnit,
+  CONTAINER_MAX_UNITS_ONLINE,
+  CONTAINER_WEEKS_PER_MONTH,
+} from "../lib/pricing";
+import {
   describeDate,
   formatDateTime,
   formatPrice,
@@ -16,9 +21,6 @@ import {
   NOT_SET,
   roundKronor,
 } from "../lib/booking/format";
-
-// Above this many site huts the price is quoted ("Offereras").
-const MAX_UNITS_ONLINE = 50;
 
 const FREQUENCY_LABELS = {
   5: "5 gånger/vecka (Måndag till fredag)",
@@ -28,39 +30,6 @@ const FREQUENCY_LABELS = {
 };
 
 const CONTACT_PREFERENCES = { call: "Bli uppringd", visit: "Få ett hembesök" };
-
-// Pricing logic based on image: price per hut and cleaning
-const getPricePerUnit = (numUnits, numFreq) => {
-  // 1-10 units pricing
-  if (numUnits >= 1 && numUnits <= 10) {
-    if (numFreq === 5) return 100;
-    if (numFreq === 3) return 110;
-    if (numFreq === 2) return 120;
-    if (numFreq === 1) return 130;
-  }
-  // 11-20 units pricing
-  if (numUnits >= 11 && numUnits <= 20) {
-    if (numFreq === 5) return 65;
-    if (numFreq === 3) return 75;
-    if (numFreq === 2) return 95;
-    if (numFreq === 1) return 100;
-  }
-  // 21-30 units pricing
-  if (numUnits >= 21 && numUnits <= 30) {
-    if (numFreq === 5) return 60;
-    if (numFreq === 3) return 70;
-    if (numFreq === 2) return 90;
-    if (numFreq === 1) return 95;
-  }
-  // 31-50 units pricing
-  if (numUnits >= 31 && numUnits <= 50) {
-    if (numFreq === 5) return 55;
-    if (numFreq === 3) return 65;
-    if (numFreq === 2) return 80;
-    if (numFreq === 1) return 85;
-  }
-  return null;
-};
 
 const ContainerCleaning = () => {
   const [numberOfUnits, setNumberOfUnits] = useState("");
@@ -75,10 +44,13 @@ const ContainerCleaning = () => {
   const units = parseCount(numberOfUnits, { min: 1 });
   const frequencyLabel = FREQUENCY_LABELS[frequency];
   const pricePerUnit =
-    units.status === "ok" && frequencyLabel ? getPricePerUnit(units.value, Number(frequency)) : null;
-  // Monthly price (4 weeks)
+    units.status === "ok" && frequencyLabel
+      ? containerCleaningPricePerUnit(units.value, Number(frequency))
+      : null;
   const totalPrice =
-    pricePerUnit === null ? null : roundKronor(pricePerUnit * units.value * Number(frequency) * 4);
+    pricePerUnit === null
+      ? null
+      : roundKronor(pricePerUnit * units.value * Number(frequency) * CONTAINER_WEEKS_PER_MONTH);
 
   // Q29 (client, confirmed): every business service is negotiated, so the page
   // only estimates a price and asks for a quote. Date and contact method are
@@ -88,7 +60,7 @@ const ContainerCleaning = () => {
     { label: "frekvens", status: frequencyLabel ? "ok" : "empty" },
   ]);
   const needsQuote = isQuoteOnly({
-    outOfRange: units.status === "ok" && units.value > MAX_UNITS_ONLINE,
+    outOfRange: units.status === "ok" && units.value > CONTAINER_MAX_UNITS_ONLINE,
     hint,
     price: totalPrice,
   });
@@ -166,7 +138,7 @@ const ContainerCleaning = () => {
                   {units.status === "invalid" && "Ange antal bodar som ett heltal, minst 1."}
                 </FieldError>
                 <small className="form-text text-muted">
-                  Ange mellan 1-50 bodar för automatisk prisberäkning. För fler bodar lämnar vi offert.
+                  {`Ange mellan 1-${CONTAINER_MAX_UNITS_ONLINE} bodar för automatisk prisberäkning. För fler bodar lämnar vi offert.`}
                 </small>
               </div>
 
@@ -221,7 +193,7 @@ const ContainerCleaning = () => {
               footer={
                 <p className="mt-3" style={{ fontSize: "13px", color: "#666" }}>
                   * Pris per bod och städtillfälle, exklusive moms.<br />
-                  * Månadspriset är beräknat på 4 veckor och är en uppskattning.
+                  {`* Månadspriset är beräknat på ${CONTAINER_WEEKS_PER_MONTH} veckor och är en uppskattning.`}
                 </p>
               }
             >

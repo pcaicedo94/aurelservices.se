@@ -19,6 +19,13 @@ import {
   QUOTE_ONLY_HINT,
 } from "../lib/booking/rules";
 import {
+  estimateHours,
+  HOME_FREQUENCY_RATES,
+  HOME_TIME_ESTIMATE,
+  HOME_WEEKDAY_RATES,
+  homeCleaningHourlyRate,
+} from "../lib/pricing";
+import {
   describeArea,
   describeDate,
   formatArea,
@@ -37,18 +44,6 @@ const FREQUENCY_LABELS = {
   4: "4 gånger per månad",
 };
 
-// Calculate hourly rate based on frequency and weekday
-const getHourlyRate = (frequency, weekday) => {
-  // Special rates for monthly and one-time cleanings
-  if (frequency === "1") return 245; // Once a month
-  if (frequency === "onetime") return 270; // One-time cleaning
-
-  // Day-based rates for regular cleanings
-  if (weekday >= 1 && weekday <= 3) return 200; // Monday-Wednesday
-  if (weekday >= 4 && weekday <= 5) return 220; // Thursday-Friday
-  return null; // No weekend rate: weekends cannot be booked online
-};
-
 const HomeCleaning = () => {
   const [size, setSize] = useState("");
   const [frequency, setFrequency] = useState("");
@@ -64,10 +59,10 @@ const HomeCleaning = () => {
   const area = parseArea(size);
   const frequencyLabel = FREQUENCY_LABELS[frequency];
   const hourlyRate = frequencyLabel
-    ? getHourlyRate(frequency, date.isValid ? date.check.parts.weekday : null)
+    ? homeCleaningHourlyRate(frequency, date.isValid ? date.check.parts.weekday : null)
     : null;
-  const estimatedTime = area.status === "ok" ? 1.57 + 0.0167 * area.value : null;
-  // TODO(cliente Q14): at least MIN_BILLABLE_HOURS are billed per cleaning.
+  const estimatedTime = area.status === "ok" ? estimateHours(area.value, HOME_TIME_ESTIMATE) : null;
+  // Q14 (client, confirmed): at least MIN_BILLABLE_HOURS are billed per cleaning.
   const cleaningTime = estimatedTime === null ? null : billableHours(estimatedTime);
   const sessionsPerMonth = frequency === "onetime" ? 1 : Number(frequency);
   const totalPrice =
@@ -204,8 +199,8 @@ const HomeCleaning = () => {
                   required
                 >
                   <option value="">Välj frekvens</option>
-                  <option value="onetime">Enstaka hemstädning (270 kr/h)</option>
-                  <option value="1">1 gång/månad (245 kr/h)</option>
+                  <option value="onetime">{`Enstaka hemstädning (${HOME_FREQUENCY_RATES.onetime} kr/h)`}</option>
+                  <option value="1">{`1 gång/månad (${HOME_FREQUENCY_RATES[1]} kr/h)`}</option>
                   <option value="2">2 gånger/månad</option>
                   <option value="4">4 gånger/månad</option>
                 </select>
@@ -218,8 +213,8 @@ const HomeCleaning = () => {
                 {hourlyRate && (frequency === "2" || frequency === "4") && (
                   <small className="form-text text-muted">
                     Timtaxa för vald dag: {formatPrice(hourlyRate)}/h
-                    {hourlyRate === 200 && " (Måndag-Onsdag)"}
-                    {hourlyRate === 220 && " (Torsdag-Fredag)"}
+                    {hourlyRate === HOME_WEEKDAY_RATES.mondayToWednesday && " (Måndag-Onsdag)"}
+                    {hourlyRate === HOME_WEEKDAY_RATES.thursdayToFriday && " (Torsdag-Fredag)"}
                   </small>
                 )}
               </DateTimeField>

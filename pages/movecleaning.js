@@ -12,6 +12,12 @@ import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
 import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
 import {
+  estimateHours,
+  moveCleaningBasePrice,
+  MOVE_CLEANING_EXTRAS,
+  MOVE_TIME_ESTIMATE,
+} from "../lib/pricing";
+import {
   describeArea,
   describeDate,
   formatArea,
@@ -21,17 +27,6 @@ import {
   NO_PRICE,
   roundKronor,
 } from "../lib/booking/format";
-
-// Calculate base price based on area.
-// Q22 (client, confirmed): the 2026 list alone makes 51 m² cheaper than 50 m²
-// (2 601 vs 2 890 kr), and the same happens at 101 and 151 m². The price may
-// never fall below the top of the previous tier, so each tier starts there.
-const getBasePrice = (area) => {
-  if (area >= 1 && area <= 50) return 2890;
-  if (area > 50 && area <= 100) return Math.max(2890, area * 51);
-  if (area > 100 && area <= 150) return Math.max(100 * 51, area * 47);
-  return Math.max(150 * 47, area * 42);
-};
 
 const MoveCleaning = () => {
   const [size, setSize] = useState("");
@@ -52,19 +47,35 @@ const MoveCleaning = () => {
   // current inputs and never keep a price from values that were cleared.
   const area = parseArea(size);
   // Rounded to two decimals as before: side areas are billed per estimated hour.
-  const cleaningTime = area.status === "ok" ? Number((1.57 + 0.0167 * area.value).toFixed(2)) : null;
-  const basePrice = area.status === "ok" ? roundKronor(getBasePrice(area.value)) : null;
+  const cleaningTime =
+    area.status === "ok" ? Number(estimateHours(area.value, MOVE_TIME_ESTIMATE).toFixed(2)) : null;
+  const basePrice = area.status === "ok" ? roundKronor(moveCleaningBasePrice(area.value)) : null;
 
   const extras = [
-    { selected: hasKylFrysDefrost, label: "Kyl/Frys med avfrostning", short: "Kyl/Frys", price: 400 },
-    { selected: hasPersienner, label: "Persienner (kan bokas som tillägg)", short: "Persienner", price: 360 },
+    {
+      selected: hasKylFrysDefrost,
+      label: "Kyl/Frys med avfrostning",
+      short: "Kyl/Frys",
+      price: MOVE_CLEANING_EXTRAS.kylFrysDefrost,
+    },
+    {
+      selected: hasPersienner,
+      label: "Persienner (kan bokas som tillägg)",
+      short: "Persienner",
+      price: MOVE_CLEANING_EXTRAS.persienner,
+    },
     {
       selected: hasBalkonger,
       label: "Städning av biytor såsom förråd, garage och balkonger",
       short: "Biytor",
-      price: roundKronor((cleaningTime || 0) * 360), // 360 kr/timmen
+      price: roundKronor((cleaningTime || 0) * MOVE_CLEANING_EXTRAS.biytor),
     },
-    { selected: hasBalkongerGlas, label: "Fönsterputsning av inglasade balkonger", short: "Fönsterputsning balkong", price: 650 },
+    {
+      selected: hasBalkongerGlas,
+      label: "Fönsterputsning av inglasade balkonger",
+      short: "Fönsterputsning balkong",
+      price: MOVE_CLEANING_EXTRAS.inglasadBalkong,
+    },
   ].filter((extra) => extra.selected);
   const extrasLabel = extras.map((extra) => extra.label).join(", ");
 
@@ -217,7 +228,7 @@ const MoveCleaning = () => {
                     onChange={(e) => setHasKylFrysDefrost(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="kylfrysdefrost">
-                    Kyl/Frys med avfrostning - 400 kr
+                    {`Kyl/Frys med avfrostning - ${MOVE_CLEANING_EXTRAS.kylFrysDefrost} kr`}
                   </label>
                 </div>
                 <div className="form-check">
@@ -229,7 +240,7 @@ const MoveCleaning = () => {
                     onChange={(e) => setHasPersienner(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="persienner">
-                    Persienner (kan bokas som tillägg) - 360 kr
+                    {`Persienner (kan bokas som tillägg) - ${MOVE_CLEANING_EXTRAS.persienner} kr`}
                   </label>
                 </div>
                 <div className="form-check">
@@ -241,7 +252,7 @@ const MoveCleaning = () => {
                     onChange={(e) => setHasBalkonger(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="balkonger">
-                    Städning av biytor såsom förråd, garage och balkonger - 360 kr/timmen
+                    {`Städning av biytor såsom förråd, garage och balkonger - ${MOVE_CLEANING_EXTRAS.biytor} kr/timmen`}
                   </label>
                 </div>
                 <div className="form-check">
@@ -253,7 +264,7 @@ const MoveCleaning = () => {
                     onChange={(e) => setHasBalkongerGlas(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="balkongerglas">
-                    Fönsterputsning av inglasade balkonger - 650 kr
+                    {`Fönsterputsning av inglasade balkonger - ${MOVE_CLEANING_EXTRAS.inglasadBalkong} kr`}
                   </label>
                 </div>
               </div>
