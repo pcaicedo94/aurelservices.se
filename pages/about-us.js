@@ -8,10 +8,13 @@ import Customers from "../components/Common/Customers";
 import Footer from "../components/Layouts/Footer";
 import OurValues from "../components/HomeOne/OurValues";
 import WorkingProcess from "../components/HomeOne/WorkingProcess";
+import Seo from "../components/Common/Seo";
 
 const AboutUs = () => {
   return (
     <>
+      <Seo route="/about-us" />
+
       <Navbar />
       <PageBanner
         pageTitle="Om oss"

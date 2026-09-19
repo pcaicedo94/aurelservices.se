@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const SnowRemoval = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/snowremoval" />
+
       <Navbar />
       <PageBanner pageTitle="Snöröjning" bgImage="/images/banners/snorojning.webp" bgPosition="center 25%" />
 
@@ -23,7 +26,7 @@ const SnowRemoval = () => {
               Vi ser till att gångvägar, parkeringar och uppfarter hålls fria från snö och is.
             </p>
 
-            <h4>Vad vi erbjuder</h4>
+            <h3>Vad vi erbjuder</h3>
             <ul>
               <li>Snöröjning av gångvägar och entréer</li>
               <li>Plogning av parkeringar och uppfarter</li>
@@ -32,7 +35,7 @@ const SnowRemoval = () => {
               <li>Akuta insatser vid behov</li>
             </ul>
 
-            <h4>Fördelar</h4>
+            <h3>Fördelar</h3>
             <ul>
               <li>Säkra och framkomliga ytor</li>
               <li>Minskad risk för olyckor</li>
@@ -40,16 +43,16 @@ const SnowRemoval = () => {
               <li>Flexibla lösningar efter behov</li>
             </ul>
 
-            <h4>RUT-avdrag</h4>
+            <h3>RUT-avdrag</h3>
             <p>
               Privatpersoner kan i vissa fall använda RUT-avdrag för snöröjning av tomt och uppfart i direkt anslutning till bostaden. RUT-avdrag gäller inte för snöröjning av gemensamma ytor som tillhör bostadsrättsföreningar eller företag.
             </p>
             <p>Vi hanterar RUT-avdraget direkt på fakturan när det är tillämpligt.</p>
 
-            <h4>Flexibla upplägg</h4>
+            <h3>Flexibla upplägg</h3>
             <p>Vi erbjuder både enstaka uppdrag och löpande snöröjning enligt avtal, anpassat efter fastighetens behov och väderförhållanden.</p>
 
-            <h4>Så fungerar det</h4>
+            <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med din eller er förfrågan</li>
               <li>Vi bokar vid behov ett kostnadsfritt platsbesök</li>

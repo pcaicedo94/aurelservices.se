@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const MoveCleaningBusiness = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/movecleaningbusiness" />
+
       <Navbar />
       <PageBanner pageTitle="Flyttstädning för företag" bgImage="/images/Flyttstädning-kontor.png" />
 
@@ -23,7 +26,7 @@ const MoveCleaningBusiness = () => {
               Vi ser till att lokalen lämnas i perfekt skick, vilket minskar risken för anmärkningar och sparar tid för er verksamhet.
             </p>
 
-            <h4>Vad ingår i vår flyttstädning</h4>
+            <h3>Vad ingår i vår flyttstädning</h3>
             <ul>
               <li>Rengöring av alla ytor från golv till tak</li>
               <li>Dammsugning och våttorkning av golv</li>
@@ -34,7 +37,7 @@ const MoveCleaningBusiness = () => {
               <li>Avtorkning av skåp, hyllor och fasta installationer</li>
             </ul>
 
-            <h4>Fördelar för företag</h4>
+            <h3>Fördelar för företag</h3>
             <ul>
               <li>Säkerställer godkänd besiktning</li>
               <li>Professionellt resultat enligt krav</li>
@@ -42,10 +45,10 @@ const MoveCleaningBusiness = () => {
               <li>Minimal påverkan på er verksamhet</li>
             </ul>
 
-            <h4>Tilläggstjänst</h4>
+            <h3>Tilläggstjänst</h3>
             <p>Vi kan även hjälpa till med själva flytten vid behov, som en kompletterande tjänst.</p>
 
-            <h4>Så fungerar det</h4>
+            <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med er förfrågan</li>
               <li>Vi bokar ett kostnadsfritt platsbesök</li>

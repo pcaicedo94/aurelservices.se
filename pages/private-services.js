@@ -1,9 +1,9 @@
 import React from "react";
-import Head from "next/head";
 import Link from "next/link";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 // No prices here on purpose: each service page shows its own calculator until
 // the single price source (config/prices.json) is wired in.
@@ -33,9 +33,7 @@ const SERVICES = [
 const PrivateServices = () => {
   return (
     <>
-      <Head>
-        <title>{"Privata tjänster – Aurel Städ & Allservice"}</title>
-      </Head>
+      <Seo route="/private-services" />
 
       <Navbar />
 

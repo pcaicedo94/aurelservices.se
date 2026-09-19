@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const FloorCare = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/floorcare" />
+
       <Navbar />
       <PageBanner pageTitle="Golvvård" bgImage="/images/banners/storstadning.webp" bgPosition="center 25%" />
 
@@ -20,7 +23,7 @@ const FloorCare = () => {
               Behöver dina golv en professionell behandling? Aurel Städ &amp; Allservice erbjuder golvvård i Stockholm för både företag och privatpersoner. Vi hjälper dig att förlänga livslängden på dina golv och återställa deras utseende med rätt behandling och underhåll.
             </p>
 
-            <h4>Vad vi erbjuder</h4>
+            <h3>Vad vi erbjuder</h3>
             <ul>
               <li>Maskinell rengöring av golv</li>
               <li>Polering och ytbehandling</li>
@@ -29,7 +32,7 @@ const FloorCare = () => {
               <li>Underhåll av olika golvtyper</li>
             </ul>
 
-            <h4>Golvtyper vi arbetar med</h4>
+            <h3>Golvtyper vi arbetar med</h3>
             <ul>
               <li>Plastgolv</li>
               <li>Laminatgolv</li>
@@ -37,7 +40,7 @@ const FloorCare = () => {
               <li>Stengolv och klinker</li>
             </ul>
 
-            <h4>Fördelar med golvvård</h4>
+            <h3>Fördelar med golvvård</h3>
             <ul>
               <li>Förlänger golvets livslängd</li>
               <li>Återställer glans och utseende</li>
@@ -45,10 +48,10 @@ const FloorCare = () => {
               <li>Ger ett professionellt och välskött intryck</li>
             </ul>
 
-            <h4>Flexibla upplägg</h4>
+            <h3>Flexibla upplägg</h3>
             <p>Vi erbjuder både enstaka behandlingar och löpande underhåll, anpassat efter behov och slitage.</p>
 
-            <h4>Så fungerar det</h4>
+            <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med din eller er förfrågan</li>
               <li>Vi bokar vid behov ett kostnadsfritt platsbesök</li>

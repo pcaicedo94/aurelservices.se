@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const StairCleaning = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/staircleaning" />
+
       <Navbar />
       <PageBanner
         pageTitle="Trappstädning"
@@ -30,7 +33,7 @@ const StairCleaning = () => {
               Vi ser till att trapphus och gemensamma utrymmen alltid är rena, fräscha och välskötta.
             </p>
 
-            <h4>Vad ingår i trappstädning</h4>
+            <h3>Vad ingår i trappstädning</h3>
             <ul>
               <li>Sopning och våttorkning av trappor och golv</li>
               <li>Rengöring av entréer och hissar</li>
@@ -39,12 +42,12 @@ const StairCleaning = () => {
               <li>Tömning av papperskorgar vid behov</li>
             </ul>
 
-            <h4>Flexibla upplägg</h4>
+            <h3>Flexibla upplägg</h3>
             <p>
               Vi erbjuder trappstädning enligt schema, till exempel en eller flera gånger per vecka, anpassat efter fastighetens behov.
             </p>
 
-            <h4>Fördelar</h4>
+            <h3>Fördelar</h3>
             <ul>
               <li>Rent och välkomnande intryck</li>
               <li>Ökad trivsel för boende och besökare</li>
@@ -52,7 +55,7 @@ const StairCleaning = () => {
               <li>Anpassade lösningar för varje fastighet</li>
             </ul>
 
-            <h4>Så fungerar det</h4>
+            <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med er förfrågan</li>
               <li>Vi bokar ett kostnadsfritt platsbesök</li>

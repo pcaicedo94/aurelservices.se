@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const WindowCleaningBusiness = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/windowcleaningbusiness" />
+
       <Navbar />
       <PageBanner pageTitle="Fönsterputsning för företag" bgImage="/images/Fönsterputs_kontor.png" />
 
@@ -23,19 +26,19 @@ const WindowCleaningBusiness = () => {
               Vi ser till att era fönster alltid håller hög standard och bidrar till en ljus och trivsam arbetsmiljö.
             </p>
 
-            <h4>Vad ingår i vår fönsterputsning</h4>
+            <h3>Vad ingår i vår fönsterputsning</h3>
             <ul>
               <li>Putsning av fönster invändigt och utvändigt</li>
               <li>Rengöring av glasytor för ett klart och fläckfritt resultat</li>
               <li>Avtorkning av karmar och kanter</li>
             </ul>
 
-            <h4>Flexibla upplägg</h4>
+            <h3>Flexibla upplägg</h3>
             <p>
               Vi erbjuder både enstaka uppdrag och regelbunden fönsterputsning enligt schema, anpassat efter era behov.
             </p>
 
-            <h4>Fördelar för företag</h4>
+            <h3>Fördelar för företag</h3>
             <ul>
               <li>Ett professionellt och välskött intryck</li>
               <li>Ökat ljusinsläpp i lokalerna</li>
@@ -43,7 +46,7 @@ const WindowCleaningBusiness = () => {
               <li>Pålitlig och erfaren personal</li>
             </ul>
 
-            <h4>Så fungerar det</h4>
+            <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med er förfrågan</li>
               <li>Vi bokar ett kostnadsfritt platsbesök</li>

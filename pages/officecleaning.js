@@ -6,6 +6,8 @@ import Footer from "../components/Layouts/Footer";
 import BookingSummary from "../components/Booking/BookingSummary";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import { billableHours, bookingHint, MIN_BILLABLE_HOURS, parseArea } from "../lib/booking/rules";
+import Seo from "../components/Common/Seo";
+import { estimateHours, OFFICE_FREQUENCIES, OFFICE_TIME_ESTIMATE } from "../lib/pricing";
 import {
   describeArea,
   formatArea,
@@ -16,12 +18,6 @@ import {
   roundKronor,
 } from "../lib/booking/format";
 
-const FREQUENCIES = {
-  1: { label: "1 gång per månad", hourlyRate: 350 },
-  2: { label: "2 gånger per månad", hourlyRate: 163 },
-  4: { label: "4 gånger per månad", hourlyRate: 150 },
-};
-
 const OfficeCleaning = () => {
   const [size, setSize] = useState("");
   const [frequency, setFrequency] = useState("");
@@ -30,10 +26,11 @@ const OfficeCleaning = () => {
   // Derived on every render, so the summary follows the inputs as they change
   // instead of waiting for a "Beräkna pris" click.
   const area = parseArea(size);
-  const plan = FREQUENCIES[frequency];
+  const plan = OFFICE_FREQUENCIES[frequency];
   const needsQuote = area.status === "quote";
-  const estimatedTime = area.status === "ok" ? Number((1.57 + 0.0167 * area.value).toFixed(2)) : null;
-  // TODO(cliente Q14): at least MIN_BILLABLE_HOURS are billed per cleaning.
+  const estimatedTime =
+    area.status === "ok" ? Number(estimateHours(area.value, OFFICE_TIME_ESTIMATE).toFixed(2)) : null;
+  // Q14 (client, confirmed): at least MIN_BILLABLE_HOURS are billed per cleaning.
   const cleaningTime = estimatedTime === null ? null : billableHours(estimatedTime);
   const predictedPrice =
     cleaningTime !== null && plan ? roundKronor(plan.hourlyRate * cleaningTime * Number(frequency)) : null;
@@ -57,6 +54,8 @@ const OfficeCleaning = () => {
 
   return (
     <>
+      <Seo route="/officecleaning" />
+
       <Navbar associates />
       <PageBanner pageTitle="Kontorsstädning" bgImage="/images/banners/kontorsstadning.webp" />
 
@@ -70,7 +69,7 @@ const OfficeCleaning = () => {
           </div>
           <div className="col-lg-5 mt-4 mt-lg-0">
             <div className="info-card">
-              <h4>Vad ingår i kontorsstädning</h4>
+              <h3>Vad ingår i kontorsstädning</h3>
               <ul>
                 <li>Dammsugning och våttorkning av golv</li>
                 <li>Tömning av papperskorgar</li>
@@ -125,9 +124,11 @@ const OfficeCleaning = () => {
                   required
                 >
                   <option value="">Välj frekvens</option>
-                  <option value="1">1 gång per månad (350 kr/h, minst 2 timmar)</option>
-                  <option value="2">2 gånger per månad (163 kr/h)</option>
-                  <option value="4">4 gånger per månad (150 kr/h)</option>
+                  <option value="1">
+                    {`${OFFICE_FREQUENCIES[1].label} (${OFFICE_FREQUENCIES[1].hourlyRate} kr/h, minst ${MIN_BILLABLE_HOURS} timmar)`}
+                  </option>
+                  <option value="2">{`${OFFICE_FREQUENCIES[2].label} (${OFFICE_FREQUENCIES[2].hourlyRate} kr/h)`}</option>
+                  <option value="4">{`${OFFICE_FREQUENCIES[4].label} (${OFFICE_FREQUENCIES[4].hourlyRate} kr/h)`}</option>
                 </select>
                 <small className="form-text text-muted">
                   Minsta debitering är {MIN_BILLABLE_HOURS} timmar per städtillfälle.

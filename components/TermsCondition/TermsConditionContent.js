@@ -10,7 +10,7 @@ const TermsConditionContent = () => {
     <div className="privacy-policy ptb-100">
       <div className="container">
         <div className="single-privacy">
-          <h3 className="mt-0">Allmänna villkor för privatpersoner</h3>
+          <h2 className="mt-0">Allmänna villkor för privatpersoner</h2>
           <p>
             De här villkoren gäller när du som privatperson köper städtjänster av Aurel Städ &amp;
             Allservice AB, organisationsnummer 556725-2340{" "}
@@ -27,7 +27,7 @@ const TermsConditionContent = () => {
             <mark>[ATT BEKRÄFTA: datum då villkoren publiceras]</mark>
           </p>
 
-          <h3>1. Bokning och avtal</h3>
+          <h2>1. Bokning och avtal</h2>
           <ul>
             <li>
               Hemstädning, storstädning, flyttstädning och fönsterputsning kan du boka direkt på
@@ -51,7 +51,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>2. Priser</h3>
+          <h2>2. Priser</h2>
           <ul>
             <li>Priser för privatpersoner anges inklusive moms och efter RUT-avdrag.</li>
             <li>
@@ -77,7 +77,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>3. RUT-avdrag</h3>
+          <h2>3. RUT-avdrag</h2>
           <ul>
             <li>
               Vi drar av RUT-avdraget direkt på fakturan och ansöker om utbetalningen hos
@@ -94,7 +94,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>4. Betalning</h3>
+          <h2>4. Betalning</h2>
           <ul>
             <li>Betalning sker mot faktura med 20 dagars betalningstid.</li>
             <li>Fakturaavgiften är 45 kr.</li>
@@ -105,7 +105,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>5. Städmaterial och utrustning</h3>
+          <h2>5. Städmaterial och utrustning</h2>
           <ul>
             <li>
               Vid hemstädning står du som kund för de produkter och medel som behövs för att utföra
@@ -120,7 +120,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>6. Förberedelser och tillträde</h3>
+          <h2>6. Förberedelser och tillträde</h2>
           <ul>
             <li>
               Du ser till att vi kan komma in i bostaden vid den bokade tiden.{" "}
@@ -140,7 +140,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>7. Vad som ingår</h3>
+          <h2>7. Vad som ingår</h2>
           <ul>
             <li>Vad som ingår i respektive tjänst beskrivs på tjänstens sida på webbplatsen.</li>
             <li>
@@ -154,7 +154,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>8. Avbokning och ombokning</h3>
+          <h2>8. Avbokning och ombokning</h2>
           <ul>
             <li>
               Avbokning eller ombokning ska göras via telefon eller e-post senast{" "}
@@ -170,7 +170,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>9. Uppsägning av återkommande tjänster</h3>
+          <h2>9. Uppsägning av återkommande tjänster</h2>
           <p>
             Avtal om återkommande tjänster har tre månaders uppsägningstid. Uppsägningen skickar du
             till info@aurelservice.se.{" "}
@@ -180,7 +180,7 @@ const TermsConditionContent = () => {
             </mark>
           </p>
 
-          <h3>10. Reklamation</h3>
+          <h2>10. Reklamation</h2>
           <ul>
             <li>
               Är du inte nöjd med en utförd tjänst ska du kontakta oss så snart som möjligt efter att
@@ -195,7 +195,7 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>11. Skador</h3>
+          <h2>11. Skador</h2>
           <ul>
             <li>Om något skadas i samband med vårt arbete ska du meddela oss så snart som möjligt.</li>
             <li>
@@ -207,13 +207,13 @@ const TermsConditionContent = () => {
             </li>
           </ul>
 
-          <h3>12. Personuppgifter</h3>
+          <h2>12. Personuppgifter</h2>
           <p>
             Hur vi behandlar dina personuppgifter beskriver vi i vår{" "}
             <Link href="/privacy-policy">integritetspolicy</Link>.
           </p>
 
-          <h3>13. Frågor och oenighet</h3>
+          <h2>13. Frågor och oenighet</h2>
           <p>
             Har du frågor om villkoren är du välkommen att kontakta oss på info@aurelservice.se eller
             076-045 02 28. Om vi inte kommer överens kan du som konsument vända dig till Allmänna

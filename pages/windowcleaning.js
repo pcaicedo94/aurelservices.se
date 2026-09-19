@@ -11,16 +11,21 @@ import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import {
+  WINDOW_BALCONY_PRICE,
+  WINDOW_QUOTE_ABOVE_AREA,
+  WINDOW_QUOTE_FROM_ROOMS,
+  WINDOW_ROOM_PRICES,
+  WINDOW_SURCHARGE_PERCENT,
+  WINDOW_SURCHARGE_RATE,
+} from "../lib/pricing";
 import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../lib/booking/format";
+import Seo from "../components/Common/Seo";
 
-const BASE_PRICES = { 1: 799, 2: 899, 3: 999, 4: 1099 };
-const BALCONY_PRICE = 450;
-// Q21 (client, confirmed): 5 rooms or more than 120 m² is quoted, never priced
-// online. All three price documents agree on this.
-const MAX_AREA_ONLINE = 120;
-// Q20 (client, confirmed): each add-on adds 25 % of the base price, and they
-// add up instead of compounding (two add-ons = +50 %, not +56 %).
-const ADD_ON_RATE = 0.25;
+// Q21 (client, confirmed): a home of this many rooms, or larger than
+// WINDOW_QUOTE_ABOVE_AREA, is quoted and never priced online. The room count
+// is compared against the value of the select, which is a string.
+const QUOTE_FROM_ROOMS = String(WINDOW_QUOTE_FROM_ROOMS);
 
 const WindowCleaning = () => {
   // Form state
@@ -39,19 +44,21 @@ const WindowCleaning = () => {
 
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
-  const area = parseArea(size, { max: MAX_AREA_ONLINE });
-  const basePrice = onlyBalcony ? BALCONY_PRICE : BASE_PRICES[rooms] || null;
+  const area = parseArea(size, { max: WINDOW_QUOTE_ABOVE_AREA });
+  const basePrice = onlyBalcony ? WINDOW_BALCONY_PRICE : WINDOW_ROOM_PRICES[rooms] || null;
   const addOns = [
     hasSprojs && "Spröjs",
     hasHighCeiling && "Hög takhöjd",
     hasTripleGlass && "Treglasfönster"
   ].filter(Boolean);
+  // Q20 (client, confirmed): the add-ons add up instead of compounding, so two
+  // of them are +50 % of the base price, not +56 %.
   const totalPrice =
-    basePrice === null ? null : roundKronor(basePrice * (1 + ADD_ON_RATE * addOns.length));
+    basePrice === null ? null : roundKronor(basePrice * (1 + WINDOW_SURCHARGE_RATE * addOns.length));
 
   let selection = NOT_SET;
   if (onlyBalcony) selection = "Endast balkong";
-  else if (rooms === "5") selection = "5 rum och kök eller större";
+  else if (rooms === QUOTE_FROM_ROOMS) selection = `${QUOTE_FROM_ROOMS} rum och kök eller större`;
   else if (rooms) selection = `${rooms} rum och kök`;
 
   const hint = bookingHint([
@@ -59,7 +66,7 @@ const WindowCleaning = () => {
     { label: "datum", status: date.check.status },
   ]);
   const needsQuote = isQuoteOnly({
-    outOfRange: !onlyBalcony && (rooms === "5" || area.status === "quote"),
+    outOfRange: !onlyBalcony && (rooms === QUOTE_FROM_ROOMS || area.status === "quote"),
     hint,
     price: totalPrice,
   });
@@ -101,6 +108,8 @@ const WindowCleaning = () => {
 
   return (
     <>
+      <Seo route="/windowcleaning" />
+
       <Navbar />
       <PageBanner pageTitle="Fönsterputsning" bgImage="/images/banners/fonsterputs.webp" />
 
@@ -115,7 +124,7 @@ const WindowCleaning = () => {
           </div>
           <div className="col-lg-5">
             <div className="brand-card">
-              <h4>RUT-avdrag</h4>
+              <h3>RUT-avdrag</h3>
               <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
             </div>
           </div>
@@ -124,7 +133,7 @@ const WindowCleaning = () => {
         <div className="row" style={{ marginTop: "30px" }}>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Vad ingår</h4>
+              <h3>Vad ingår</h3>
               <ul>
                 <li>Rengöring av fönstrets in- och utsida</li>
                 <li>Putsning av fönsterglas för klart och fläckfritt resultat</li>
@@ -134,7 +143,7 @@ const WindowCleaning = () => {
           </div>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Fördelar</h4>
+              <h3>Fördelar</h3>
               <ul>
                 <li>Klart och randfritt resultat</li>
                 <li>Ökat ljusinsläpp i hemmet</li>
@@ -145,7 +154,7 @@ const WindowCleaning = () => {
           </div>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Prisinformation</h4>
+              <h3>Prisinformation</h3>
               <p>Priser inkl. moms efter RUT-avdrag. I priserna ingår rengöring av fönstrets bågar och dammning av persienner.</p>
             </div>
           </div>
@@ -164,7 +173,7 @@ const WindowCleaning = () => {
                   <option value="2">2 rum och kök</option>
                   <option value="3">3 rum och kök</option>
                   <option value="4">4 rum och kök</option>
-                  <option value="5">5 rum och kök eller större</option>
+                  <option value="5">{`${QUOTE_FROM_ROOMS} rum och kök eller större`}</option>
                 </select>
               </div>
 
@@ -186,7 +195,7 @@ const WindowCleaning = () => {
                 />
                 <FieldError id="size-error">{area.message}</FieldError>
                 <small className="form-text text-muted">
-                  Över {MAX_AREA_ONLINE} m² lämnar vi en offert.
+                  Över {WINDOW_QUOTE_ABOVE_AREA} m² lämnar vi en offert.
                 </small>
               </div>
 
@@ -194,15 +203,15 @@ const WindowCleaning = () => {
                 <label>Tillägg</label>
                 <div className="form-check">
                   <input type="checkbox" className="form-check-input" id="sprojs" checked={hasSprojs} onChange={(e) => setHasSprojs(e.target.checked)} />
-                  <label className="form-check-label" htmlFor="sprojs">Spröjs (+25%)</label>
+                  <label className="form-check-label" htmlFor="sprojs">{`Spröjs (+${WINDOW_SURCHARGE_PERCENT}%)`}</label>
                 </div>
                 <div className="form-check">
                   <input type="checkbox" className="form-check-input" id="highCeiling" checked={hasHighCeiling} onChange={(e) => setHasHighCeiling(e.target.checked)} />
-                  <label className="form-check-label" htmlFor="highCeiling">Takhöjd över 280 cm (+25%)</label>
+                  <label className="form-check-label" htmlFor="highCeiling">{`Takhöjd över 280 cm (+${WINDOW_SURCHARGE_PERCENT}%)`}</label>
                 </div>
                 <div className="form-check">
                   <input type="checkbox" className="form-check-input" id="tripleGlass" checked={hasTripleGlass} onChange={(e) => setHasTripleGlass(e.target.checked)} />
-                  <label className="form-check-label" htmlFor="tripleGlass">Treglasfönster eller mer (+25%)</label>
+                  <label className="form-check-label" htmlFor="tripleGlass">{`Treglasfönster eller mer (+${WINDOW_SURCHARGE_PERCENT}%)`}</label>
                 </div>
               </div>
 
@@ -210,7 +219,7 @@ const WindowCleaning = () => {
                 <label>Endast Balkong</label>
                 <div className="form-check">
                   <input type="checkbox" className="form-check-input" id="onlyBalcony" checked={onlyBalcony} onChange={(e) => { setOnlyBalcony(e.target.checked); if (e.target.checked) setRooms(""); }} />
-                  <label className="form-check-label" htmlFor="onlyBalcony">Endast inglasad balkong (från 450 kr)</label>
+                  <label className="form-check-label" htmlFor="onlyBalcony">{`Endast inglasad balkong (från ${WINDOW_BALCONY_PRICE} kr)`}</label>
                 </div>
               </div>
 
@@ -225,7 +234,7 @@ const WindowCleaning = () => {
               hint={needsQuote ? "" : hint}
               onBook={flow.openContact}
               onQuote={() => setShowQuote(true)}
-              quoteNote={`För 5 rum och kök eller mer än ${MAX_AREA_ONLINE} m² lämnar vi en offert. Skicka en förfrågan så återkommer vi.`}
+              quoteNote={`För ${QUOTE_FROM_ROOMS} rum och kök eller mer än ${WINDOW_QUOTE_ABOVE_AREA} m² lämnar vi en offert. Skicka en förfrågan så återkommer vi.`}
             >
               <li><strong>Val:</strong> {selection}</li>
               <li><strong>Storlek:</strong> {onlyBalcony ? "–" : describeArea(area)}</li>

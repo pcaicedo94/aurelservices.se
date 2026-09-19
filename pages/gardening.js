@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const Gardening = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/gardening" />
+
       <Navbar />
       <PageBanner pageTitle="Trädgårdsskötsel" bgImage="/images/banners/tradgardsskotsel.webp" />
 
@@ -20,7 +23,7 @@ const Gardening = () => {
               Behöver du hjälp med din trädgård? Aurel Städ &amp; Allservice erbjuder professionell trädgårdsskötsel i Stockholm för privatpersoner. Vi hjälper dig att hålla din trädgård välskött, trivsam och i gott skick under hela säsongen.
             </p>
 
-            <h4>Vad vi erbjuder</h4>
+            <h3>Vad vi erbjuder</h3>
             <ul>
               <li>Gräsklippning</li>
               <li>Ogräsrensning</li>
@@ -29,7 +32,7 @@ const Gardening = () => {
               <li>Allmänt underhåll av trädgården</li>
             </ul>
 
-            <h4>RUT-avdrag</h4>
+            <h3>RUT-avdrag</h3>
             <p>
               Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden för trädgårdsskötsel.
             </p>
@@ -40,7 +43,7 @@ const Gardening = () => {
               Vi hanterar hela RUT-avdraget direkt på fakturan så att det blir enkelt för dig.
             </p>
 
-            <h4>Fördelar</h4>
+            <h3>Fördelar</h3>
             <ul>
               <li>En välskött och trivsam trädgård</li>
               <li>Mer tid över till annat</li>
@@ -48,7 +51,7 @@ const Gardening = () => {
               <li>Pålitlig och noggrann service</li>
             </ul>
 
-            <h4>Så fungerar det</h4>
+            <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med din förfrågan</li>
               <li>Vi bokar vid behov ett kostnadsfritt platsbesök</li>

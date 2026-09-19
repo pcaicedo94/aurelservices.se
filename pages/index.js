@@ -8,10 +8,13 @@ import FunFacts from "../components/Common/FunFacts";
 import GetStartedProject from "../components/Common/GetStartedProject";
 import Customers from "../components/Common/Customers";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const Index = () => {
   return (
     <>
+      <Seo route="/" />
+
       <Navbar />
 
       <MainBanner />
