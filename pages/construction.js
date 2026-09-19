@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const Construction = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/construction" />
+
       <Navbar />
       <PageBanner pageTitle="Byggtjänster" bgImage="/images/banners/byggtjanster.webp" />
 

@@ -3,12 +3,15 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import QuoteModal from "../components/Common/QuoteModal";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const SnowRemoval = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
+      <Seo route="/snowremoval" />
+
       <Navbar />
       <PageBanner pageTitle="Snöröjning" bgImage="/images/banners/snorojning.webp" bgPosition="center 25%" />
 

@@ -11,6 +11,7 @@ import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
 import { bookingHint, isQuoteOnly, parseArea, parseCount, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import Seo from "../components/Common/Seo";
 import {
   deepCleaningBasePrice,
   DEEP_CLEANING_EXTRAS,
@@ -129,6 +130,8 @@ const DeepCleaning = () => {
 
   return (
     <>
+      <Seo route="/deepcleaning" />
+
       <Navbar associates />
       <PageBanner pageTitle="Storstädning" bgImage="/images/banners/storstadning.webp" bgPosition="center 25%" />
 

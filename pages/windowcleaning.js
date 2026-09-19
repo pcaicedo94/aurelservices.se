@@ -20,6 +20,7 @@ import {
   WINDOW_SURCHARGE_RATE,
 } from "../lib/pricing";
 import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../lib/booking/format";
+import Seo from "../components/Common/Seo";
 
 // Q21 (client, confirmed): a home of this many rooms, or larger than
 // WINDOW_QUOTE_ABOVE_AREA, is quoted and never priced online. The room count
@@ -107,6 +108,8 @@ const WindowCleaning = () => {
 
   return (
     <>
+      <Seo route="/windowcleaning" />
+
       <Navbar />
       <PageBanner pageTitle="Fönsterputsning" bgImage="/images/banners/fonsterputs.webp" />
 

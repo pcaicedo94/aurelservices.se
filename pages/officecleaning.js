@@ -6,6 +6,7 @@ import Footer from "../components/Layouts/Footer";
 import BookingSummary from "../components/Booking/BookingSummary";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import { billableHours, bookingHint, MIN_BILLABLE_HOURS, parseArea } from "../lib/booking/rules";
+import Seo from "../components/Common/Seo";
 import { estimateHours, OFFICE_FREQUENCIES, OFFICE_TIME_ESTIMATE } from "../lib/pricing";
 import {
   describeArea,
@@ -53,6 +54,8 @@ const OfficeCleaning = () => {
 
   return (
     <>
+      <Seo route="/officecleaning" />
+
       <Navbar associates />
       <PageBanner pageTitle="Kontorsstädning" bgImage="/images/banners/kontorsstadning.webp" />
 

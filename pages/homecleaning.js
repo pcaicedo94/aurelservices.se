@@ -10,6 +10,7 @@ import DateTimeField from "../components/Booking/DateTimeField";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import useBookingFlow from "../lib/booking/useBookingFlow";
 import useBookingDate from "../lib/booking/useBookingDate";
+import Seo from "../components/Common/Seo";
 import {
   billableHours,
   bookingHint,
@@ -111,6 +112,8 @@ const HomeCleaning = () => {
 
   return (
     <>
+      <Seo route="/homecleaning" />
+
       <Navbar associates />
       <PageBanner pageTitle="Hemstädning" bgImage="/images/banners/hemstadning.webp" />
 

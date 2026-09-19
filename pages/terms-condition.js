@@ -1,16 +1,14 @@
 import React from "react";
-import Head from "next/head";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import TermsConditionContent from "../components/TermsCondition/TermsConditionContent";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
 const TermsCondition = () => {
   return (
     <>
-      <Head>
-        <title>{"Allmänna villkor – Aurel Städ & Allservice"}</title>
-      </Head>
+      <Seo route="/terms-condition" />
 
       <Navbar />
 

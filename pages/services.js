@@ -3,10 +3,13 @@ import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import Footer from "../components/Layouts/Footer";
 import ServicesDetails from "../components/HomeOne/ServicesDetails";
+import Seo from "../components/Common/Seo";
 
 const Services = () => {
   return (
     <>
+      <Seo route="/services" />
+
       <Navbar />
 
       <PageBanner

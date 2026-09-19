@@ -8,6 +8,7 @@ import DateTimeField from "../components/Booking/DateTimeField";
 import FieldError, { invalidClass } from "../components/Booking/FieldError";
 import useBookingDate from "../lib/booking/useBookingDate";
 import { bookingHint, isQuoteOnly, parseCount } from "../lib/booking/rules";
+import Seo from "../components/Common/Seo";
 import {
   containerCleaningPricePerUnit,
   CONTAINER_MAX_UNITS_ONLINE,
@@ -84,6 +85,8 @@ const ContainerCleaning = () => {
 
   return (
     <>
+      <Seo route="/containercleaning" />
+
       <Navbar />
 
       <PageBanner

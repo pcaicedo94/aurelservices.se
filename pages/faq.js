@@ -1,25 +1,17 @@
 import React from "react";
-import Head from "next/head";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
 import FaqContent, { faqSchema } from "../components/Faq/FaqContent";
 import ContactForm from "../components/Contact/ContactForm";
 import Footer from "../components/Layouts/Footer";
+import Seo from "../components/Common/Seo";
 
-// "<" is escaped so no answer text can close the script tag early.
-const schemaJson = JSON.stringify(faqSchema()).replace(/</g, "\\u003c");
-
+// The FAQPage JSON-LD is derived from the questions rendered on this page, so
+// the markup and the structured data can never drift apart.
 const Faq = () => {
   return (
     <>
-      <Head>
-        <title>{"Vanliga frågor – Aurel Städ & Allservice"}</title>
-        <script
-          key="faq-jsonld"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: schemaJson }}
-        />
-      </Head>
+      <Seo route="/faq" schemas={[faqSchema()]} />
 
       <Navbar />
 
