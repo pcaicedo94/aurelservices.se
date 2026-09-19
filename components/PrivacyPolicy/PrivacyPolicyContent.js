@@ -45,9 +45,8 @@ const PrivacyPolicyContent = () => {
 
           <h2>1. Personuppgiftsansvarig</h2>
           <p>
-            Aurel Städ &amp; Allservice AB, organisationsnummer 556725-2340{" "}
-            <mark>[ATT BEKRÄFTA: organisationsnummer]</mark>, är personuppgiftsansvarig för
-            behandlingen av dina personuppgifter.
+            Aurel Städ &amp; Allservice AB, organisationsnummer 556725-2340, är
+            personuppgiftsansvarig för behandlingen av dina personuppgifter.
           </p>
           <ul>
             <li>

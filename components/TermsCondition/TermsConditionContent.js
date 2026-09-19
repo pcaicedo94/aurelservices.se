@@ -13,8 +13,7 @@ const TermsConditionContent = () => {
           <h2 className="mt-0">Allmänna villkor för privatpersoner</h2>
           <p>
             De här villkoren gäller när du som privatperson köper städtjänster av Aurel Städ &amp;
-            Allservice AB, organisationsnummer 556725-2340{" "}
-            <mark>[ATT BEKRÄFTA: organisationsnummer]</mark>. För företag och
+            Allservice AB, organisationsnummer 556725-2340. För företag och
             bostadsrättsföreningar gäller i första hand den offert eller det avtal som vi har kommit
             överens om. <mark>[ATT BEKRÄFTA: om villkoren även ska gälla företagskunder]</mark>
           </p>
