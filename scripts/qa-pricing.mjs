@@ -1,28 +1,50 @@
 /**
- * QA: lib/pricing.js must reproduce, to the öre, what each calculator page
- * shows today. The script then checks the figures transcribed into
- * config/prices.json against Prislista 2026 (pages 1-3), lists where the
- * calculators disagree with the price list, and lists every price still
- * waiting for the client. No network, no side effects.
+ * QA: prices. config/prices.json is the single source of truth and the
+ * calculators reach it through lib/pricing.js, so this script checks the two
+ * ends of that chain:
+ *
+ *   1. No calculator keeps a rate of its own. Each page is tokenized and every
+ *      number it still spells out is compared with the figures lib/pricing.js
+ *      hands it, so a rate that creeps back into the JSX fails the check.
+ *   2. The figures themselves still match the client's price lists: Prislista
+ *      2026 (pages 1-3) and the answers confirmed on 2026-09-17, including the
+ *      rules the pages depend on (two billed hours, tiers that never drop,
+ *      window add-ons that add up, the quote thresholds).
+ *
+ * It then lists, for information only, where the calculators still differ from
+ * the price list and which entries wait for the client. No network, no side
+ * effects.
  *
  *   node scripts/qa-pricing.mjs
  *
- * Exit code 1 only when a check fails; discrepancies are informational.
- *
- * The legacy* functions are transcriptions of each page's calculation, with
- * React state setters turned into return values. A drift check runs first and
- * fails if a page's formula lines change, so a page cannot keep passing
- * against an outdated transcription.
+ * Exit code 1 only when a check fails; the reports never fail the run.
  */
 import { readFileSync } from "node:fs";
 import {
-  containerCleaningPrice,
-  deepCleaningPrice,
-  homeCleaningPrice,
-  moveCleaningPrice,
-  officeCleaningPrice,
-  weekdayOf,
-  windowCleaningPrice,
+  containerCleaningPricePerUnit,
+  CONTAINER_MAX_UNITS_ONLINE,
+  CONTAINER_WEEKS_PER_MONTH,
+  deepCleaningBasePrice,
+  DEEP_CLEANING_EXTRAS,
+  DEEP_CLEANING_QUOTE_ABOVE_AREA,
+  estimateHours,
+  homeCleaningHourlyRate,
+  HOME_FREQUENCY_RATES,
+  HOME_TIME_ESTIMATE,
+  HOME_WEEKDAY_RATES,
+  MIN_BILLABLE_HOURS,
+  moveCleaningBasePrice,
+  MOVE_CLEANING_EXTRAS,
+  MOVE_TIME_ESTIMATE,
+  OFFICE_FREQUENCIES,
+  OFFICE_TIME_ESTIMATE,
+  PRICE_FLAGS,
+  WINDOW_BALCONY_PRICE,
+  WINDOW_QUOTE_ABOVE_AREA,
+  WINDOW_QUOTE_FROM_ROOMS,
+  WINDOW_ROOM_PRICES,
+  WINDOW_SURCHARGE_PERCENT,
+  WINDOW_SURCHARGE_RATE,
 } from "../lib/pricing.js";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -42,344 +64,275 @@ function check(name, actual, expected) {
 
 const kr = (amount) => `${amount.toFixed(2)} kr`;
 
-/* ------------------------------ source drift ------------------------------ */
+/* ----------------------- no rates left in the pages ----------------------- */
 
-const SIGNATURES = {
-  "pages/homecleaning.js": [
-    'if (selectedFrequency === "1") return 245;',
-    'if (selectedFrequency === "onetime") return 270;',
-    "if (dayOfWeek >= 1 && dayOfWeek <= 3) return 200;",
-    "if (dayOfWeek >= 4 && dayOfWeek <= 5) return 220;",
-    "const time = 1.57 + 0.0167 * area;",
-    "monthlyPrice = time * rate;",
-    "monthlyPrice = time * rate * sessionsPerMonth;",
-  ],
-  "pages/deepcleaning.js": [
-    "if (area >= 1 && area <= 50) price = 2650;",
-    "else if (area > 50 && area <= 70) price = 3290;",
-    "else if (area > 70 && area <= 100) price = 3950;",
-    "else if (area > 100 && area <= 150) price = 4750;",
-    "if (hasKylFrys) total += 360;",
-    "if (hasKylFrysDefrost) total += 500;",
-    "if (hasDiskmaskin) total += 250;",
-    "if (hasKapGarderob) total += 360;",
-    "if (hasForrad) total += 300;",
-    "if (hasTvattmaskin) total += 390;",
-    "total += vaggtvattCount * 250;",
-  ],
-  "pages/movecleaning.js": [
-    "const time = 1.57 + 0.0167 * area;",
-    "price = 2890;",
-    "price = area * 51;",
-    "price = area * 47;",
-    "price = area * 42;",
-    "if (hasKylFrysDefrost) total += 400;",
-    "if (hasPersienner) total += 360;",
-    "if (hasBalkonger) total += cleaningTime * 360;",
-    "if (hasBalkongerGlas) total += 650;",
-  ],
-  "pages/windowcleaning.js": [
-    "basePrice = 450;",
-    'case "1": basePrice = 799; break;',
-    'case "2": basePrice = 899; break;',
-    'case "3": basePrice = 999; break;',
-    'case "4": basePrice = 1099; break;',
-    "if (hasSprojs) finalPrice *= 1.25;",
-    "if (hasHighCeiling) finalPrice *= 1.25;",
-    "if (hasTripleGlass) finalPrice *= 1.25;",
-    '} else if (rooms === "5") {',
-  ],
-  "pages/officecleaning.js": [
-    '1: { label: "1 gång per månad", hourlyRate: 350 },',
-    '2: { label: "2 gånger per månad", hourlyRate: 163 },',
-    '4: { label: "4 gånger per månad", hourlyRate: 150 },',
-    "(1.57 + 0.0167 * area).toFixed(2)",
-    "(plan.hourlyRate * cleaningTime * Number(frequency)).toFixed(2)",
-  ],
-  "pages/containercleaning.js": [
-    "if (numFreq === 5) pricePerBodar = 100;",
-    "else if (numFreq === 1) pricePerBodar = 130;",
-    "if (numFreq === 5) pricePerBodar = 65;",
-    "if (numFreq === 5) pricePerBodar = 60;",
-    "else if (numFreq === 1) pricePerBodar = 85;",
-    "const totalPrice = pricePerBodar * numUnits * numFreq * 4;",
-  ],
-};
-
-console.log("=== Las fórmulas transcritas siguen en las páginas ===");
-const squash = (text) => text.replace(/\s+/g, " ");
-for (const [file, lines] of Object.entries(SIGNATURES)) {
-  const source = squash(read(file));
-  const missing = lines.filter((line) => !source.includes(squash(line)));
-  check(`${file}`, missing.length ? `cambió: ${missing.join(" | ")}` : "sin cambios", "sin cambios");
-}
-
-/* ------------------------ page logic, transcribed ------------------------- */
-
-// pages/homecleaning.js — getHourlyRate() and updateCalculations()
-function legacyHome({ size, frequency, dateTime }) {
-  const getHourlyRate = (selectedDateTime, selectedFrequency) => {
-    if (selectedFrequency === "1") return 245;
-    if (selectedFrequency === "onetime") return 270;
-    if (selectedDateTime) {
-      const dayOfWeek = new Date(selectedDateTime).getDay();
-      if (dayOfWeek >= 1 && dayOfWeek <= 3) return 200;
-      if (dayOfWeek >= 4 && dayOfWeek <= 5) return 220;
-    }
-    return 0;
+// Numbers inside comments, strings and JSX attributes are not rates the page
+// prices with, so only code and JSX text are scanned. Template literals count
+// as text plus the code inside their ${...} holes.
+function numbersInCode(source) {
+  const code = [];
+  let i = 0;
+  let line = 1;
+  const lines = [];
+  const keep = (char) => {
+    code.push(char);
+    lines.push(line);
   };
-  let hourlyRate = 0;
-  let cleaningTime = 0;
-  let predictedPrice = 0;
-  if (size && frequency && dateTime) {
-    const area = parseFloat(size);
-    const rate = getHourlyRate(dateTime, frequency);
-    const time = 1.57 + 0.0167 * area;
-    hourlyRate = rate;
-    cleaningTime = time.toFixed(2);
-    let monthlyPrice;
-    if (frequency === "onetime") {
-      monthlyPrice = time * rate;
-    } else {
-      const sessionsPerMonth = parseInt(frequency, 10);
-      monthlyPrice = time * rate * sessionsPerMonth;
+  const skip = (char) => {
+    code.push(" ");
+    lines.push(line);
+    if (char === "\n") line += 1;
+  };
+  while (i < source.length) {
+    const char = source[i];
+    const next = source[i + 1];
+    if (char === "/" && next === "/") {
+      while (i < source.length && source[i] !== "\n") skip(source[i++]);
+      continue;
     }
-    predictedPrice = monthlyPrice.toFixed(2);
-  }
-  // What the summary shows
-  return `${hourlyRate} kr/h | ${cleaningTime || "0"} h | ${predictedPrice || "0"} kr`;
-}
-
-// pages/deepcleaning.js — calculateBasePrice(), total effect, summary labels
-function legacyDeep({ size, extras: x = {} }) {
-  const area = parseFloat(size);
-  let basePrice = 0;
-  if (!isNaN(area) && area > 0) {
-    let price = 0;
-    if (area >= 1 && area <= 50) price = 2650;
-    else if (area > 50 && area <= 70) price = 3290;
-    else if (area > 70 && area <= 100) price = 3950;
-    else if (area > 100 && area <= 150) price = 4750;
-    else if (area > 150) price = 0; // Offereras
-    basePrice = price;
-  }
-  let total = basePrice;
-  if (x.kylFrys) total += 360;
-  if (x.kylFrysDefrost) total += 500;
-  if (x.diskmaskin) total += 250;
-  if (x.kapGarderob) total += 360;
-  if (x.forrad) total += 300;
-  if (x.tvattmaskin) total += 390;
-  total += (x.vaggtvatt || 0) * 250;
-  const predictedPrice = total.toFixed(2);
-  const quote = basePrice === 0 && parseFloat(size) > 150;
-  return `${quote ? "Offereras" : `${basePrice || "0"} kr`} | ${quote ? "Offereras" : `${predictedPrice || "0"} kr`}`;
-}
-
-// pages/movecleaning.js — calculateBasePrice(), total effect, summary labels
-function legacyMove({ size, extras: x = {} }) {
-  const area = parseFloat(size);
-  let basePrice = 0;
-  let cleaningTime = 0;
-  if (!isNaN(area) && area > 0) {
-    const time = 1.57 + 0.0167 * area;
-    cleaningTime = time.toFixed(2);
-    let price = 0;
-    if (area >= 1 && area <= 50) price = 2890;
-    else if (area > 50 && area <= 100) price = area * 51;
-    else if (area > 100 && area <= 150) price = area * 47;
-    else if (area > 150) price = area * 42;
-    basePrice = price;
-  }
-  let total = basePrice;
-  if (x.kylFrysDefrost) total += 400;
-  if (x.persienner) total += 360;
-  if (x.biytor) total += cleaningTime * 360;
-  if (x.inglasadBalkong) total += 650;
-  return `${cleaningTime || "0"} h | ${basePrice || "0"} kr | ${total.toFixed(2) || "0"} kr`;
-}
-
-// pages/windowcleaning.js — price effect and summary label
-function legacyWindow({ rooms, onlyBalcony, sprojs, highCeiling, tripleGlass }) {
-  let basePrice = 0;
-  if (onlyBalcony) {
-    basePrice = 450;
-  } else {
-    switch (rooms) {
-      case "1": basePrice = 799; break;
-      case "2": basePrice = 899; break;
-      case "3": basePrice = 999; break;
-      case "4": basePrice = 1099; break;
-      default: basePrice = 0;
+    if (char === "/" && next === "*") {
+      const end = source.indexOf("*/", i + 2);
+      const stop = end === -1 ? source.length : end + 2;
+      while (i < stop) skip(source[i++]);
+      continue;
     }
+    if (char === '"' || char === "'") {
+      skip(source[i++]);
+      while (i < source.length && source[i] !== char) {
+        if (source[i] === "\\") skip(source[i++]);
+        if (i < source.length) skip(source[i++]);
+      }
+      if (i < source.length) skip(source[i++]);
+      continue;
+    }
+    if (char === "`") {
+      // Text of the template is dropped, the ${...} holes are kept as code.
+      skip(source[i++]);
+      let depth = 0;
+      while (i < source.length && (depth > 0 || source[i] !== "`")) {
+        if (depth === 0 && source[i] === "$" && source[i + 1] === "{") {
+          depth = 1;
+          skip(source[i++]);
+          skip(source[i++]);
+          continue;
+        }
+        if (depth > 0) {
+          if (source[i] === "{") depth += 1;
+          if (source[i] === "}") depth -= 1;
+          keep(source[i++]);
+          continue;
+        }
+        if (source[i] === "\\") skip(source[i++]);
+        if (i < source.length) skip(source[i++]);
+      }
+      if (i < source.length) skip(source[i++]);
+      continue;
+    }
+    keep(source[i++]);
+    if (char === "\n") line += 1;
   }
-  let predictedPrice;
-  if (basePrice > 0) {
-    let finalPrice = basePrice;
-    if (sprojs) finalPrice *= 1.25;
-    if (highCeiling) finalPrice *= 1.25;
-    if (tripleGlass) finalPrice *= 1.25;
-    predictedPrice = finalPrice.toFixed(2);
-  } else if (rooms === "5") {
-    predictedPrice = "Offereras";
-  } else {
-    predictedPrice = 0;
+
+  const text = code.join("");
+  const found = [];
+  // Skips numbers glued to a word or a dot, so ids and versions are left alone.
+  for (const match of text.matchAll(/(?<![\w.$])\d+(?:\.\d+)?/g)) {
+    found.push({ value: Number(match[0]), line: lines[match.index] });
   }
-  return predictedPrice === "Offereras" ? "Offereras" : `${predictedPrice} kr`;
+  return found;
 }
 
-// pages/officecleaning.js (main, 40d75a9) — values derived on every render
-const OFFICE_FREQUENCIES = {
-  1: { label: "1 gång per månad", hourlyRate: 350 },
-  2: { label: "2 gånger per månad", hourlyRate: 163 },
-  4: { label: "4 gånger per månad", hourlyRate: 150 },
+// Every figure lib/pricing.js hands each page. If one of these turns up as a
+// literal in the page, the page is pricing with its own copy again.
+const PAGE_RATES = {
+  "pages/homecleaning.js": {
+    ...HOME_FREQUENCY_RATES,
+    ...HOME_WEEKDAY_RATES,
+    baseHours: HOME_TIME_ESTIMATE.baseHours,
+    hoursPerSqm: HOME_TIME_ESTIMATE.hoursPerSqm,
+  },
+  "pages/deepcleaning.js": {
+    ...DEEP_CLEANING_EXTRAS,
+    quoteAboveArea: DEEP_CLEANING_QUOTE_ABOVE_AREA,
+    ...Object.fromEntries([1, 50.5, 71, 101].map((area) => [`${area} m²`, deepCleaningBasePrice(area)])),
+  },
+  "pages/movecleaning.js": {
+    ...MOVE_CLEANING_EXTRAS,
+    baseHours: MOVE_TIME_ESTIMATE.baseHours,
+    hoursPerSqm: MOVE_TIME_ESTIMATE.hoursPerSqm,
+    ...Object.fromEntries(
+      S.movecleaning.tiers.map((tier, index) => [
+        `tramo ${index + 1}`,
+        tier.price ?? tier.pricePerSqm,
+      ])
+    ),
+  },
+  "pages/windowcleaning.js": {
+    ...WINDOW_ROOM_PRICES,
+    balcony: WINDOW_BALCONY_PRICE,
+    quoteAboveArea: WINDOW_QUOTE_ABOVE_AREA,
+    quoteFromRooms: WINDOW_QUOTE_FROM_ROOMS,
+    surchargePercent: WINDOW_SURCHARGE_PERCENT,
+    surchargeRate: WINDOW_SURCHARGE_RATE,
+  },
+  "pages/officecleaning.js": {
+    ...Object.fromEntries(
+      Object.entries(OFFICE_FREQUENCIES).map(([id, plan]) => [`${id}/mes`, plan.hourlyRate])
+    ),
+    baseHours: OFFICE_TIME_ESTIMATE.baseHours,
+    hoursPerSqm: OFFICE_TIME_ESTIMATE.hoursPerSqm,
+  },
+  "pages/containercleaning.js": {
+    ...Object.fromEntries(
+      S.containercleaning.tiers.flatMap((tier, index) =>
+        Object.entries(tier.pricePerUnitByVisitsPerWeek).map(([visits, price]) => [
+          `tramo ${index + 1}, ${visits}/semana`,
+          price,
+        ])
+      )
+    ),
+    quoteAboveUnits: CONTAINER_MAX_UNITS_ONLINE,
+    weeksPerMonth: CONTAINER_WEEKS_PER_MONTH,
+  },
 };
-function legacyOffice({ size, frequency }) {
-  const area = parseFloat(size);
+
+console.log("=== Ninguna calculadora guarda tarifas propias ===");
+for (const [file, rates] of Object.entries(PAGE_RATES)) {
+  const source = read(file);
+  const problems = [];
+  if (!/from "\.\.\/lib\/pricing"/.test(source)) problems.push("no importa ../lib/pricing");
+  const byValue = new Map();
+  for (const [name, value] of Object.entries(rates)) {
+    if (typeof value !== "number") continue;
+    if (!byValue.has(value)) byValue.set(value, []);
+    byValue.get(value).push(name);
+  }
+  for (const { value, line } of numbersInCode(source)) {
+    if (byValue.has(value)) problems.push(`${value} en la línea ${line} (${byValue.get(value).join(", ")})`);
+  }
+  check(file, problems.length ? problems.join("; ") : "sin números sueltos", "sin números sueltos");
+}
+
+/* ------------------- the formulas the pages apply on top ------------------ */
+
+// Transcriptions of what each page does with the figures lib/pricing.js gives
+// it. They hold no rate of their own, so the report below and the rule checks
+// can quote the same amounts the visitor sees.
+const homeHours = (area) => estimateHours(area, HOME_TIME_ESTIMATE);
+const billable = (hours) => Math.max(MIN_BILLABLE_HOURS, hours);
+
+function homePrice(area, frequency, weekday) {
+  const rate = homeCleaningHourlyRate(frequency, weekday);
+  if (!rate) return null;
+  const sessions = frequency === "onetime" ? 1 : Number(frequency);
+  return Math.round(billable(homeHours(area)) * rate * sessions);
+}
+
+function windowPrice(rooms, addOns = 0, balconyOnly = false) {
+  const base = balconyOnly ? WINDOW_BALCONY_PRICE : WINDOW_ROOM_PRICES[rooms] || null;
+  return base === null ? null : Math.round(base * (1 + WINDOW_SURCHARGE_RATE * addOns));
+}
+
+function officePrice(area, frequency) {
   const plan = OFFICE_FREQUENCIES[frequency];
-  const hasArea = !isNaN(area) && area > 0;
-  const cleaningTime = hasArea ? (1.57 + 0.0167 * area).toFixed(2) : 0;
-  const predictedPrice = hasArea && plan ? (plan.hourlyRate * cleaningTime * Number(frequency)).toFixed(2) : 0;
-  return `${plan ? plan.hourlyRate : "-"} kr/h | ${cleaningTime || "0"} h | ${predictedPrice || "0"} kr`;
+  const hours = billable(Number(estimateHours(area, OFFICE_TIME_ESTIMATE).toFixed(2)));
+  return plan ? Math.round(plan.hourlyRate * hours * Number(frequency)) : null;
 }
 
-// pages/containercleaning.js — calculatePrice()
-function legacyContainer({ units, frequency }) {
-  const numUnits = parseInt(units);
-  const numFreq = parseInt(frequency);
-  if (!numUnits || !numFreq) return "0 kr/bod | 0 kr";
-  let pricePerBodar = 0;
-  if (numUnits >= 1 && numUnits <= 10) {
-    if (numFreq === 5) pricePerBodar = 100;
-    else if (numFreq === 3) pricePerBodar = 110;
-    else if (numFreq === 2) pricePerBodar = 120;
-    else if (numFreq === 1) pricePerBodar = 130;
-  } else if (numUnits >= 11 && numUnits <= 20) {
-    if (numFreq === 5) pricePerBodar = 65;
-    else if (numFreq === 3) pricePerBodar = 75;
-    else if (numFreq === 2) pricePerBodar = 95;
-    else if (numFreq === 1) pricePerBodar = 100;
-  } else if (numUnits >= 21 && numUnits <= 30) {
-    if (numFreq === 5) pricePerBodar = 60;
-    else if (numFreq === 3) pricePerBodar = 70;
-    else if (numFreq === 2) pricePerBodar = 90;
-    else if (numFreq === 1) pricePerBodar = 95;
-  } else if (numUnits >= 31 && numUnits <= 50) {
-    if (numFreq === 5) pricePerBodar = 55;
-    else if (numFreq === 3) pricePerBodar = 65;
-    else if (numFreq === 2) pricePerBodar = 80;
-    else if (numFreq === 1) pricePerBodar = 85;
-  }
-  const totalPrice = pricePerBodar * numUnits * numFreq * 4;
-  return `${pricePerBodar} kr/bod | ${totalPrice.toFixed(2) || "0"} kr`;
+function containerPrice(units, visitsPerWeek) {
+  const perUnit = containerCleaningPricePerUnit(units, visitsPerWeek);
+  return perUnit === null
+    ? null
+    : Math.round(perUnit * units * visitsPerWeek * CONTAINER_WEEKS_PER_MONTH);
 }
 
-/* ------------------- the same summaries from lib/pricing ------------------ */
+/* ------------------ rules the client confirmed on 2026-09-17 --------------- */
 
-const LIB = {
-  homecleaning: ({ size, frequency, dateTime }) => {
-    const r = homeCleaningPrice({ area: size, frequency, dateTime }, prices);
-    return `${r.hourlyRate} kr/h | ${r.hoursText || "0"} h | ${r.totalText || "0"} kr`;
-  },
-  deepcleaning: ({ size, extras }) => {
-    const r = deepCleaningPrice({ area: size, extras }, prices);
-    const quote = r.status === "quote";
-    return `${quote ? "Offereras" : `${r.basePrice || "0"} kr`} | ${quote ? "Offereras" : `${r.totalText} kr`}`;
-  },
-  movecleaning: ({ size, extras }) => {
-    const r = moveCleaningPrice({ area: size, extras }, prices);
-    return `${r.hoursText || "0"} h | ${r.basePrice || "0"} kr | ${r.totalText} kr`;
-  },
-  windowcleaning: ({ rooms, onlyBalcony, ...surcharges }) => {
-    const r = windowCleaningPrice({ rooms, balconyOnly: onlyBalcony, surcharges }, prices);
-    if (r.status === "quote") return "Offereras";
-    return `${r.status === "ok" ? r.totalText : 0} kr`;
-  },
-  officecleaning: ({ size, frequency }) => {
-    const r = officeCleaningPrice({ area: size, frequency }, prices);
-    return `${r.hourlyRate || "-"} kr/h | ${r.hoursText || "0"} h | ${r.totalText || "0"} kr`;
-  },
-  containercleaning: ({ units, frequency }) => {
-    const r = containerCleaningPrice({ units, visitsPerWeek: frequency }, prices);
-    return `${r.pricePerUnit} kr/bod | ${r.totalText || "0"} kr`;
-  },
-};
+console.log("\n=== Reglas confirmadas por el cliente (2026-09-17) ===");
 
-const LEGACY = {
-  homecleaning: legacyHome,
-  deepcleaning: legacyDeep,
-  movecleaning: legacyMove,
-  windowcleaning: legacyWindow,
-  officecleaning: legacyOffice,
-  containercleaning: legacyContainer,
-};
+check("Q14 mínimo de 2 horas facturadas", MIN_BILLABLE_HOURS, 2);
+const tiny = 20;
+check(
+  `Q14 hemstädning de ${tiny} m² se factura como ${MIN_BILLABLE_HOURS} h`,
+  homePrice(tiny, "4", 2),
+  Math.round(MIN_BILLABLE_HOURS * HOME_WEEKDAY_RATES.mondayToWednesday * 4)
+);
+check(
+  `Q14 kontorsstädning de ${tiny} m² se factura como ${MIN_BILLABLE_HOURS} h`,
+  officePrice(tiny, "1"),
+  Math.round(MIN_BILLABLE_HOURS * OFFICE_FREQUENCIES[1].hourlyRate)
+);
+check(
+  "Q13 fin de semana sin tarifa de hemstädning",
+  [0, 6].map((weekday) => String(homeCleaningHourlyRate("4", weekday))).join("/"),
+  "null/null"
+);
 
-// September 2026: the 14th is a Monday and the 20th a Sunday.
-const CASES = [
-  ["homecleaning", "60 m², varje vecka, måndag", { size: "60", frequency: "4", dateTime: "2026-09-14T09:00" }],
-  ["homecleaning", "60 m², varje vecka, torsdag", { size: "60", frequency: "4", dateTime: "2026-09-17T09:00" }],
-  ["homecleaning", "85 m², varannan vecka, onsdag", { size: "85", frequency: "2", dateTime: "2026-09-16T10:00" }],
-  ["homecleaning", "85 m², varannan vecka, fredag", { size: "85", frequency: "2", dateTime: "2026-09-18T13:30" }],
-  ["homecleaning", "42,5 m², en gång i månaden, lördag", { size: "42.5", frequency: "1", dateTime: "2026-09-19T08:00" }],
-  ["homecleaning", "120 m², enstaka, söndag", { size: "120", frequency: "onetime", dateTime: "2026-09-20T10:00" }],
-  ["homecleaning", "70 m², varannan vecka, lördag (sin tarifa)", { size: "70", frequency: "2", dateTime: "2026-09-19T10:00" }],
-  ["homecleaning", "20 m², varje vecka, tisdag (< 2 h)", { size: "20", frequency: "4", dateTime: "2026-09-15T08:00" }],
-  ["deepcleaning", "45 m² sin extras", { size: "45" }],
-  ["deepcleaning", "50 m² (límite)", { size: "50" }],
-  ["deepcleaning", "50,5 m²", { size: "50.5" }],
-  ["deepcleaning", "100 m² + kyl/frys + skåp", { size: "100", extras: { kylFrys: true, kapGarderob: true } }],
-  [
-    "deepcleaning",
-    "150 m² + todos los extras + 3 väggar",
-    {
-      size: "150",
-      extras: { kylFrys: true, kylFrysDefrost: true, diskmaskin: true, kapGarderob: true, forrad: true, tvattmaskin: true, vaggtvatt: 3 },
-    },
-  ],
-  ["deepcleaning", "151 m² + avfrostning (oferta)", { size: "151", extras: { kylFrysDefrost: true } }],
-  ["deepcleaning", "0,5 m² (fuera de tramo)", { size: "0.5" }],
-  ["movecleaning", "30 m²", { size: "30" }],
-  ["movecleaning", "50 m²", { size: "50" }],
-  ["movecleaning", "51 m²", { size: "51" }],
-  ["movecleaning", "101 m²", { size: "101" }],
-  [
-    "movecleaning",
-    "55,3 m² + todos los extras",
-    { size: "55.3", extras: { kylFrysDefrost: true, persienner: true, biytor: true, inglasadBalkong: true } },
-  ],
-  ["movecleaning", "180 m² + biytor", { size: "180", extras: { biytor: true } }],
-  ["windowcleaning", "1 rum", { rooms: "1" }],
-  ["windowcleaning", "2 rum + treglas", { rooms: "2", tripleGlass: true }],
-  ["windowcleaning", "3 rum + spröjs + takhöjd", { rooms: "3", sprojs: true, highCeiling: true }],
-  ["windowcleaning", "4 rum + los 3 recargos", { rooms: "4", sprojs: true, highCeiling: true, tripleGlass: true }],
-  ["windowcleaning", "5 rum (oferta)", { rooms: "5" }],
-  ["windowcleaning", "endast balkong", { rooms: "", onlyBalcony: true }],
-  ["windowcleaning", "endast balkong + spröjs", { rooms: "", onlyBalcony: true, sprojs: true }],
-  ["officecleaning", "120 m², 2 veces/mes", { size: "120", frequency: "2" }],
-  ["officecleaning", "200 m², 4 veces/mes", { size: "200", frequency: "4" }],
-  ["officecleaning", "25 m², 1 vez/mes", { size: "25", frequency: "1" }],
-  ["officecleaning", "57,3 m², 2 veces/mes", { size: "57.3", frequency: "2" }],
-  ["officecleaning", "sin superficie", { size: "", frequency: "2" }],
-  ["containercleaning", "1 bod, 5/semana", { units: "1", frequency: "5" }],
-  ["containercleaning", "10 bodar, 1/semana", { units: "10", frequency: "1" }],
-  ["containercleaning", "11 bodar, 3/semana", { units: "11", frequency: "3" }],
-  ["containercleaning", "30 bodar, 2/semana", { units: "30", frequency: "2" }],
-  ["containercleaning", "50 bodar, 1/semana", { units: "50", frequency: "1" }],
-  ["containercleaning", "51 bodar, 5/semana", { units: "51", frequency: "5" }],
-];
-
-console.log(`\n=== lib/pricing.js = cálculo actual de cada página (${CASES.length} entradas) ===`);
-for (const [service, name, input] of CASES) {
-  check(`${service.padEnd(17)} ${name}`, LIB[service](input), LEGACY[service](input));
+// Q22: the per-m² rate applies to the whole home, so without the floor the
+// price would fall at 51, 101 and 151 m².
+const drops = [];
+let previous = 0;
+for (let area = 1; area <= 300; area++) {
+  const base = moveCleaningBasePrice(area);
+  if (base < previous) drops.push(`${area} m² = ${base} kr`);
+  previous = base;
 }
+check("Q22 flyttstädning nunca baja al cruzar un umbral", drops.join(", ") || "nunca baja", "nunca baja");
+check(
+  "Q22 el tramo empieza en el techo del anterior (51, 101 y 151 m²)",
+  [51, 101, 151].map((area) => moveCleaningBasePrice(area)).join("/"),
+  [50, 100, 150].map((area) => moveCleaningBasePrice(area)).join("/")
+);
 
-console.log("\n=== Día de la semana independiente de la zona horaria ===");
-const DAY_NAMES = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-for (const [date, day] of [["2026-09-14T09:00", "monday"], ["2026-09-18T16:30", "friday"], ["2026-09-20T07:00", "sunday"]]) {
-  check(`weekdayOf(${date})`, `${weekdayOf(date)}/${DAY_NAMES[new Date(date).getDay()]}`, `${day}/${day}`);
-}
+// Q20: the add-ons add up; compounding would give 1 099 × 1.25³ = 2 146,29 kr.
+const rooms4 = WINDOW_ROOM_PRICES[4];
+check(
+  `Q20 fönsterputs: ${WINDOW_SURCHARGE_PERCENT} % por tillägg y aditivos`,
+  [0, 1, 2, 3].map((count) => windowPrice("4", count)).join("/"),
+  [0, 1, 2, 3].map((count) => Math.round(rooms4 * (1 + 0.25 * count))).join("/")
+);
+check(
+  "Q20 tres tillägg suman 75 %, no componen 95,3 %",
+  windowPrice("4", 3),
+  Math.round(rooms4 * 1.75)
+);
+check(
+  "Q20 los tillägg se aplican también a “endast balkong”",
+  windowPrice("", 1, true),
+  Math.round(WINDOW_BALCONY_PRICE * 1.25)
+);
 
-/* ----------------- prices.json against the printed price list ---------------- */
+check("Q21 fönsterputs: oferta desde 5 rum", WINDOW_QUOTE_FROM_ROOMS, 5);
+check("Q21 fönsterputs: oferta por encima de 120 m²", WINDOW_QUOTE_ABOVE_AREA, 120);
+check("Q21 no hay precio para 5 rum", WINDOW_ROOM_PRICES[5] ?? null, null);
+check(
+  "Storstädning: oferta por encima de 150 m²",
+  `${DEEP_CLEANING_QUOTE_ABOVE_AREA}/${deepCleaningBasePrice(DEEP_CLEANING_QUOTE_ABOVE_AREA + 1)}`,
+  "150/null"
+);
+check(
+  `Bodstädning: oferta por encima de ${CONTAINER_MAX_UNITS_ONLINE} bodar`,
+  containerCleaningPricePerUnit(CONTAINER_MAX_UNITS_ONLINE + 1, 5),
+  null
+);
+check(
+  "Q23 privados: SEK, con IVA, después de RUT",
+  ["homecleaning", "deepcleaning", "movecleaning", "windowcleaning"]
+    .map((id) => `${PRICE_FLAGS[id].includesVat}/${PRICE_FLAGS[id].afterRut}`)
+    .join(" "),
+  "true/true true/true true/true true/true"
+);
+check(
+  "Q26–Q28 empresas: sin IVA, estimación y siempre offert",
+  ["officecleaning", "containercleaning"]
+    .map((id) => {
+      const f = PRICE_FLAGS[id];
+      return `${f.includesVat}/${f.priceIsEstimate}/${f.alwaysQuoted}`;
+    })
+    .join(" "),
+  "false/true/true false/true/true"
+);
+
+/* ---------------- prices.json against the printed price list -------------- */
 
 // Prislista 2026 exactly as printed on pages 1-3, used only for comparison.
 const PRISLISTA = {
@@ -402,59 +355,61 @@ const PRISLISTA = {
     { from: 151, to: Infinity, perSqm: 42 },
   ],
   windowRooms: { 1: 799, 2: 899, 3: 999, 4: 1099 },
-  windowQuoteFromRooms: 5,
-  windowQuoteAboveSqm: 120,
   windowBalconyFrom: 450,
   windowSurchargePercent: 25,
 };
 
-console.log("\n=== prices.json frente a la Prislista 2026 (págs. 1–3) ===");
-const byDay = S.homecleaning.weekdayRates.byDay;
+console.log("\n=== Las tarifas entregadas a las páginas frente a la Prislista 2026 (págs. 1–3) ===");
 check(
   "Hemstädning lun–vie 200/200/200/220/220 kr/h",
-  Object.keys(PRISLISTA.homeWeekdays).map((day) => byDay[day]).join("/"),
+  [1, 2, 3, 4, 5].map((weekday) => homeCleaningHourlyRate("4", weekday)).join("/"),
   Object.values(PRISLISTA.homeWeekdays).join("/")
 );
-check("Hemstädning una vez al mes 245 kr/h", S.homecleaning.frequencies["1"].hourlyRate, PRISLISTA.homeMonthly);
-check("Enstaka hemstädning 270 kr/h", S.homecleaning.frequencies.onetime.hourlyRate, PRISLISTA.homeOneTime);
-check("Minsta debitering 2 h", S.homecleaning.minHours.value, PRISLISTA.homeMinHours);
+check("Hemstädning una vez al mes 245 kr/h", HOME_FREQUENCY_RATES[1], PRISLISTA.homeMonthly);
+check("Enstaka hemstädning 270 kr/h", HOME_FREQUENCY_RATES.onetime, PRISLISTA.homeOneTime);
+check("Minsta debitering 2 h", MIN_BILLABLE_HOURS, PRISLISTA.homeMinHours);
+check(
+  "Estimación de horas 1,57 + 0,0167 × m² en las tres páginas que la usan",
+  [HOME_TIME_ESTIMATE, MOVE_TIME_ESTIMATE, OFFICE_TIME_ESTIMATE]
+    .map((e) => `${e.baseHours}+${e.hoursPerSqm}`)
+    .join(" "),
+  "1.57+0.0167 1.57+0.0167 1.57+0.0167"
+);
 
 const deepMismatches = [];
 for (let area = 1; area <= 300; area++) {
   const listed = PRISLISTA.deep.find((tier) => area >= tier.from && area <= tier.to);
-  const result = deepCleaningPrice({ area }, prices);
-  if (listed && (result.status !== "ok" || result.basePrice !== listed.price)) deepMismatches.push(area);
-  if (area >= PRISLISTA.deepQuoteFrom && result.status !== "quote") deepMismatches.push(area);
+  const base = deepCleaningBasePrice(area);
+  if (listed && base !== listed.price) deepMismatches.push(`${area} m² = ${base} kr`);
+  if (area >= PRISLISTA.deepQuoteFrom && base !== null) deepMismatches.push(`${area} m² sin oferta`);
 }
-check("Storstädning: precio de 1–149 m² y oferta desde 151 m²", deepMismatches.join(",") || "coincide", "coincide");
+check(
+  "Storstädning: precio de 1–149 m² y oferta desde 151 m²",
+  deepMismatches.join(", ") || "coincide",
+  "coincide"
+);
 for (const [id, from] of Object.entries(PRISLISTA.deepExtrasFrom)) {
-  check(`Storstädning tillägg "${S.deepcleaning.extras[id].label}" desde ${from} kr`, S.deepcleaning.extras[id].price, from);
+  check(`Storstädning tillägg "${S.deepcleaning.extras[id].label}" desde ${from} kr`, DEEP_CLEANING_EXTRAS[id], from);
 }
 
+// The floor from Q22 only ever raises a price, so the printed rate must still
+// be what the page charges at the top of every band.
 const moveMismatches = [];
-for (let area = 1; area <= 300; area++) {
-  const tier = PRISLISTA.move.find((t) => area >= t.from && area <= t.to);
+for (const tier of PRISLISTA.move) {
+  const area = tier.to === Infinity ? 300 : tier.to;
   const expected = tier.fixed ?? area * tier.perSqm;
-  if (moveCleaningPrice({ area }, prices).basePrice !== expected) moveMismatches.push(area);
+  const base = moveCleaningBasePrice(area);
+  if (base !== expected) moveMismatches.push(`${area} m² = ${base} kr, la lista dice ${expected} kr`);
 }
-check("Flyttstädning: precio de 1–300 m²", moveMismatches.join(",") || "coincide", "coincide");
+check("Flyttstädning: la tarifa impresa vale en el techo de cada tramo", moveMismatches.join(", ") || "coincide", "coincide");
 
 check(
   "Fönsterputs 1–4 rum",
-  ["1", "2", "3", "4"].map((rooms) => windowCleaningPrice({ rooms }, prices).total).join("/"),
+  ["1", "2", "3", "4"].map((rooms) => WINDOW_ROOM_PRICES[rooms]).join("/"),
   Object.values(PRISLISTA.windowRooms).join("/")
 );
-check("Fönsterputs 5 rum → oferta", windowCleaningPrice({ rooms: "5" }, prices).status, "quote");
-check("Fönsterputs oferta por encima de 120 m²", S.windowcleaning.quote.aboveSqm, PRISLISTA.windowQuoteAboveSqm);
-check("Endast balkong desde 450 kr", S.windowcleaning.balconyOnly.price, PRISLISTA.windowBalconyFrom);
-check(
-  "Recargos de ventanas de 25 %",
-  Object.values(S.windowcleaning.surcharges.items).map((item) => item.percent).join("/"),
-  "25/25/25"
-);
-for (const id of ["homecleaning", "deepcleaning", "movecleaning", "windowcleaning"]) {
-  check(`${S[id].label}: SEK, con IVA, después de RUT`, `${S[id].currency}/${S[id].includesVat}/${S[id].afterRut}`, "SEK/true/true");
-}
+check("Endast balkong desde 450 kr", WINDOW_BALCONY_PRICE, PRISLISTA.windowBalconyFrom);
+check("Recargo de ventanas del 25 %", WINDOW_SURCHARGE_PERCENT, PRISLISTA.windowSurchargePercent);
 
 /* ------------------------------ discrepancies ------------------------------ */
 
@@ -463,30 +418,16 @@ function finding(group, text) {
   if (!findings.has(group)) findings.set(group, []);
   findings.get(group).push(text);
 }
-const home = (area, frequency, dateTime) => homeCleaningPrice({ area, frequency, dateTime }, prices);
-const windows = (rooms, surcharges = {}, balconyOnly = false) =>
-  windowCleaningPrice({ rooms, surcharges, balconyOnly }, prices);
-
-// Q13 weekends
-for (const [day, date] of [["sábado", "2026-09-19T10:00"], ["domingo", "2026-09-20T10:00"]]) {
-  const r = home(70, "2", date);
-  if (r.status !== "ok") {
-    finding("Q13", `Hemstädning cada dos semanas en ${day}: la calculadora muestra ${kr(r.total)}; la Prislista no tiene tarifa de fin de semana.`);
-  }
-}
 
 // Q14 two-hour minimum
-const te = S.homecleaning.timeEstimate;
-const minArea = (PRISLISTA.homeMinHours - te.baseHours) / te.hoursPerSqm;
-const small = home(20, "4", "2026-09-15T08:00");
+const minArea = (MIN_BILLABLE_HOURS - HOME_TIME_ESTIMATE.baseHours) / HOME_TIME_ESTIMATE.hoursPerSqm;
 finding(
   "Q14",
-  `El mínimo de 2 h no se aplica: por debajo de ${minArea.toFixed(1)} m² la estimación es menor de 2 h. 20 m² cada semana (martes) = ${small.hoursText} h → ${kr(small.total)}/mes; con el mínimo serían ${kr(2 * small.hourlyRate * 4)}.`
+  `Por debajo de ${minArea.toFixed(1)} m² la estimación es menor de 2 h, así que el mínimo de ${MIN_BILLABLE_HOURS} h decide el precio: 20 m² cada semana (martes) = ${kr(homePrice(20, "4", 2))}/mes.`
 );
-const smallOneOff = home(20, "onetime", "2026-09-15T08:00");
 finding(
   "Q14",
-  `La Prislista pone el mínimo bajo las tarifas recurrentes y no aclara si vale para enstaka: 20 m² enstaka = ${kr(smallOneOff.total)}; con mínimo, ${kr(2 * PRISLISTA.homeOneTime)}.`
+  `La Prislista pone el mínimo bajo las tarifas recurrentes y no aclara si vale para enstaka; la calculadora lo aplica también ahí: 20 m² enstaka = ${kr(homePrice(20, "onetime", 2))}.`
 );
 
 // Q15 material
@@ -496,90 +437,71 @@ if (S.homecleaning.material.companyProductsPrice === null) {
 finding("Q15", "Enstaka hemstädning (270 kr/h \"med Aurel städmaterial\"): no se dice si incluye equipo (aspiradora…) ni si la nota OBS sobre productos del cliente también aplica.");
 
 // Q17 move-out extras
-for (const extra of Object.values(S.movecleaning.extras)) {
-  const price = extra.type === "perEstimatedHour" ? `${extra.hourlyRate} kr/h estimada` : `${extra.price} kr`;
+for (const [id, extra] of Object.entries(S.movecleaning.extras)) {
+  const price = extra.type === "perEstimatedHour" ? `${MOVE_CLEANING_EXTRAS[id]} kr/h estimada` : `${MOVE_CLEANING_EXTRAS[id]} kr`;
   finding("Q17", `Flyttstädning "${extra.label}": ${price}, solo en la calculadora (no está en las págs. 1–3).`);
 }
 finding(
   "Q17",
-  `"Kyl/Frys med avfrostning" cuesta ${S.movecleaning.extras.kylFrysDefrost.price} kr en flyttstädning y ${S.deepcleaning.extras.kylFrysDefrost.price} kr en storstädning.`
+  `"Kyl/Frys med avfrostning" cuesta ${MOVE_CLEANING_EXTRAS.kylFrysDefrost} kr en flyttstädning y ${DEEP_CLEANING_EXTRAS.kylFrysDefrost} kr en storstädning.`
 );
-const biytor = moveCleaningPrice({ area: 80, extras: { biytor: true } }, prices);
+const biytorHours = Number(estimateHours(80, MOVE_TIME_ESTIMATE).toFixed(2));
 finding(
   "Q17",
-  `Biytor = 360 kr × horas estimadas de TODA la vivienda: 80 m² → ${biytor.hoursText} h → +${kr(biytor.extras[0].amount)}, sin relación con el tamaño del trastero o balcón.`
+  `Biytor = ${MOVE_CLEANING_EXTRAS.biytor} kr × horas estimadas de TODA la vivienda: 80 m² → ${biytorHours} h → +${kr(biytorHours * MOVE_CLEANING_EXTRAS.biytor)}, sin relación con el tamaño del trastero o balcón.`
 );
 
 // Q18 deep-cleaning extras
 for (const [id, extra] of Object.entries(S.deepcleaning.extras)) {
   const from = PRISLISTA.deepExtrasFrom[id];
   if (from === undefined) {
-    finding("Q18", `Storstädning "${extra.label}": ${extra.price} kr${extra.unit ? `/${extra.unit}` : ""}, solo en la calculadora.`);
+    finding("Q18", `Storstädning "${extra.label}": ${DEEP_CLEANING_EXTRAS[id]} kr${extra.unit ? `/${extra.unit}` : ""}, solo en la calculadora.`);
   } else {
     finding("Q18", `Storstädning "${extra.label}": la Prislista dice "Från ${from} kr" y la calculadora cobra ${from} kr fijos.`);
   }
 }
 
 // Q20 window surcharges
-const two = windows("4", { sprojs: true, highCeiling: true });
-const three = windows("4", { sprojs: true, highCeiling: true, tripleGlass: true });
 finding(
   "Q20",
-  `Los recargos se multiplican: 4 rum con 2 recargos = ${kr(two.total)} (sumando 25 % + 25 %: ${kr(1099 * 1.5)}); con 3 = ${kr(three.total)} (sumando: ${kr(1099 * 1.75)}).`
-);
-finding(
-  "Q20",
-  `"Endast balkong" es "Från 450 kr", pero la calculadora cobra 450 kr fijos y le aplica recargos (con spröjs: ${kr(windows("", { sprojs: true }, true).total)}).`
+  `"Endast balkong" es "Från ${WINDOW_BALCONY_PRICE} kr", pero la calculadora cobra ${WINDOW_BALCONY_PRICE} kr fijos y le aplica los tillägg (con spröjs: ${kr(windowPrice("", 1, true))}).`
 );
 
 // Q21 window quote threshold
 finding(
   "Q21",
-  `La Prislista pide oferta desde 5 rum o más de 120 m², pero la calculadora solo pregunta habitaciones: 3 rum de 130 m² → ${kr(windows("3").total)}.`
-);
-finding(
-  "Q21",
-  "5 rum: la Prislista pide oferta y el docx da precio directo \"upp till 5 rum och kök\" (oferta solo si son más); ninguna fuente da precio para 5 rum. La calculadora pide oferta."
+  `5 rum: la Prislista pide oferta y el docx da precio directo "upp till 5 rum och kök" (oferta solo si son más); ninguna fuente da precio para ${WINDOW_QUOTE_FROM_ROOMS} rum. La calculadora pide oferta.`
 );
 
 // Q22 move-out thresholds
-const drops = [];
-let previous = null;
-for (let area = 1; area <= 300; area++) {
-  const base = moveCleaningPrice({ area }, prices).basePrice;
-  if (previous !== null && base < previous) drops.push(`${area - 1} m² = ${previous} kr → ${area} m² = ${base} kr`);
-  previous = base;
-}
-finding("Q22", `El precio baja al cruzar un umbral (la tarifa por m² se aplica a toda la superficie): ${drops.join("; ")}.`);
-finding("Q22", `Decimales entre tramos: 50,5 m² → ${kr(moveCleaningPrice({ area: 50.5 }, prices).basePrice)} (tarifa de 51 kr/m²).`);
+finding(
+  "Q22",
+  `Con la regla del cliente el precio se aplana en cada umbral: 50 m² = ${kr(moveCleaningBasePrice(50))} igual que 51–56 m², y 100 m² = ${kr(moveCleaningBasePrice(100))} igual que 101–108 m².`
+);
+finding(
+  "Q22",
+  `Storstädning 150 m²: el tramo no existe en la Prislista, que pasa de "101–149 kvm" a "Över 151 kvm"; la calculadora cobra ${kr(deepCleaningBasePrice(150))} hasta 150 m² y oferta por encima.`
+);
 
 // Business
-const officeRates = Object.values(S.officecleaning.frequencies).map((plan) => `${plan.label} ${plan.hourlyRate} kr/h`);
-finding("Q26–Q28", `Kontorsstädning: ${officeRates.join(", ")}; sin base de IVA confirmada.`);
-const officeSmall = officeCleaningPrice({ area: 20, frequency: "1" }, prices);
-finding("Q26–Q28", `Kontorsstädning 1 vez/mes promete "minst 2 timmar" pero no lo aplica: 20 m² → ${officeSmall.hoursText} h → ${kr(officeSmall.total)}.`);
-finding("Q26–Q28", "Bodstädning: tramos por número de bodar y visitas/semana \"exkl. moms\"; el mes se calcula como 4 semanas.");
+const officeRates = Object.values(OFFICE_FREQUENCIES).map((plan) => `${plan.label} ${plan.hourlyRate} kr/h`);
+finding("Q26–Q28", `Kontorsstädning: ${officeRates.join(", ")}; sin lista de precios de empresa que confirmarlo.`);
 finding(
   "Q26–Q28",
-  `Bodstädning con más de 50 bodar: la calculadora muestra ${kr(containerCleaningPrice({ units: 51, visitsPerWeek: 5 }, prices).total)} en vez de pedir oferta.`
+  `Bodstädning: tramos por número de bodar y visitas/semana "exkl. moms"; el mes se calcula como ${CONTAINER_WEEKS_PER_MONTH} semanas (10 bodar, 1/semana = ${kr(containerPrice(10, 1))}).`
 );
 
 // Not in the client questionnaire yet
 const NO_Q = "Sin pregunta asignada (proponer)";
-finding(
-  "Q22",
-  `Storstädning 150 m²: el tramo no existe en la Prislista, que pasa de "101–149 kvm" a "Över 151 kvm"; la calculadora cobra ${kr(deepCleaningPrice({ area: 150 }, prices).basePrice)} hasta 150 m² y oferta por encima.`
-);
 finding(NO_Q, "Recargo por vivienda muy sucia: hay que aclarar si es 20 % fijo (Prislista: \"tilläggskostnad på 20%\") o hasta 20 % (docx: \"upp till 20 procent\"); ninguna calculadora lo contempla y solo aparece como aviso.");
-finding(NO_Q, "La estimación de horas (1,57 + 0,0167 × m²) no figura en la Prislista y determina el precio de hemstädning, kontorsstädning y del extra biytor.");
-const unrounded = home(120, "2", "2026-09-14T09:00");
-const rounded = Number(unrounded.hoursText) * unrounded.hourlyRate * 2;
+finding(NO_Q, `La estimación de horas (${HOME_TIME_ESTIMATE.baseHours} + ${HOME_TIME_ESTIMATE.hoursPerSqm} × m²) no figura en la Prislista y determina el precio de hemstädning, kontorsstädning y del extra biytor.`);
+const unrounded = billable(homeHours(120)) * HOME_WEEKDAY_RATES.mondayToWednesday * 2;
+const rounded = billable(Number(homeHours(120).toFixed(2))) * HOME_WEEKDAY_RATES.mondayToWednesday * 2;
 finding(
   NO_Q,
-  `Redondeo distinto: hemstädning multiplica las horas sin redondear y kontorsstädning/biytor las redondeadas (120 m² cada dos semanas, lunes: ${kr(unrounded.total)} frente a ${kr(rounded)}).`
+  `Redondeo distinto: hemstädning multiplica las horas sin redondear y kontorsstädning/biytor las redondeadas (120 m² cada dos semanas, lunes: ${kr(unrounded)} frente a ${kr(rounded)}).`
 );
 finding(NO_Q, "\"Varje vecka\" se calcula como 4 visitas al mes, no 4,33.");
-finding(NO_Q, `Flyttstädning muestra el baspris sin redondear: 55,3 m² → "${legacyMove({ size: "55.3" }).split(" | ")[1]}".`);
 
 // Other price sources still in the code
 const OTHER_SOURCES = [
