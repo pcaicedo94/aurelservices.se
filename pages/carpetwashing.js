@@ -20,7 +20,7 @@ const CarpetWashing = () => {
               Har dina mattor blivit smutsiga eller slitna? Aurel Städ &amp; Allservice erbjuder professionell mattvätt i Stockholm för privatpersoner, företag och bostadsrättsföreningar. Vi rengör dina mattor på djupet och återställer deras fräschör.
             </p>
 
-            <h4>Vad vi erbjuder</h4>
+            <h3>Vad vi erbjuder</h3>
             <ul>
               <li>Djuprengöring av mattor</li>
               <li>Borttagning av fläckar och smuts</li>
@@ -28,7 +28,7 @@ const CarpetWashing = () => {
               <li>Anpassade metoder beroende på material</li>
             </ul>
 
-            <h4>Fördelar</h4>
+            <h3>Fördelar</h3>
             <ul>
               <li>Fräschare och renare mattor</li>
               <li>Förlänger mattans livslängd</li>
@@ -36,10 +36,10 @@ const CarpetWashing = () => {
               <li>Professionellt resultat</li>
             </ul>
 
-            <h4>Flexibla upplägg</h4>
+            <h3>Flexibla upplägg</h3>
             <p>Vi erbjuder både enstaka tvättar och återkommande underhåll, anpassat efter behov.</p>
 
-            <h4>Så fungerar det</h4>
+            <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med din eller er förfrågan</li>
               <li>Vi bokar vid behov ett kostnadsfritt platsbesök</li>

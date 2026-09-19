@@ -2481,6 +2481,11 @@ Tabs Solutions Section CSS
 .solutions-list-tab .react-tabs .react-tabs__tab-list li:focus:after {
   background: transparent;
 }
+.tab-section .services-tab-title {
+  text-align: center;
+  font-size: 30px;
+  margin: 0 0 30px 0;
+}
 .solutions-list-tab .react-tabs__tab-panel .tab-solution-content h3 {
   font-size: 38px;
   color: #393953;
@@ -3611,6 +3616,9 @@ Productive Section CSS
 /*================================================
 Footer Section CSS
 =================================================*/
+/* The legal pages hang their sections straight off the page-banner H1, so
+   they are H2; the size stays the one the template used for H3. */
+.single-privacy h2,
 .single-privacy h3 {
   font-size: 25px;
   margin: 0 0 12px 0;
@@ -3823,6 +3831,11 @@ Contact Section CSS
   color: var(--aurel-green-action);
 }
 
+.contact-box .contact-box-title {
+  text-align: center;
+  font-size: 30px;
+  margin: 0 0 30px 0;
+}
 .contact-box .single-contact-box {
   text-align: center;
   background-color: #ffffff;
@@ -3891,6 +3904,9 @@ Service Info Cards CSS
   box-shadow: 0 4px 20px rgba(52, 167, 131, 0.3);
   height: 100%;
 }
+/* Cards sit at whatever heading level the page's outline needs (h3 on the
+   service pages, h4 where they hang under one), so both are styled alike. */
+.brand-card h3,
 .brand-card h4 {
   color: #fff;
   margin-top: 0;
@@ -3911,6 +3927,7 @@ Service Info Cards CSS
   padding: 30px;
   height: 100%;
 }
+.info-card h3,
 .info-card h4 {
   margin-top: 0;
   font-size: 20px;
@@ -4439,7 +4456,11 @@ Pagination Area CSS
 404 Error Area CSS
 =================================================*/
 .error-area {
-  height: 100vh;
+  /* The header floats over this area, so leave room for it; the content then
+     decides the height when it needs more than one screen. */
+  min-height: 100vh;
+  padding-top: 170px;
+  padding-bottom: 60px;
   background: linear-gradient(
     to bottom,
     #34a783,
@@ -4454,13 +4475,20 @@ Pagination Area CSS
   margin: 0 auto;
   max-width: 700px;
 }
-.error-content h3 {
+.error-content h1 {
   font-size: 35px;
-  margin-top: -10px;
+  margin-top: 10px;
   margin-bottom: 18px;
 }
-.error-content h4 {
-  color: #fdfdff;
+.error-content h2 {
+  font-size: 22px;
+  margin: 0 0 14px 0;
+}
+.error-content .error-lead {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: "Dosis", sans-serif;
+  color: #08291f; /* 5.2:1 on the green top of the gradient, more below */
   max-width: 520px;
   margin: 0 auto 20px;
   line-height: 30px;
@@ -6298,5 +6326,141 @@ Quote Modal CSS
   }
   .quote-modal-body {
     padding: 20px;
+  }
+}
+
+/*================================================
+Home Hero CSS
+=================================================*/
+/* The copy sits in a solid white card so every string keeps its contrast
+   whichever slide of the photo carousel happens to be showing. No animation
+   is added here on purpose: the H1 and both CTAs must be clickable as soon as
+   the page paints. */
+.hero-copy {
+  background-color: #ffffff;
+  padding: 26px 20px 30px 20px;
+}
+.hero-copy h1 {
+  font-size: 30px;
+  line-height: 1.25;
+  margin: 0 0 14px 0;
+  color: #091029; /* 16.1:1 on white */
+}
+.hero-copy .hero-lead {
+  font-size: 16px;
+  margin: 0 0 16px 0;
+  max-width: 44em;
+}
+.hero-trust {
+  list-style: none;
+  margin: 0 0 20px 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+.hero-trust li {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f3d2e; /* 10.4:1 on the pale green pill */
+  background-color: #e6f2ed;
+  border-radius: 999px;
+  padding: 5px 14px;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.hero-copy .default-btn.hero-btn-primary {
+  padding: 13px 28px;
+  font-size: 16px;
+  text-decoration: none;
+}
+.hero-btn-secondary {
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  background-color: #ffffff;
+  color: var(--aurel-green-action); /* 5.25:1 on white */
+  border: 2px solid var(--aurel-green-action);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 11px 26px;
+}
+.hero-btn-secondary:hover,
+.hero-btn-secondary:focus {
+  background-color: var(--aurel-green-action-hover);
+  color: #ffffff;
+  border-color: var(--aurel-green-action-hover);
+}
+.hero-links {
+  font-size: 14px;
+  margin: 0;
+}
+.hero-links a {
+  color: var(--aurel-green-action); /* 5.25:1 on white */
+  text-decoration: underline;
+  font-weight: 600;
+}
+.hero-links a:hover,
+.hero-links a:focus {
+  color: var(--aurel-green-action-hover);
+}
+
+/* Wide screens: the card floats over the left half of the slideshow. The
+   header is absolutely positioned over the banner and ends around 145px, so
+   the card starts below that and the slideshow is given room for both. */
+@media only screen and (min-width: 1201px) {
+  .carousel {
+    min-height: 660px;
+  }
+  .hero-copy {
+    position: absolute;
+    top: 170px;
+    left: 40px;
+    width: min(580px, calc(50% - 40px));
+    padding: 34px 36px;
+    border-radius: 16px;
+    box-shadow: 0 10px 34px rgba(9, 16, 41, 0.22);
+    z-index: 2;
+  }
+  .hero-copy h1 {
+    font-size: 38px;
+  }
+}
+
+/* Below that width the legacy `.main-banner-two` rule flips to
+   column-reverse, so the card lands above the photos and the H1 is the first
+   thing on screen — once it clears the header floating over it. */
+@media only screen and (max-width: 1200px) {
+  .hero-copy {
+    padding-top: 150px;
+  }
+  /* A 3:1 photo cropped to 60vh fills a whole phone screen; keep it a band
+     under the copy instead. */
+  .carousel {
+    height: 34vh;
+    min-height: 200px;
+    max-height: 320px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  /* responsive.css already pads `.main-banner-two` by 40px at this width. */
+  .hero-copy {
+    padding-top: 110px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .hero-copy h1 {
+    font-size: 25px;
+  }
+  .hero-copy .default-btn.hero-btn-primary,
+  .hero-btn-secondary {
+    width: 100%;
   }
 }

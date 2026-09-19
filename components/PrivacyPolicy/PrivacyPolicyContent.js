@@ -32,7 +32,7 @@ const PrivacyPolicyContent = () => {
     <div className="privacy-policy ptb-100">
       <div className="container">
         <div className="single-privacy">
-          <h3 className="mt-0">Integritetspolicy för Aurel Städ &amp; Allservice AB</h3>
+          <h2 className="mt-0">Integritetspolicy för Aurel Städ &amp; Allservice AB</h2>
           <p>
             Vi värnar om din integritet. Här beskriver vi vilka personuppgifter vi behandlar när du
             besöker vår webbplats, bokar en tjänst eller kontaktar oss, varför vi gör det och vilka
@@ -43,7 +43,7 @@ const PrivacyPolicyContent = () => {
             <mark>[ATT BEKRÄFTA: datum då policyn publiceras]</mark>
           </p>
 
-          <h3>1. Personuppgiftsansvarig</h3>
+          <h2>1. Personuppgiftsansvarig</h2>
           <p>
             Aurel Städ &amp; Allservice AB, organisationsnummer 556725-2340{" "}
             <mark>[ATT BEKRÄFTA: organisationsnummer]</mark>, är personuppgiftsansvarig för
@@ -61,7 +61,7 @@ const PrivacyPolicyContent = () => {
             </li>
           </ul>
 
-          <h3>2. Vilka personuppgifter vi behandlar</h3>
+          <h2>2. Vilka personuppgifter vi behandlar</h2>
           <p>
             <strong>När du bokar en tjänst på webbplatsen:</strong> namn, e-postadress,
             telefonnummer, adressen där tjänsten ska utföras, önskat datum och tid, vald tjänst och
@@ -91,7 +91,7 @@ const PrivacyPolicyContent = () => {
           </p>
           <p>Skriv helst inga känsliga personuppgifter, till exempel om hälsa, i meddelandefälten.</p>
 
-          <h3>3. Varför vi behandlar uppgifterna och med vilket stöd</h3>
+          <h2>3. Varför vi behandlar uppgifterna och med vilket stöd</h2>
           <div className="table-responsive">
             <table className="table table-bordered">
               <thead>
@@ -115,7 +115,7 @@ const PrivacyPolicyContent = () => {
             vi inte ta emot bokningen.
           </p>
 
-          <h3>4. Vilka som får ta del av uppgifterna</h3>
+          <h2>4. Vilka som får ta del av uppgifterna</h2>
           <p>
             Dina uppgifter hanteras av de medarbetare som behöver dem för att planera och utföra
             uppdraget. Vi anlitar också följande leverantörer, som behandlar uppgifter för vår
@@ -155,7 +155,7 @@ const PrivacyPolicyContent = () => {
             </mark>
           </p>
 
-          <h3>5. Överföring utanför EU/EES</h3>
+          <h2>5. Överföring utanför EU/EES</h2>
           <p>
             Google och Supabase är amerikanska företag, och uppgifter kan därför behandlas utanför
             EU/EES. Sådana överföringar sker med stöd av EU–USA-ramverket för dataskydd (EU–US Data
@@ -166,7 +166,7 @@ const PrivacyPolicyContent = () => {
             </mark>
           </p>
 
-          <h3>6. Hur länge vi sparar uppgifterna</h3>
+          <h2>6. Hur länge vi sparar uppgifterna</h2>
           <ul>
             <li>
               Bokningar i kalendern och databasen: <mark>[ATT BEKRÄFTA: lagringstid]</mark>
@@ -187,7 +187,7 @@ const PrivacyPolicyContent = () => {
           </ul>
           <p>När uppgifterna inte längre behövs raderar eller avidentifierar vi dem.</p>
 
-          <h3>7. Dina rättigheter</h3>
+          <h2>7. Dina rättigheter</h2>
           <p>Du har rätt att:</p>
           <ul>
             <li>få veta vilka personuppgifter vi behandlar om dig och få en kopia av dem</li>
@@ -206,7 +206,7 @@ const PrivacyPolicyContent = () => {
             dröjsmål och senast inom en månad.
           </p>
 
-          <h3>8. Cookies och tjänster från tredje part</h3>
+          <h2>8. Cookies och tjänster från tredje part</h2>
           <p>
             Vi använder inga cookies för statistik eller marknadsföring.{" "}
             <mark>[ATT BEKRÄFTA: att inga sådana verktyg läggs till före lansering]</mark>
@@ -239,14 +239,14 @@ const PrivacyPolicyContent = () => {
             ditt samtycke innan de används.
           </p>
 
-          <h3>9. Säkerhet</h3>
+          <h2>9. Säkerhet</h2>
           <p>
             Vi skyddar dina uppgifter med tekniska och organisatoriska åtgärder. Kunddatabasen går
             inte att nå från webbläsaren, och bara de som behöver uppgifterna i sitt arbete ska ha
             tillgång till dem. <mark>[ATT BEKRÄFTA: behörigheter och rutiner]</mark>
           </p>
 
-          <h3>10. Klagomål</h3>
+          <h2>10. Klagomål</h2>
           <p>
             Tycker du att vi behandlar dina personuppgifter på fel sätt vill vi gärna att du hör av
             dig till oss först. Du har också rätt att lämna klagomål till Integritetsskyddsmyndigheten
@@ -257,7 +257,7 @@ const PrivacyPolicyContent = () => {
             .
           </p>
 
-          <h3>11. Ändringar i policyn</h3>
+          <h2>11. Ändringar i policyn</h2>
           <p>
             Vi kan komma att uppdatera policyn, till exempel om vi byter leverantör. Den senaste
             versionen finns alltid på den här sidan. Villkoren för våra tjänster hittar du i våra{" "}

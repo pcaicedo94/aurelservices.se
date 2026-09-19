@@ -128,7 +128,7 @@ const MoveCleaning = () => {
           </div>
           <div className="col-lg-5">
             <div className="brand-card">
-              <h4>RUT-avdrag</h4>
+              <h3>RUT-avdrag</h3>
               <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
               <p><strong>OBS!</strong> Fönsterputs ingår. Gäller ej spröjsade fönster.</p>
             </div>
@@ -138,7 +138,7 @@ const MoveCleaning = () => {
         <div className="row" style={{ marginTop: "30px" }}>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Allmänna utrymmen</h4>
+              <h3>Allmänna utrymmen</h3>
               <ul>
                 <li>Dammsugning och våttorkning av golv</li>
                 <li>Rengöring av golvlister och trösklar</li>
@@ -151,7 +151,7 @@ const MoveCleaning = () => {
           </div>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Kök</h4>
+              <h3>Kök</h3>
               <ul>
                 <li>Rengöring av alla skåp och lådor, invändigt och utvändigt</li>
                 <li>Djupgående rengöring av ugn och spis inklusive plattor och galler</li>
@@ -163,7 +163,7 @@ const MoveCleaning = () => {
           </div>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Badrum</h4>
+              <h3>Badrum</h3>
               <ul>
                 <li>Noggrann rengöring av toalett, handfat, dusch och badkar</li>
                 <li>Borttagning av kalkavlagringar på kranar och kakel</li>

@@ -70,7 +70,7 @@ const OfficeCleaning = () => {
           </div>
           <div className="col-lg-5 mt-4 mt-lg-0">
             <div className="info-card">
-              <h4>Vad ingår i kontorsstädning</h4>
+              <h3>Vad ingår i kontorsstädning</h3>
               <ul>
                 <li>Dammsugning och våttorkning av golv</li>
                 <li>Tömning av papperskorgar</li>

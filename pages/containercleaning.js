@@ -130,7 +130,7 @@ const ContainerCleaning = () => {
             <p>
               Behöver ni professionell städning i samband med byggprojekt eller renovering? Aurel Städ &amp; Allservice erbjuder byggstädning i Stockholm, anpassad för entreprenörer, byggföretag och fastighetsägare. Vi ser till att arbetsplatsen hålls ren, säker och redo för nästa steg i projektet.
             </p>
-            <h4>Vad vi erbjuder</h4>
+            <h3>Vad vi erbjuder</h3>
             <ul>
               <li>Städning av bodar, baracker och personalutrymmen</li>
               <li>Löpande städning under byggprojekt</li>

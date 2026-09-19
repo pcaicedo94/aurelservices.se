@@ -130,7 +130,7 @@ const HomeCleaning = () => {
           </div>
           <div className="col-lg-5">
             <div className="brand-card">
-              <h4>RUT-avdrag</h4>
+              <h3>RUT-avdrag</h3>
               <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
             </div>
           </div>
@@ -139,7 +139,7 @@ const HomeCleaning = () => {
         <div className="row" style={{ marginTop: "30px" }}>
           <div className="col-lg-6">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Detta ingår i vår hemstädning</h4>
+              <h3>Detta ingår i vår hemstädning</h3>
               <ul>
                 <li>Dammsugning av golv och mattor</li>
                 <li>Våttorkning av golv</li>
@@ -152,7 +152,7 @@ const HomeCleaning = () => {
           </div>
           <div className="col-lg-6">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Fördelar med vår hemstädning</h4>
+              <h3>Fördelar med vår hemstädning</h3>
               <ul>
                 <li>Ett rent och hygieniskt hem</li>
                 <li>Mer tid över till familj och fritid</li>
