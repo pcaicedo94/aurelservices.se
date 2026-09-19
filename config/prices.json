@@ -84,8 +84,8 @@
         "pendingConfirmation": false,
         "question": "Q13",
         "note": "No weekend rates in the price list, and none in the calculator either: Saturday and Sunday cannot be booked online.",
-        "confirmedByClient": "2026-09-17",
-        "clientAnswer": "Inga helgbokningar online"
+        "confirmedByClient": "2026-09-19",
+        "clientAnswer": "Inga helgbokningar online. Skillnaden mån–ons (200 kr) mot tors–fre (220 kr) är avsiktlig och satt av kunden."
       },
       "material": {
         "customerProvidesProducts": true,
@@ -548,7 +548,9 @@
       "Q23": "Privatpriser: inkl. moms efter RUT",
       "Q24": "20 dagars betalningsvillkor, 45 kr fakturaavgift, 3 månaders uppsägningstid, avbokning senast 2 dagar innan",
       "Q25": "10 % rabatt på första städningen",
-      "Q26-Q28": "Företagspriser är uppskattningar, exklusive moms, och förhandlas alltid"
+      "Q26-Q28": "Företagspriser är uppskattningar, exklusive moms, och förhandlas alltid",
+      "Q13 (2026-09-19)": "Veckodagsskillnaden i timpriset är avsiktlig, inte ett fel i prislistan",
+      "Byggstädning (2026-09-19)": "Ny tjänst, offereras alltid – ingen prislista och ingen kalkylator"
     },
     "stillOpen": [
       "Utvärderare och zoner (Q32–Q37, Q41)",
@@ -556,7 +558,8 @@
       "Kundtjänst och WhatsApp (Q53–Q54)",
       "Språk och dataskydd (Q59–Q60)",
       "Webnode och Search Console (Q62–Q63)",
-      "Avtalsvillkor (Q65–Q68)"
+      "Avtalsvillkor (Q65–Q68)",
+      "Vad byggstädning omfattar (nya frågor i docs/cuestionario-cliente-2.md)"
     ]
   }
 }
