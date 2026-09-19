@@ -1,5 +1,5 @@
 {
-  "_readme": "Draft single source of truth for prices. NOT wired to the pages yet. Calculations live in lib/pricing.js and scripts/qa-pricing.mjs checks both. Anything with pendingConfirmation: true waits for the client's answer to `question` (null = not in the client questionnaire yet). Amounts are SEK.",
+  "_readme": "Single source of truth for prices. The calculators read every rate from here through lib/pricing.js, and scripts/qa-pricing.mjs checks both that no page keeps a rate of its own and that these figures still match the client's price lists. Anything with pendingConfirmation: true waits for the client's answer to `question` (null = not in the client questionnaire yet). Amounts are SEK.",
   "version": "2026-02-19",
   "sources": {
     "prislista": "Prislista Ny 2026 privat.pdf, dated 2026-02-19. Only pages 1-3 of 7 were available.",
@@ -32,11 +32,11 @@
           "2",
           "1"
         ],
-        "enforcedByCalculator": false,
+        "enforcedByCalculator": true,
         "source": "prislista p. 2: \"Minsta debitering 2 timmar\"",
         "pendingConfirmation": false,
         "question": "Q14",
-        "note": "Printed under the weekly/biweekly/monthly rates, before \"Enstaka hemstädning\"; unclear whether it also covers one-off cleaning. The calculator bills homes under about 25.7 m2 for less than 2 hours.",
+        "note": "Printed under the weekly/biweekly/monthly rates, before \"Enstaka hemstädning\"; unclear whether it also covers one-off cleaning. The calculator bills at least 2 hours for every plan, including enstaka.",
         "confirmedByClient": "2026-09-17",
         "clientAnswer": "Minst 2 debiterade timmar gäller alla tjänster"
       },
@@ -83,7 +83,7 @@
         "source": "prislista p. 2: \"Måndag till onsdag: 200 kr/timmen\", \"Torsdag och fredag: 220 kr/timmen\"",
         "pendingConfirmation": false,
         "question": "Q13",
-        "note": "No weekend rates in the price list. The calculator shows 0 kr for weekly or biweekly cleaning on Saturday and Sunday.",
+        "note": "No weekend rates in the price list, and none in the calculator either: Saturday and Sunday cannot be booked online.",
         "confirmedByClient": "2026-09-17",
         "clientAnswer": "Inga helgbokningar online"
       },
@@ -284,7 +284,7 @@
           "clientAnswer": "Priset får aldrig understiga toppen av föregående intervall"
         }
       ],
-      "tierNote": "The per-m2 rate applies to the whole area, so the price drops when a home crosses a threshold (50 m2 = 2 890 kr but 51 m2 = 2 601 kr).",
+      "tierNote": "The per-m2 rate applies to the whole area, which on its own would make 51 m2 (2 601 kr) cheaper than 50 m2 (2 890 kr). Q22 settled it: no band may price below the top of the one before it, so the bands start at 2 890, 5 100 and 7 050 kr.",
       "quoteAboveSqm": null,
       "includesWindowCleaning": true,
       "windowCleaningExcludes": "Spröjsade fönster",
@@ -375,7 +375,7 @@
         "docxText": "För bostäder upp till 5 rum och kök eller max 120 kvm kan du få ett pris direkt via vårt formulär. För bostäder större än 5 rum och kök eller över 120 kvm lämnas offert.",
         "pendingConfirmation": false,
         "question": "Q21",
-        "note": "The sources disagree on 5-room homes: the price list quotes them, the docx prices them directly and quotes only above 5 rooms, and neither gives a 5-room price. The calculator quotes 5 rooms and never asks for m2, so a 3-room home of 130 m2 gets a price instead of a quote.",
+        "note": "The sources disagree on 5-room homes: the price list quotes them, the docx prices them directly and quotes only above 5 rooms, and neither gives a 5-room price. The calculator quotes 5 rooms and also asks for the size, so a 3-room home of 130 m2 is quoted as well.",
         "confirmedByClient": "2026-09-17",
         "clientAnswer": "5 rum och kök eller över 120 kvm offereras"
       },
@@ -390,11 +390,10 @@
         "clientAnswer": "Tilläggen adderas: 25 % av grundpriset vardera"
       },
       "surcharges": {
-        "stacking": "compound",
         "source": "prislista p. 3",
         "pendingConfirmation": false,
         "question": "Q20",
-        "note": "Each surcharge is +25 %, but the price list does not say how several combine. \"compound\" (what the calculator does) multiplies by 1.25 per surcharge; \"additive\" adds the percentages.",
+        "note": "Each surcharge is +25 %, but the price list does not say how several combine. The client settled it on 2026-09-17, see `combination`: the percentages add up, so two surcharges are +50 % and not +56.25 %. A `stacking: \"compound\"` field described the old calculator and was dropped.",
         "items": {
           "sprojs": {
             "label": "Spröjs",
@@ -440,7 +439,7 @@
         "appliesTo": [
           "1"
         ],
-        "enforcedByCalculator": false,
+        "enforcedByCalculator": true,
         "source": "calculator option label: \"1 gång per månad (350 kr/h, minst 2 timmar)\"",
         "pendingConfirmation": false,
         "question": "Q26-Q28",
@@ -479,7 +478,7 @@
       "source": "calculator (pages/containercleaning.js, shown \"exkl. moms\"); no business price list available",
       "pendingConfirmation": false,
       "question": "Q26-Q28",
-      "note": "Monthly price = price per unit x units x visits per week x 4. Above 50 units the calculator shows 0 kr instead of asking for a quote.",
+      "note": "Monthly price = price per unit x units x visits per week x 4. Above 50 units the calculator asks for a quote.",
       "pricing": "perUnitPerVisit",
       "minHours": null,
       "weeksPerMonth": 4,
