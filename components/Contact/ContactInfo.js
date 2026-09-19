@@ -5,6 +5,9 @@ const ContactInfo = () => {
     <>
       <div className="contact-box pt-100">
         <div className="container">
+          {/* Section heading: the four cards below are H3, so without it the
+              page jumped straight from the H1 in the page banner to H3. */}
+          <h2 className="contact-box-title">Kontaktuppgifter</h2>
           <div className="row justify-content-center">
             <div className="col-lg-3 col-md-6">
               <div className="single-contact-box">

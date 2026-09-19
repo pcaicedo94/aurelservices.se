@@ -21,6 +21,11 @@ const ServicesDetails = () => {
         // }}
       >
         <div className="container">
+          {/* Section heading: each tab panel opens with an H3, so without it
+              the page jumped from the H1 in the page banner to H3. */}
+          <h2 className="services-tab-title">
+            Våra tjänster för privatpersoner, företag och bostadsrättsföreningar
+          </h2>
           <div className="solutions-list-tab">
             <Tabs>
               <TabList>

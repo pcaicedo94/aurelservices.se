@@ -121,7 +121,7 @@ const WindowCleaning = () => {
           </div>
           <div className="col-lg-5">
             <div className="brand-card">
-              <h4>RUT-avdrag</h4>
+              <h3>RUT-avdrag</h3>
               <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
             </div>
           </div>
@@ -130,7 +130,7 @@ const WindowCleaning = () => {
         <div className="row" style={{ marginTop: "30px" }}>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Vad ingår</h4>
+              <h3>Vad ingår</h3>
               <ul>
                 <li>Rengöring av fönstrets in- och utsida</li>
                 <li>Putsning av fönsterglas för klart och fläckfritt resultat</li>
@@ -140,7 +140,7 @@ const WindowCleaning = () => {
           </div>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Fördelar</h4>
+              <h3>Fördelar</h3>
               <ul>
                 <li>Klart och randfritt resultat</li>
                 <li>Ökat ljusinsläpp i hemmet</li>
@@ -151,7 +151,7 @@ const WindowCleaning = () => {
           </div>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Prisinformation</h4>
+              <h3>Prisinformation</h3>
               <p>Priser inkl. moms efter RUT-avdrag. I priserna ingår rengöring av fönstrets bågar och dammning av persienner.</p>
             </div>
           </div>

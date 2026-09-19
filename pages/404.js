@@ -16,13 +16,16 @@ const CoustomErorPage = () => {
               data-aos-duration="1200"
               data-aos-once="true"
             >
-              <img src="/images/404.png" alt="Image" />
+              {/* Decorative illustration: the heading below says the same. */}
+              <img src="/images/404.png" alt="" />
 
-              <h3>Sidan finns ej 🔍</h3>
-              <h4>
+              <h1>Sidan finns ej 🔍</h1>
+              <p className="error-lead">
                 Sidan du letar efter är inte tillgänglig.
-              </h4>
+              </p>
 
+              {/* Keeps the outline H1 → H2 → H3 (the footer starts at H3). */}
+              <h2>Vart vill du gå?</h2>
               <Link href="/" className="default-btn-one">Återgå till startsidan</Link>            </div>
           </div>
         </div>

@@ -20,7 +20,7 @@ const MovingHelp = () => {
               Behöver du hjälp med flytt? Aurel Städ &amp; Allservice erbjuder professionell flytthjälp i Stockholm för privatpersoner, företag och bostadsrättsföreningar. Vi ser till att din flytt sker smidigt, säkert och effektivt.
             </p>
 
-            <h4>Vad vi erbjuder</h4>
+            <h3>Vad vi erbjuder</h3>
             <ul>
               <li>Hjälp med packning vid behov</li>
               <li>Transport av möbler och tillhörigheter</li>
@@ -29,7 +29,7 @@ const MovingHelp = () => {
               <li>Flexibla lösningar efter behov</li>
             </ul>
 
-            <h4>Fördelar</h4>
+            <h3>Fördelar</h3>
             <ul>
               <li>Trygg och säker hantering av dina tillhörigheter</li>
               <li>Effektiv flyttprocess</li>
@@ -37,10 +37,10 @@ const MovingHelp = () => {
               <li>En smidig helhetslösning tillsammans med flyttstädning</li>
             </ul>
 
-            <h4>Flexibla upplägg</h4>
+            <h3>Flexibla upplägg</h3>
             <p>Vi erbjuder både mindre flyttar och större uppdrag, anpassade efter dina eller era behov.</p>
 
-            <h4>Så fungerar det</h4>
+            <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med din eller er förfrågan</li>
               <li>Vi bokar vid behov ett kostnadsfritt platsbesök</li>

@@ -143,7 +143,7 @@ const DeepCleaning = () => {
           </div>
           <div className="col-lg-5">
             <div className="brand-card">
-              <h4>RUT-avdrag</h4>
+              <h3>RUT-avdrag</h3>
               <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
             </div>
           </div>
@@ -152,7 +152,7 @@ const DeepCleaning = () => {
         <div className="row" style={{ marginTop: "30px" }}>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Allmän rengöring</h4>
+              <h3>Allmän rengöring</h3>
               <ul>
                 <li>Rengöring av alla ytor från golv till tak</li>
                 <li>Dammsugning och våttorkning av golv, lister, dörrkarmar</li>
@@ -162,7 +162,7 @@ const DeepCleaning = () => {
           </div>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Kök och badrum</h4>
+              <h3>Kök och badrum</h3>
               <ul>
                 <li>Rengöring med fokus på noggrannhet och hygien</li>
                 <li>Rengöring av kyl och frys utvändigt</li>
@@ -172,7 +172,7 @@ const DeepCleaning = () => {
           </div>
           <div className="col-lg-4">
             <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h4>Utrustning och material</h4>
+              <h3>Utrustning och material</h3>
               <ul>
                 <li>All städutrustning ingår</li>
                 <li>Dammsugare, hinkar, moppar</li>
