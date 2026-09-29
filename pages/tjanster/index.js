@@ -5,8 +5,10 @@ import PageBanner from "../../components/Common/PageBanner";
 import Footer from "../../components/Layouts/Footer";
 import Seo from "../../components/Common/Seo";
 
-// No prices here on purpose: each service page shows its own calculator until
-// the single price source (config/prices.json) is wired in.
+// Private index. Only the pages that live under /tjanster/ are listed, and the
+// copy comes from each service's own page: nothing is invented here.
+// No prices here on purpose: each service page shows its own calculator, with
+// amounts including VAT and after RUT.
 const SERVICES = [
   {
     href: "/tjanster/hemstadning",
@@ -55,6 +57,11 @@ const PrivateServices = () => {
               fönsterputsning. Välj den tjänst som passar dig, så får du ett pris direkt i
               formuläret på tjänstens sida.
             </p>
+            <p>
+              Söker du städning till ett företag eller en bostadsrättsförening? Se våra{" "}
+              <Link href="/foretag">tjänster för företag och BRF</Link>, som prissätts genom
+              offert och visas exklusive moms.
+            </p>
           </div>
         </div>
 
@@ -91,8 +98,10 @@ const PrivateServices = () => {
               <h4>Fler tjänster för hemmet</h4>
               <p>
                 Vi hjälper också till med <Link href="/tjanster/tradgardsskotsel">trädgårdsskötsel</Link>,{" "}
-                <Link href="/tjanster/flytthjalp">flytthjälp</Link> och{" "}
-                <Link href="/tjanster/mattvatt">mattvätt</Link>. Undrar du något? Läs våra{" "}
+                <Link href="/tjanster/flytthjalp">flytthjälp</Link>,{" "}
+                <Link href="/tjanster/mattvatt">mattvätt</Link> och{" "}
+                <Link href="/tjanster/snorojning">snöröjning</Link>. De prissätts genom offert.
+                Undrar du något? Läs våra{" "}
                 <Link href="/vanliga-fragor">vanliga frågor</Link> eller{" "}
                 <Link href="/kontakt">kontakta oss</Link>.
               </p>
