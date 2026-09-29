@@ -1,6 +1,6 @@
 // Booking submit behaviour with a mocked /api/booking: duplicate submits,
 // error answers that must keep the page and the data, and the contact form on
-// mobile. /contact is included as the reference that already behaves.
+// mobile. /kontakt is included as the reference that already behaves.
 import { sleep } from "../lib/browser.mjs";
 import { defineSuite } from "../lib/runner.mjs";
 import {
@@ -133,7 +133,7 @@ export default defineSuite("booking", async (test, ctx) => {
   }
 
   for (const scenario of ["bad-request", "server-error", "offline"]) {
-    test(`/contact error ${ERROR_LABELS[scenario]}: sin recarga y con los datos (control)`, async (t) => {
+    test(`/kontakt error ${ERROR_LABELS[scenario]}: sin recarga y con los datos (control)`, async (t) => {
       await t.page.goto("/kontakt");
       await fillContact(t.page);
       t.api.setScenario(scenario);
@@ -141,7 +141,7 @@ export default defineSuite("booking", async (test, ctx) => {
     });
   }
 
-  test('/contact triple clic en "Skicka meddelande" envía 1 POST', { bug: "QA-01" }, async ({ page, api, expect }) => {
+  test('/kontakt triple clic en "Skicka meddelande" envía 1 POST', { bug: "QA-01" }, async ({ page, api, expect }) => {
     await page.goto("/kontakt");
     await fillContact(page);
     api.setScenario("slow");

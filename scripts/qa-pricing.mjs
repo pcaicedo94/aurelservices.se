@@ -199,7 +199,10 @@ console.log("=== Ninguna calculadora guarda tarifas propias ===");
 for (const [file, rates] of Object.entries(PAGE_RATES)) {
   const source = read(file);
   const problems = [];
-  if (!/from "\.\.\/lib\/pricing"/.test(source)) problems.push("no importa ../lib/pricing");
+  // The depth of the relative path depends on where the page sits
+  // (pages/tjanster/... is one level deeper than pages/...), so match any
+  // number of "../" segments instead of hard-coding one.
+  if (!/from "(?:\.\.\/)+lib\/pricing"/.test(source)) problems.push("no importa lib/pricing");
   const byValue = new Map();
   for (const [name, value] of Object.entries(rates)) {
     if (typeof value !== "number") continue;
