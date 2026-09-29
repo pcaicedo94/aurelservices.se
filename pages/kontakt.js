@@ -1,30 +1,32 @@
 import React from "react";
 import Navbar from "../components/Layouts/Navbar";
 import PageBanner from "../components/Common/PageBanner";
-import PrivacyPolicyContent from "../components/PrivacyPolicy/PrivacyPolicyContent";
+import ContactInfo from "../components/Contact/ContactInfo";
+import ContactForm from "../components/Contact/ContactForm";
 import Footer from "../components/Layouts/Footer";
 import Seo from "../components/Common/Seo";
 
-const PrivacyPolicy = () => {
+const Contact = () => {
   return (
     <>
-      <Seo route="/privacy-policy" />
+      <Seo route="/kontakt" />
 
       <Navbar />
 
       <PageBanner
-        pageTitle="Integritetspolicy"
+        pageTitle="Kontakt/Funderingar"
         breadcrumbTextOne="Start"
-        breadcrumbTextTwo="Integritetspolicy"
+        breadcrumbTextTwo="Kontakt/Funderingar"
         breadcrumbUrl="/"
-        bgImage="/images/page-title-bg-5.jpg"
+        bgImage="/images/page-title-bg.jpg"
       />
 
-      <PrivacyPolicyContent />
+      <ContactInfo />
 
+      <ContactForm />
       <Footer />
     </>
   );
 };
 
-export default PrivacyPolicy;
+export default Contact;

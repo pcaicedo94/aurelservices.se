@@ -68,20 +68,20 @@ export default defineSuite("calculators", async (test, ctx) => {
     }
   }
 
-  test("/homecleaning sábado no da 0 kr ni se puede reservar", { bug: "QA-03" }, async ({ page, api, expect }) => {
-    const a = await attemptBooking(page, api, { route: "/homecleaning", fields: withFields(CALCULATORS.home.valid(d), [["#dateTime", d.saturday]]) });
+  test("/tjanster/hemstadning sábado no da 0 kr ni se puede reservar", { bug: "QA-03" }, async ({ page, api, expect }) => {
+    const a = await attemptBooking(page, api, { route: "/tjanster/hemstadning", fields: withFields(CALCULATORS.home.valid(d), [["#dateTime", d.saturday]]) });
     expectNoZeroPrice(expect, a);
     expectNotBookable(expect, a, `sábado ${d.saturday}`);
   });
 
-  test("/deepcleaning väggtvätt negativo no da precio negativo", { bug: "QA-04" }, async ({ page, api, expect, note }) => {
-    const a = await attemptBooking(page, api, { route: "/deepcleaning", fields: withFields(CALCULATORS.deep.valid(d), [["#vaggtvatt", "-20"]]) });
+  test("/tjanster/storstadning väggtvätt negativo no da precio negativo", { bug: "QA-04" }, async ({ page, api, expect, note }) => {
+    const a = await attemptBooking(page, api, { route: "/tjanster/storstadning", fields: withFields(CALCULATORS.deep.valid(d), [["#vaggtvatt", "-20"]]) });
     expectNoNegative(expect, a);
     note(priceLine(a.summary));
   });
 
-  test("/homecleaning vaciar m² o frecuencia no deja el precio anterior", { bug: "QA-05" }, async ({ page, expect }) => {
-    await page.goto("/homecleaning");
+  test("/tjanster/hemstadning vaciar m² o frecuencia no deja el precio anterior", { bug: "QA-05" }, async ({ page, expect }) => {
+    await page.goto("/tjanster/hemstadning");
     await fillFields(page, withFields(CALCULATORS.home.valid(d), [["#size", "100"]]));
     const full = await readSummary(page);
     if (!full || !(full.price > 0)) throw new Error(`el cálculo inicial no dio precio (${priceLine(full)})`);
@@ -95,8 +95,8 @@ export default defineSuite("calculators", async (test, ctx) => {
     expect(book.found && book.disabled, "el botón de reservar no queda desactivado con datos incompletos");
   });
 
-  test("/movecleaning vaciar m² reinicia el precio (control)", async ({ page, expect }) => {
-    await page.goto("/movecleaning");
+  test("/tjanster/flyttstadning vaciar m² reinicia el precio (control)", async ({ page, expect }) => {
+    await page.goto("/tjanster/flyttstadning");
     await fillFields(page, withFields(CALCULATORS.move.valid(d), [["#size", "100"]]));
     const full = await readSummary(page);
     if (!full || !(full.price > 0)) throw new Error(`el cálculo inicial no dio precio (${priceLine(full)})`);
@@ -106,29 +106,29 @@ export default defineSuite("calculators", async (test, ctx) => {
   });
 
   for (const units of ["51", "1000"]) {
-    test(`/containercleaning ${units} bodar no da 0 kr`, { bug: "QA-11" }, async ({ page, api, expect, note }) => {
-      const a = await attemptBooking(page, api, { route: "/containercleaning", fields: withFields(CALCULATORS.container.valid(d), [["#numberOfUnits", units]]) });
+    test(`/foretag/bodstadning ${units} bodar no da 0 kr`, { bug: "QA-11" }, async ({ page, api, expect, note }) => {
+      const a = await attemptBooking(page, api, { route: "/foretag/bodstadning", fields: withFields(CALCULATORS.container.valid(d), [["#numberOfUnits", units]]) });
       expectNoZeroPrice(expect, a);
       note(priceLine(a.summary));
     });
   }
 
-  test('/deepcleaning "Offereras" (200 m²) no se reserva a 0 kr', { bug: "QA-12" }, async ({ page, api, expect, note }) => {
-    const a = await attemptBooking(page, api, { route: "/deepcleaning", fields: withFields(CALCULATORS.deep.valid(d), [["#size", "200"]]) });
+  test('/tjanster/storstadning "Offereras" (200 m²) no se reserva a 0 kr', { bug: "QA-12" }, async ({ page, api, expect, note }) => {
+    const a = await attemptBooking(page, api, { route: "/tjanster/storstadning", fields: withFields(CALCULATORS.deep.valid(d), [["#size", "200"]]) });
     if (!a.summary?.quote) note(`el resumen no muestra "Offereras" (${priceLine(a.summary)})`);
     for (const p of a.posts) {
       expect(payloadPrice(p.json) !== 0 && Number(p.json?.basePrice) !== 0, `envía la reserva con totalPrice=${JSON.stringify(p.json?.totalPrice)} basePrice=${JSON.stringify(p.json?.basePrice)}`);
     }
   });
 
-  test('/windowcleaning "Offereras" (5 rum) no se reserva a 0 kr', { bug: "QA-12" }, async ({ page, api, expect, note }) => {
-    const a = await attemptBooking(page, api, { route: "/windowcleaning", fields: withFields(CALCULATORS.window.valid(d), [["#rooms", "5"]]) });
+  test('/tjanster/fonsterputs "Offereras" (5 rum) no se reserva a 0 kr', { bug: "QA-12" }, async ({ page, api, expect, note }) => {
+    const a = await attemptBooking(page, api, { route: "/tjanster/fonsterputs", fields: withFields(CALCULATORS.window.valid(d), [["#rooms", "5"]]) });
     for (const p of a.posts) expect(payloadPrice(p.json) !== 0, `envía la reserva con totalPrice=${JSON.stringify(p.json?.totalPrice)}`);
     note(`${a.reason}; ${priceLine(a.summary)}`);
   });
 
-  test("/homecleaning botón Boka desactivado se distingue del activo", { bug: "QA-16" }, async ({ page, expect, note }) => {
-    await page.goto("/homecleaning");
+  test("/tjanster/hemstadning botón Boka desactivado se distingue del activo", { bug: "QA-16" }, async ({ page, expect, note }) => {
+    await page.goto("/tjanster/hemstadning");
     await page.disableAnimations();
     await page.mouseMove(1, 1);
     const style = () =>

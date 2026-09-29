@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../components/Layouts/Navbar";
-import PageBanner from "../components/Common/PageBanner";
-import QuoteModal from "../components/Common/QuoteModal";
-import Footer from "../components/Layouts/Footer";
-import Seo from "../components/Common/Seo";
+import Navbar from "../../components/Layouts/Navbar";
+import PageBanner from "../../components/Common/PageBanner";
+import QuoteModal from "../../components/Common/QuoteModal";
+import Footer from "../../components/Layouts/Footer";
+import Seo from "../../components/Common/Seo";
 
 const StairCleaning = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
-      <Seo route="/staircleaning" />
+      <Seo route="/foretag/trappstadning" />
 
       <Navbar />
       <PageBanner

@@ -21,7 +21,7 @@ const DateTimeField = ({
   } else if (check.status === "weekend") {
     message = (
       <>
-        <strong>Helgbokning?</strong> <Link href="/contact">Kontakta oss</Link> – online kan du
+        <strong>Helgbokning?</strong> <Link href="/kontakt">Kontakta oss</Link> – online kan du
         boka måndag till fredag.
       </>
     );

@@ -42,7 +42,7 @@ function parseArgs(argv) {
   return out;
 }
 
-// Git Bash rewrites a leading "/services" into "C:/Program Files/Git/services",
+// Git Bash rewrites a leading "/foretag" into "C:/Program Files/Git/foretag",
 // so routes may be given without the slash.
 function parseRoutes(value) {
   return value
@@ -51,7 +51,7 @@ function parseRoutes(value) {
     .filter(Boolean)
     .map((r) => {
       if (/^[a-z]:[\\/]/i.test(r)) {
-        throw new Error(`Ruta "${r}" convertida por la shell: escribe --routes sin la barra inicial (services,contact) o usa MSYS_NO_PATHCONV=1`);
+        throw new Error(`Ruta "${r}" convertida por la shell: escribe --routes sin la barra inicial (foretag,kontakt) o usa MSYS_NO_PATHCONV=1`);
       }
       return r.startsWith("/") ? r : `/${r}`;
     });

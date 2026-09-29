@@ -209,7 +209,7 @@ const TermsConditionContent = () => {
           <h2>12. Personuppgifter</h2>
           <p>
             Hur vi behandlar dina personuppgifter beskriver vi i vår{" "}
-            <Link href="/privacy-policy">integritetspolicy</Link>.
+            <Link href="/integritetspolicy">integritetspolicy</Link>.
           </p>
 
           <h2>13. Frågor och oenighet</h2>

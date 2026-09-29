@@ -7,7 +7,7 @@ import Seo from "../components/Common/Seo";
 const Careers = () => {
   return (
     <>
-      <Seo route="/careers" />
+      <Seo route="/karriar" />
 
       <Navbar />
       <PageBanner

@@ -8,7 +8,7 @@ import Seo from "../components/Common/Seo";
 const TermsCondition = () => {
   return (
     <>
-      <Seo route="/terms-condition" />
+      <Seo route="/allmanna-villkor" />
 
       <Navbar />
 

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Navbar from "../components/Layouts/Navbar";
-import PageBanner from "../components/Common/PageBanner";
-import QuoteModal from "../components/Common/QuoteModal";
-import Footer from "../components/Layouts/Footer";
-import BookingSummary from "../components/Booking/BookingSummary";
-import FieldError, { invalidClass } from "../components/Booking/FieldError";
-import { billableHours, bookingHint, MIN_BILLABLE_HOURS, parseArea } from "../lib/booking/rules";
-import Seo from "../components/Common/Seo";
-import { estimateHours, OFFICE_FREQUENCIES, OFFICE_TIME_ESTIMATE } from "../lib/pricing";
+import Navbar from "../../components/Layouts/Navbar";
+import PageBanner from "../../components/Common/PageBanner";
+import QuoteModal from "../../components/Common/QuoteModal";
+import Footer from "../../components/Layouts/Footer";
+import BookingSummary from "../../components/Booking/BookingSummary";
+import FieldError, { invalidClass } from "../../components/Booking/FieldError";
+import { billableHours, bookingHint, MIN_BILLABLE_HOURS, parseArea } from "../../lib/booking/rules";
+import Seo from "../../components/Common/Seo";
+import { estimateHours, OFFICE_FREQUENCIES, OFFICE_TIME_ESTIMATE } from "../../lib/pricing";
 import {
   describeArea,
   formatArea,
@@ -16,7 +16,7 @@ import {
   NO_PRICE,
   NOT_SET,
   roundKronor,
-} from "../lib/booking/format";
+} from "../../lib/booking/format";
 
 const OfficeCleaning = () => {
   const [size, setSize] = useState("");
@@ -54,7 +54,7 @@ const OfficeCleaning = () => {
 
   return (
     <>
-      <Seo route="/officecleaning" />
+      <Seo route="/foretag/kontorsstadning" />
 
       <Navbar associates />
       <PageBanner pageTitle="Kontorsstädning" bgImage="/images/banners/kontorsstadning.webp" />

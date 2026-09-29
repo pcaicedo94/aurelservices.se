@@ -16,14 +16,14 @@ export const BOOK_BUTTON = { selector: "button, a", text: "^\\s*Boka( tjänsten)
 
 // Valid inputs per calculator; `size` names the free numeric field.
 export const CALCULATORS = {
-  home: { route: "/homecleaning", size: "#size", valid: (d) => [["#size", "60"], ["#frequency", "2"], ["#dateTime", d.weekday]] },
-  deep: { route: "/deepcleaning", size: "#size", valid: (d) => [["#size", "60"], ["#dateTime", d.weekday], ["#contactPreference", "call"]] },
-  move: { route: "/movecleaning", size: "#size", valid: (d) => [["#size", "60"], ["#dateTime", d.weekday]] },
-  window: { route: "/windowcleaning", size: null, valid: (d) => [["#rooms", "3"], ["#dateTime", d.weekday]] },
+  home: { route: "/tjanster/hemstadning", size: "#size", valid: (d) => [["#size", "60"], ["#frequency", "2"], ["#dateTime", d.weekday]] },
+  deep: { route: "/tjanster/storstadning", size: "#size", valid: (d) => [["#size", "60"], ["#dateTime", d.weekday], ["#contactPreference", "call"]] },
+  move: { route: "/tjanster/flyttstadning", size: "#size", valid: (d) => [["#size", "60"], ["#dateTime", d.weekday]] },
+  window: { route: "/tjanster/fonsterputs", size: null, valid: (d) => [["#rooms", "3"], ["#dateTime", d.weekday]] },
   // Business services are negotiated (client Q29): the page estimates a price
   // and asks for a quote, it never books a slot.
   container: {
-    route: "/containercleaning",
+    route: "/foretag/bodstadning",
     size: "#numberOfUnits",
     quoteOnly: true,
     valid: (d) => [["#numberOfUnits", "10"], ["#frequency", "5"], ["#dateTime", d.weekday], ["#contactPreference", "call"]],

@@ -536,7 +536,7 @@ const FAQbot = () => {
           </div>
 
           <div className="faq-chat-footer">
-            <p>Behöver du mer hjälp? <a href="/contact">Kontakta oss</a></p>
+            <p>Behöver du mer hjälp? <a href="/kontakt">Kontakta oss</a></p>
           </div>
         </div>
       )}

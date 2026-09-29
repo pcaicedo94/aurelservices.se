@@ -4,7 +4,7 @@ import { sleep } from "../lib/browser.mjs";
 import { defineSuite } from "../lib/runner.mjs";
 import { CALCULATORS, fillFields } from "../lib/flows.mjs";
 
-async function prepareKeyboardPage(page, route = "/about-us") {
+async function prepareKeyboardPage(page, route = "/om-oss") {
   await page.goto(route);
   await page.disableAnimations();
   await page.mouseMove(720, 880);
@@ -145,9 +145,9 @@ export default defineSuite("a11y", async (test) => {
     const failures = [];
     let measured = 0;
     const cases = [
-      ["/carpetwashing", {}],
-      ["/contact", {}],
-      ["/homecleaning", { prepare: (p) => fillFields(p, CALCULATORS.home.valid(ctx.dates)) }],
+      ["/tjanster/mattvatt", {}],
+      ["/kontakt", {}],
+      ["/tjanster/hemstadning", { prepare: (p) => fillFields(p, CALCULATORS.home.valid(ctx.dates)) }],
     ];
     for (const [route, opts] of cases) {
       const items = await measure(page, route, ".default-btn", opts);
@@ -160,7 +160,7 @@ export default defineSuite("a11y", async (test) => {
   });
 
   test("contraste del footer ≥ 4,5:1 (3:1 texto grande)", async ({ page, expect, note }) => {
-    const items = await measure(page, "/contact", "footer", { exclude: ".footer-bubbles" });
+    const items = await measure(page, "/kontakt", "footer", { exclude: ".footer-bubbles" });
     const measurable = items.filter((i) => i.measurable);
     if (!measurable.length) throw new Error("no se pudo medir el texto del footer");
     const failures = contrastFailures(items, "footer");
@@ -171,7 +171,7 @@ export default defineSuite("a11y", async (test) => {
   test("contraste del aviso amarillo ≥ 4,5:1", async ({ page, expect, note }) => {
     const failures = [];
     let measured = 0;
-    for (const route of ["/homecleaning", "/deepcleaning", "/movecleaning"]) {
+    for (const route of ["/tjanster/hemstadning", "/tjanster/storstadning", "/tjanster/flyttstadning"]) {
       const items = await measure(page, route, ".brand-card-warning, .alert-warning");
       measured += items.filter((i) => i.measurable).length;
       failures.push(...contrastFailures(items, route));

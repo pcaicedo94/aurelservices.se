@@ -11,7 +11,7 @@ import Seo from "../components/Common/Seo";
 const Faq = () => {
   return (
     <>
-      <Seo route="/faq" schemas={[faqSchema()]} />
+      <Seo route="/vanliga-fragor" schemas={[faqSchema()]} />
 
       <Navbar />
 

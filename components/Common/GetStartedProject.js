@@ -17,7 +17,7 @@ const GetStartedProject = () => {
                 </p>
 
                 <div className="productive-btn">
-                  <Link href="/contact" className="productive-btn-one">
+                  <Link href="/kontakt" className="productive-btn-one">
                     Kontakta Oss
                     <span></span>
                   </Link>

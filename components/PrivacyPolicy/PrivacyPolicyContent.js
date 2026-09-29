@@ -260,7 +260,7 @@ const PrivacyPolicyContent = () => {
           <p>
             Vi kan komma att uppdatera policyn, till exempel om vi byter leverantör. Den senaste
             versionen finns alltid på den här sidan. Villkoren för våra tjänster hittar du i våra{" "}
-            <Link href="/terms-condition">allmänna villkor</Link>.
+            <Link href="/allmanna-villkor">allmänna villkor</Link>.
           </p>
         </div>
       </div>

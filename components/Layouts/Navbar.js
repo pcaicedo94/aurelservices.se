@@ -4,30 +4,30 @@ import Link from "next/link";
 // One list drives both the desktop dropdowns and the collapsed (mobile) menu,
 // so labels only live here.
 const MENU = [
-  { label: "Om oss", href: "/about-us" },
+  { label: "Om oss", href: "/om-oss" },
   {
     id: "privata",
     label: "Privata tjänster",
-    href: "/private-services",
+    href: "/tjanster",
     children: [
-      { label: "Hemstädning", href: "/homecleaning" },
-      { label: "Flyttstädning", href: "/movecleaning" },
-      { label: "Storstädning", href: "/deepcleaning" },
-      { label: "Fönsterputsning", href: "/windowcleaning" },
-      { label: "Trädgårdsskötsel", href: "/gardening" },
+      { label: "Hemstädning", href: "/tjanster/hemstadning" },
+      { label: "Flyttstädning", href: "/tjanster/flyttstadning" },
+      { label: "Storstädning", href: "/tjanster/storstadning" },
+      { label: "Fönsterputsning", href: "/tjanster/fonsterputs" },
+      { label: "Trädgårdsskötsel", href: "/tjanster/tradgardsskotsel" },
     ],
   },
   {
     id: "foretag",
     label: "Företag och BRF",
-    href: "/services",
+    href: "/foretag",
     children: [
-      { label: "Kontorsstädning", href: "/officecleaning" },
-      { label: "Bod- och Etableringstädning", href: "/containercleaning" },
-      { label: "Fönsterputsning", href: "/windowcleaningbusiness" },
-      { label: "Trappstädning", href: "/staircleaning" },
-      { label: "Flyttstädning", href: "/movecleaningbusiness" },
-      { label: "Golvvård", href: "/floorcare" },
+      { label: "Kontorsstädning", href: "/foretag/kontorsstadning" },
+      { label: "Bod- och Etableringstädning", href: "/foretag/bodstadning" },
+      { label: "Fönsterputsning", href: "/foretag/fonsterputs" },
+      { label: "Trappstädning", href: "/foretag/trappstadning" },
+      { label: "Flyttstädning", href: "/foretag/flyttstadning" },
+      { label: "Golvvård", href: "/foretag/golvvard" },
     ],
   },
   {
@@ -35,15 +35,15 @@ const MENU = [
     id: "andra",
     label: "Andra tjänster",
     children: [
-      { label: "Byggtjänster", href: "/construction" },
-      { label: "Snöröjning och plogning", href: "/snowremoval" },
-      { label: "Flytthjälp", href: "/movinghelp" },
-      { label: "Mattvätt", href: "/carpetwashing" },
+      { label: "Byggtjänster", href: "/foretag/byggtjanster" },
+      { label: "Snöröjning och plogning", href: "/tjanster/snorojning" },
+      { label: "Flytthjälp", href: "/tjanster/flytthjalp" },
+      { label: "Mattvätt", href: "/tjanster/mattvatt" },
     ],
   },
   { label: "Produkter", href: "https://yureco.com", external: true },
-  { label: "Jobba hos oss", href: "/careers" },
-  { label: "Kontakta oss", href: "/contact" },
+  { label: "Jobba hos oss", href: "/karriar" },
+  { label: "Kontakta oss", href: "/kontakt" },
 ];
 
 // Same breakpoint as navbar-expand-xl and the collapsed-menu rules in

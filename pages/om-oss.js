@@ -13,7 +13,7 @@ import Seo from "../components/Common/Seo";
 const AboutUs = () => {
   return (
     <>
-      <Seo route="/about-us" />
+      <Seo route="/om-oss" />
 
       <Navbar />
       <PageBanner

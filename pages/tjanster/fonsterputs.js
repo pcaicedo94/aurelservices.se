@@ -1,16 +1,16 @@
 import React, { useRef, useState } from "react";
-import Navbar from "../components/Layouts/Navbar";
-import PageBanner from "../components/Common/PageBanner";
-import QuoteModal from "../components/Common/QuoteModal";
-import Footer from "../components/Layouts/Footer";
-import BookingSummary from "../components/Booking/BookingSummary";
-import BookingContactForm from "../components/Booking/BookingContactForm";
-import BookingConfirmation from "../components/Booking/BookingConfirmation";
-import DateTimeField from "../components/Booking/DateTimeField";
-import useBookingFlow from "../lib/booking/useBookingFlow";
-import useBookingDate from "../lib/booking/useBookingDate";
-import FieldError, { invalidClass } from "../components/Booking/FieldError";
-import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
+import Navbar from "../../components/Layouts/Navbar";
+import PageBanner from "../../components/Common/PageBanner";
+import QuoteModal from "../../components/Common/QuoteModal";
+import Footer from "../../components/Layouts/Footer";
+import BookingSummary from "../../components/Booking/BookingSummary";
+import BookingContactForm from "../../components/Booking/BookingContactForm";
+import BookingConfirmation from "../../components/Booking/BookingConfirmation";
+import DateTimeField from "../../components/Booking/DateTimeField";
+import useBookingFlow from "../../lib/booking/useBookingFlow";
+import useBookingDate from "../../lib/booking/useBookingDate";
+import FieldError, { invalidClass } from "../../components/Booking/FieldError";
+import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../../lib/booking/rules";
 import {
   WINDOW_BALCONY_PRICE,
   WINDOW_QUOTE_ABOVE_AREA,
@@ -18,9 +18,9 @@ import {
   WINDOW_ROOM_PRICES,
   WINDOW_SURCHARGE_PERCENT,
   WINDOW_SURCHARGE_RATE,
-} from "../lib/pricing";
-import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../lib/booking/format";
-import Seo from "../components/Common/Seo";
+} from "../../lib/pricing";
+import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../../lib/booking/format";
+import Seo from "../../components/Common/Seo";
 
 // Q21 (client, confirmed): a home of this many rooms, or larger than
 // WINDOW_QUOTE_ABOVE_AREA, is quoted and never priced online. The room count
@@ -108,7 +108,7 @@ const WindowCleaning = () => {
 
   return (
     <>
-      <Seo route="/windowcleaning" />
+      <Seo route="/tjanster/fonsterputs" />
 
       <Navbar />
       <PageBanner pageTitle="Fönsterputsning" bgImage="/images/banners/fonsterputs.webp" />

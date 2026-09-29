@@ -7,10 +7,10 @@ import QuoteModal from "../Common/QuoteModal";
 // primary CTA points at the hub page that lists them; these links are the
 // shortcut for a visitor who already knows what they need.
 const CALCULATORS = [
-  { href: "/homecleaning", label: "Hemstädning" },
-  { href: "/deepcleaning", label: "Storstädning" },
-  { href: "/movecleaning", label: "Flyttstädning" },
-  { href: "/windowcleaning", label: "Fönsterputsning" },
+  { href: "/tjanster/hemstadning", label: "Hemstädning" },
+  { href: "/tjanster/storstadning", label: "Storstädning" },
+  { href: "/tjanster/flyttstadning", label: "Flyttstädning" },
+  { href: "/tjanster/fonsterputs", label: "Fönsterputsning" },
 ];
 
 const MainBanner = () => {
@@ -36,7 +36,7 @@ const MainBanner = () => {
             <li>Org.nr 556725-2340</li>
           </ul>
           <div className="hero-actions">
-            <Link href="/private-services" className="default-btn hero-btn-primary">
+            <Link href="/tjanster" className="default-btn hero-btn-primary">
               Boka städning – se priset direkt
             </Link>
             <button

@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import Navbar from "../components/Layouts/Navbar";
-import PageBanner from "../components/Common/PageBanner";
-import QuoteModal from "../components/Common/QuoteModal";
-import Footer from "../components/Layouts/Footer";
-import Seo from "../components/Common/Seo";
+import Navbar from "../../components/Layouts/Navbar";
+import PageBanner from "../../components/Common/PageBanner";
+import QuoteModal from "../../components/Common/QuoteModal";
+import Footer from "../../components/Layouts/Footer";
+import Seo from "../../components/Common/Seo";
 
 const Gardening = () => {
   const [showQuote, setShowQuote] = useState(false);
 
   return (
     <>
-      <Seo route="/gardening" />
+      <Seo route="/tjanster/tradgardsskotsel" />
 
       <Navbar />
       <PageBanner pageTitle="Trädgårdsskötsel" bgImage="/images/banners/tradgardsskotsel.webp" />

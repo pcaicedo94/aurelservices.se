@@ -14,7 +14,7 @@ node scripts/qa-browser/run.mjs --url=http://localhost:3100 --suite=all --out=<c
 | `--out` | capturas de los fallos (`shots/`), `report.json` y el perfil temporal de Chrome. Se niega a escribir dentro del repo |
 | `--port` | puerto CDP de Chrome (9609 por defecto). Si ya está ocupado, aborta en lugar de conectarse a otro navegador |
 | `--grep` | ejecuta solo las pruebas cuyo nombre o ID de bug contenga el texto, p. ej. `--grep=QA-02` |
-| `--routes` | limita la suite smoke, p. ej. `--routes=services,contact` (sin barra inicial: Git Bash convierte `/services` en una ruta de Windows; la portada es `/`) |
+| `--routes` | limita la suite smoke, p. ej. `--routes=foretag,kontakt` (sin barra inicial: Git Bash convierte `/foretag` en una ruta de Windows; la portada es `/`) |
 | `--timeout` | tiempo máximo por prueba en ms (90000) |
 
 Cada prueba imprime `PASS`, `FAIL` o `ERROR` (la prueba no pudo completarse, p. ej. un selector desaparecido). Al final hay un resumen por suite y por bug. El proceso sale con código 1 si algo falla o si alguna petición llegó a la API real, y con 2 si no pudo arrancar. La suite `all` (219 pruebas) tarda unos 7 minutos contra el servidor de desarrollo; smoke se lleva casi la mitad.
@@ -50,7 +50,7 @@ suites/*.mjs       smoke, calculators, booking, quote, a11y, nav
 ```js
 // suites/nav.mjs (dentro de defineSuite("nav", async (test, ctx) => { ... }))
 test("el logo lleva a la portada", { bug: "QA-99" }, async ({ page, api, expect, note }) => {
-  await page.goto("/contact");                 // espera a que React hidrate
+  await page.goto("/kontakt");                 // espera a que React hidrate
   api.setScenario("conflict");                 // opcional: respuesta de /api/*
   await page.click({ selector: "a", text: "^Kontakta oss$", within: "#navbar" }); // clic real
   const href = await page.eval(() => document.querySelector("#navbar .navbar-brand").getAttribute("href"));

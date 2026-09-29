@@ -87,7 +87,7 @@ export function serviceSchema(route) {
  * Per-page <head>: title, description, canonical, Open Graph and Twitter card,
  * plus the JSON-LD this route needs.
  *
- * Usage: <Seo route="/homecleaning" /> — everything else comes from
+ * Usage: <Seo route="/tjanster/hemstadning" /> — everything else comes from
  * config/seo.js. `schemas` adds page-specific JSON-LD (for example the
  * FAQPage derived from the questions already rendered on /faq).
  */

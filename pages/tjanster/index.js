@@ -1,30 +1,30 @@
 import React from "react";
 import Link from "next/link";
-import Navbar from "../components/Layouts/Navbar";
-import PageBanner from "../components/Common/PageBanner";
-import Footer from "../components/Layouts/Footer";
-import Seo from "../components/Common/Seo";
+import Navbar from "../../components/Layouts/Navbar";
+import PageBanner from "../../components/Common/PageBanner";
+import Footer from "../../components/Layouts/Footer";
+import Seo from "../../components/Common/Seo";
 
 // No prices here on purpose: each service page shows its own calculator until
 // the single price source (config/prices.json) is wired in.
 const SERVICES = [
   {
-    href: "/homecleaning",
+    href: "/tjanster/hemstadning",
     title: "Hemstädning",
     text: "Regelbunden städning varje vecka, varannan vecka eller en gång i månaden – eller vid ett enstaka tillfälle. Vi tar hand om golv, kök, badrum och ytor så att du får mer tid över.",
   },
   {
-    href: "/deepcleaning",
+    href: "/tjanster/storstadning",
     title: "Storstädning",
     text: "En grundlig rengöring av hela hemmet, från golv till tak. Perfekt när bostaden behöver en nystart eller när du inte hinner göra det själv.",
   },
   {
-    href: "/movecleaning",
+    href: "/tjanster/flyttstadning",
     title: "Flyttstädning",
     text: "Noggrann städning av hela bostaden, som minskar risken för anmärkningar vid besiktningen. Fönsterputs ingår, utom för spröjsade fönster.",
   },
   {
-    href: "/windowcleaning",
+    href: "/tjanster/fonsterputs",
     title: "Fönsterputsning",
     text: "Rena fönster utan ränder, på både in- och utsidan. Priset utgår från antal rum och du ser det direkt i formuläret.",
   },
@@ -33,7 +33,7 @@ const SERVICES = [
 const PrivateServices = () => {
   return (
     <>
-      <Seo route="/private-services" />
+      <Seo route="/tjanster" />
 
       <Navbar />
 
@@ -90,11 +90,11 @@ const PrivateServices = () => {
             <div className="info-card">
               <h4>Fler tjänster för hemmet</h4>
               <p>
-                Vi hjälper också till med <Link href="/gardening">trädgårdsskötsel</Link>,{" "}
-                <Link href="/movinghelp">flytthjälp</Link> och{" "}
-                <Link href="/carpetwashing">mattvätt</Link>. Undrar du något? Läs våra{" "}
-                <Link href="/faq">vanliga frågor</Link> eller{" "}
-                <Link href="/contact">kontakta oss</Link>.
+                Vi hjälper också till med <Link href="/tjanster/tradgardsskotsel">trädgårdsskötsel</Link>,{" "}
+                <Link href="/tjanster/flytthjalp">flytthjälp</Link> och{" "}
+                <Link href="/tjanster/mattvatt">mattvätt</Link>. Undrar du något? Läs våra{" "}
+                <Link href="/vanliga-fragor">vanliga frågor</Link> eller{" "}
+                <Link href="/kontakt">kontakta oss</Link>.
               </p>
             </div>
           </div>

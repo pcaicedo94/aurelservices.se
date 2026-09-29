@@ -1,23 +1,23 @@
 import React, { useRef, useState } from "react";
-import Navbar from "../components/Layouts/Navbar";
-import PageBanner from "../components/Common/PageBanner";
-import QuoteModal from "../components/Common/QuoteModal";
-import Footer from "../components/Layouts/Footer";
-import BookingSummary from "../components/Booking/BookingSummary";
-import BookingContactForm from "../components/Booking/BookingContactForm";
-import BookingConfirmation from "../components/Booking/BookingConfirmation";
-import DateTimeField from "../components/Booking/DateTimeField";
-import FieldError, { invalidClass } from "../components/Booking/FieldError";
-import useBookingFlow from "../lib/booking/useBookingFlow";
-import useBookingDate from "../lib/booking/useBookingDate";
-import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../lib/booking/rules";
-import Seo from "../components/Common/Seo";
+import Navbar from "../../components/Layouts/Navbar";
+import PageBanner from "../../components/Common/PageBanner";
+import QuoteModal from "../../components/Common/QuoteModal";
+import Footer from "../../components/Layouts/Footer";
+import BookingSummary from "../../components/Booking/BookingSummary";
+import BookingContactForm from "../../components/Booking/BookingContactForm";
+import BookingConfirmation from "../../components/Booking/BookingConfirmation";
+import DateTimeField from "../../components/Booking/DateTimeField";
+import FieldError, { invalidClass } from "../../components/Booking/FieldError";
+import useBookingFlow from "../../lib/booking/useBookingFlow";
+import useBookingDate from "../../lib/booking/useBookingDate";
+import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../../lib/booking/rules";
+import Seo from "../../components/Common/Seo";
 import {
   estimateHours,
   moveCleaningBasePrice,
   MOVE_CLEANING_EXTRAS,
   MOVE_TIME_ESTIMATE,
-} from "../lib/pricing";
+} from "../../lib/pricing";
 import {
   describeArea,
   describeDate,
@@ -27,7 +27,7 @@ import {
   formatPrice,
   NO_PRICE,
   roundKronor,
-} from "../lib/booking/format";
+} from "../../lib/booking/format";
 
 const MoveCleaning = () => {
   const [size, setSize] = useState("");
@@ -126,7 +126,7 @@ const MoveCleaning = () => {
 
   return (
     <>
-      <Seo route="/movecleaning" />
+      <Seo route="/tjanster/flyttstadning" />
 
       <Navbar associates />
       <PageBanner pageTitle="Flyttstädning" bgImage="/images/banners/flyttstadning.webp" />

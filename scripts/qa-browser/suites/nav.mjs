@@ -7,7 +7,7 @@ const CHAT_OPENER = ".faq-chat-button, button[aria-label*='chat' i]";
 
 async function openAndCloseChat(page, { scrollY }) {
   await page.setViewport("mobile");
-  await page.goto("/homecleaning");
+  await page.goto("/tjanster/hemstadning");
   if (scrollY) {
     await page.eval((y) => {
       scrollTo({ top: y, behavior: "instant" });
@@ -62,7 +62,7 @@ function checkChat(expect, { state, closed }) {
 
 export default defineSuite("nav", async (test, ctx) => {
   test('"Andra tjänster" no enlaza a "#"', { bug: "QA-17" }, async ({ page, expect, note }) => {
-    await page.goto("/homecleaning");
+    await page.goto("/tjanster/hemstadning");
     const info = await page.eval(() => {
       const el = [...document.querySelectorAll("#navbar a, #navbar button")].find((e) => /andra tjänster/i.test(window.__qa.norm(e.textContent)));
       if (!el) return null;
@@ -81,7 +81,7 @@ export default defineSuite("nav", async (test, ctx) => {
   });
 
   test("icono de Instagram visible en el footer", { bug: "QA-18" }, async ({ page, expect }) => {
-    await page.goto("/contact");
+    await page.goto("/kontakt");
     const r = await page.eval(() => {
       const a = document.querySelector("footer a[href*='instagram']");
       if (!a) return null;
@@ -110,7 +110,7 @@ export default defineSuite("nav", async (test, ctx) => {
 
   test("menú de escritorio a 1024 px sin romperse", async ({ page, expect, note }) => {
     await page.setViewport("laptop");
-    await page.goto("/homecleaning");
+    await page.goto("/tjanster/hemstadning");
     const r = await page.eval(() => {
       const toggler = document.querySelector(".navbar-toggler");
       const links = [...document.querySelectorAll("#navbar .navbar-nav > .nav-item > .nav-link")].filter(window.__qa.isVisible);

@@ -1,16 +1,16 @@
 import React, { useRef, useState } from "react";
-import Navbar from "../components/Layouts/Navbar";
-import PageBanner from "../components/Common/PageBanner";
-import QuoteModal from "../components/Common/QuoteModal";
-import Footer from "../components/Layouts/Footer";
-import BookingSummary from "../components/Booking/BookingSummary";
-import BookingContactForm from "../components/Booking/BookingContactForm";
-import BookingConfirmation from "../components/Booking/BookingConfirmation";
-import DateTimeField from "../components/Booking/DateTimeField";
-import FieldError, { invalidClass } from "../components/Booking/FieldError";
-import useBookingFlow from "../lib/booking/useBookingFlow";
-import useBookingDate from "../lib/booking/useBookingDate";
-import Seo from "../components/Common/Seo";
+import Navbar from "../../components/Layouts/Navbar";
+import PageBanner from "../../components/Common/PageBanner";
+import QuoteModal from "../../components/Common/QuoteModal";
+import Footer from "../../components/Layouts/Footer";
+import BookingSummary from "../../components/Booking/BookingSummary";
+import BookingContactForm from "../../components/Booking/BookingContactForm";
+import BookingConfirmation from "../../components/Booking/BookingConfirmation";
+import DateTimeField from "../../components/Booking/DateTimeField";
+import FieldError, { invalidClass } from "../../components/Booking/FieldError";
+import useBookingFlow from "../../lib/booking/useBookingFlow";
+import useBookingDate from "../../lib/booking/useBookingDate";
+import Seo from "../../components/Common/Seo";
 import {
   billableHours,
   bookingHint,
@@ -18,14 +18,14 @@ import {
   MIN_BILLABLE_HOURS,
   parseArea,
   QUOTE_ONLY_HINT,
-} from "../lib/booking/rules";
+} from "../../lib/booking/rules";
 import {
   estimateHours,
   HOME_FREQUENCY_RATES,
   HOME_TIME_ESTIMATE,
   HOME_WEEKDAY_RATES,
   homeCleaningHourlyRate,
-} from "../lib/pricing";
+} from "../../lib/pricing";
 import {
   describeArea,
   describeDate,
@@ -36,7 +36,7 @@ import {
   NO_PRICE,
   NOT_SET,
   roundKronor,
-} from "../lib/booking/format";
+} from "../../lib/booking/format";
 
 const FREQUENCY_LABELS = {
   onetime: "Enstaka hemstädning",
@@ -112,7 +112,7 @@ const HomeCleaning = () => {
 
   return (
     <>
-      <Seo route="/homecleaning" />
+      <Seo route="/tjanster/hemstadning" />
 
       <Navbar associates />
       <PageBanner pageTitle="Hemstädning" bgImage="/images/banners/hemstadning.webp" />

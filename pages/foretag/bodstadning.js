@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import Navbar from "../components/Layouts/Navbar";
-import PageBanner from "../components/Common/PageBanner";
-import QuoteModal from "../components/Common/QuoteModal";
-import Footer from "../components/Layouts/Footer";
-import BookingSummary from "../components/Booking/BookingSummary";
-import DateTimeField from "../components/Booking/DateTimeField";
-import FieldError, { invalidClass } from "../components/Booking/FieldError";
-import useBookingDate from "../lib/booking/useBookingDate";
-import { bookingHint, isQuoteOnly, parseCount } from "../lib/booking/rules";
-import Seo from "../components/Common/Seo";
+import Navbar from "../../components/Layouts/Navbar";
+import PageBanner from "../../components/Common/PageBanner";
+import QuoteModal from "../../components/Common/QuoteModal";
+import Footer from "../../components/Layouts/Footer";
+import BookingSummary from "../../components/Booking/BookingSummary";
+import DateTimeField from "../../components/Booking/DateTimeField";
+import FieldError, { invalidClass } from "../../components/Booking/FieldError";
+import useBookingDate from "../../lib/booking/useBookingDate";
+import { bookingHint, isQuoteOnly, parseCount } from "../../lib/booking/rules";
+import Seo from "../../components/Common/Seo";
 import {
   containerCleaningPricePerUnit,
   CONTAINER_MAX_UNITS_ONLINE,
   CONTAINER_WEEKS_PER_MONTH,
-} from "../lib/pricing";
+} from "../../lib/pricing";
 import {
   describeDate,
   formatDateTime,
@@ -21,7 +21,7 @@ import {
   NO_PRICE,
   NOT_SET,
   roundKronor,
-} from "../lib/booking/format";
+} from "../../lib/booking/format";
 
 const FREQUENCY_LABELS = {
   5: "5 gånger/vecka (Måndag till fredag)",
@@ -85,7 +85,7 @@ const ContainerCleaning = () => {
 
   return (
     <>
-      <Seo route="/containercleaning" />
+      <Seo route="/foretag/bodstadning" />
 
       <Navbar />
 

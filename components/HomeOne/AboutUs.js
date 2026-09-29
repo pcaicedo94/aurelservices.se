@@ -55,7 +55,7 @@ const AboutUs = () => {
                   </li> */}
                 </ul>
 
-                <Link href="/contact" className="default-btn">
+                <Link href="/kontakt" className="default-btn">
                   Kontakta Oss <span></span>
                 </Link>
               </div>

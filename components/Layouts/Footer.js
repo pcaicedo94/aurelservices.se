@@ -43,19 +43,19 @@ const Footer = () => {
               </div>
               <ul className="footer-quick-links">
                 <li>
-                  <Link href="/about-us">Om oss</Link>
+                  <Link href="/om-oss">Om oss</Link>
                 </li>
                 <li>
-                  <Link href="/private-services">Privata tjänster</Link>
+                  <Link href="/tjanster">Privata tjänster</Link>
                 </li>
                 <li>
-                  <Link href="/services">Företag och BRF</Link>
+                  <Link href="/foretag">Företag och BRF</Link>
                 </li>
                 <li>
-                  <Link href="/careers">Jobba hos oss</Link>
+                  <Link href="/karriar">Jobba hos oss</Link>
                 </li>
                 <li>
-                  <Link href="/contact">Kontakta oss</Link>
+                  <Link href="/kontakt">Kontakta oss</Link>
                 </li>
               </ul>
             </div>
@@ -68,19 +68,19 @@ const Footer = () => {
               </div>
               <ul className="footer-quick-links">
                 <li>
-                  <Link href="/homecleaning">Hemstädning</Link>
+                  <Link href="/tjanster/hemstadning">Hemstädning</Link>
                 </li>
                 <li>
-                  <Link href="/movecleaning">Flyttstädning</Link>
+                  <Link href="/tjanster/flyttstadning">Flyttstädning</Link>
                 </li>
                 <li>
-                  <Link href="/deepcleaning">Storstädning</Link>
+                  <Link href="/tjanster/storstadning">Storstädning</Link>
                 </li>
                 <li>
-                  <Link href="/windowcleaning">Fönsterputsning</Link>
+                  <Link href="/tjanster/fonsterputs">Fönsterputsning</Link>
                 </li>
                 <li>
-                  <Link href="/officecleaning">Kontorsstädning</Link>
+                  <Link href="/foretag/kontorsstadning">Kontorsstädning</Link>
                 </li>
               </ul>
             </div>

@@ -105,7 +105,7 @@ export default defineSuite("booking", async (test, ctx) => {
     });
   }
 
-  test("/homecleaning respuesta 200 muestra confirmación (control)", async ({ page, api, expect, note }) => {
+  test("/tjanster/hemstadning respuesta 200 muestra confirmación (control)", async ({ page, api, expect, note }) => {
     await openBookingForm(page, CALCULATORS.home, d);
     api.setScenario("ok");
     const mark = api.mark();
@@ -116,7 +116,7 @@ export default defineSuite("booking", async (test, ctx) => {
   });
 
   for (const scenario of ["bad-request", "conflict", "server-error", "offline"]) {
-    test(`/homecleaning error ${ERROR_LABELS[scenario]}: sin recarga y con los datos`, { bug: "QA-02" }, async (t) => {
+    test(`/tjanster/hemstadning error ${ERROR_LABELS[scenario]}: sin recarga y con los datos`, { bug: "QA-02" }, async (t) => {
       const calcFields = await openBookingForm(t.page, CALCULATORS.home, d);
       t.api.setScenario(scenario);
       await submitAndCheckKept(t, { calcFields, scenario, allowEmpty: scenario === "conflict" ? ["#dateTime"] : [] });
@@ -134,7 +134,7 @@ export default defineSuite("booking", async (test, ctx) => {
 
   for (const scenario of ["bad-request", "server-error", "offline"]) {
     test(`/contact error ${ERROR_LABELS[scenario]}: sin recarga y con los datos (control)`, async (t) => {
-      await t.page.goto("/contact");
+      await t.page.goto("/kontakt");
       await fillContact(t.page);
       t.api.setScenario(scenario);
       await submitAndCheckKept(t, { scenario });
@@ -142,7 +142,7 @@ export default defineSuite("booking", async (test, ctx) => {
   }
 
   test('/contact triple clic en "Skicka meddelande" envía 1 POST', { bug: "QA-01" }, async ({ page, api, expect }) => {
-    await page.goto("/contact");
+    await page.goto("/kontakt");
     await fillContact(page);
     api.setScenario("slow");
     const mark = api.mark();

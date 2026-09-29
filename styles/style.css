@@ -1545,7 +1545,7 @@ form {
 .default-btn:hover {
   background-color: var(--aurel-green-action-hover);
 }
-/* movecleaning Form Section */
+/* tjanster/flyttstadning Form Section */
 .move-cleaning-form {
   background-color: #f9f9f9;
   padding: 20px;
@@ -1577,7 +1577,7 @@ form {
   background-color: var(--aurel-green-action-hover);
 }
 
-/* homecleaning Form Section */
+/* tjanster/hemstadning Form Section */
 .home-cleaning-form {
   background-color: #f9f9f9;
   padding: 20px;
@@ -1609,7 +1609,7 @@ form {
   background-color: var(--aurel-green-action-hover);
 }
 
-/* deepcleaning Form Section */
+/* tjanster/storstadning Form Section */
 .deep-cleaning-form {
   background-color: #f9f9f9;
   padding: 20px;

@@ -50,7 +50,7 @@ export const PAGES = {
     image: "/images/banners/hemstadning.webp",
   },
 
-  "/homecleaning": {
+  "/tjanster/hemstadning": {
     title: "Hemstädning Stockholm – regelbunden städhjälp | Aurel",
     description:
       "Hemstädning i Stockholm varje vecka, varannan vecka, månadsvis eller vid enstaka tillfälle. Vi städar kök, badrum, golv och ytor. Räkna ut ditt pris här.",
@@ -64,7 +64,7 @@ export const PAGES = {
     },
   },
 
-  "/deepcleaning": {
+  "/tjanster/storstadning": {
     title: "Storstädning Stockholm – grundlig städning av hemmet",
     description:
       "Storstädning i Stockholm där vi rengör hemmet på djupet, från golv till tak. Passar inför inflyttning, efter renovering eller när hemmet behöver en nystart.",
@@ -78,7 +78,7 @@ export const PAGES = {
     },
   },
 
-  "/movecleaning": {
+  "/tjanster/flyttstadning": {
     title: "Flyttstädning Stockholm – pris och städ inför besiktning",
     description:
       "Flyttstädning i Stockholm som uppfyller kraven inför besiktning. Vi städar hela bostaden inför överlämningen. Se pris för din bostadsyta direkt här.",
@@ -92,7 +92,7 @@ export const PAGES = {
     },
   },
 
-  "/windowcleaning": {
+  "/tjanster/fonsterputs": {
     title: "Fönsterputs Stockholm – rena fönster i ditt hem | Aurel",
     description:
       "Fönsterputsning i Stockholm för villa, lägenhet och radhus. Vi putsar fönster utan ränder och fläckar så att hemmet får mer ljus. Räkna ut ditt pris här.",
@@ -106,7 +106,7 @@ export const PAGES = {
     },
   },
 
-  "/officecleaning": {
+  "/foretag/kontorsstadning": {
     title: "Kontorsstädning Stockholm – städning för företag | Aurel",
     description:
       "Kontorsstädning i Stockholm anpassad efter era lokaler och er verksamhet. Vi håller arbetsplatsen ren för personal och besökare. Begär offert från oss.",
@@ -120,7 +120,7 @@ export const PAGES = {
     },
   },
 
-  "/staircleaning": {
+  "/foretag/trappstadning": {
     title: "Trappstädning Stockholm – för BRF och fastighetsägare",
     description:
       "Trappstädning i Stockholm för bostadsrättsföreningar, fastighetsägare och företag. Vi håller trapphus, entré och gemensamma ytor rena. Begär offert av oss.",
@@ -134,7 +134,7 @@ export const PAGES = {
     },
   },
 
-  "/containercleaning": {
+  "/foretag/bodstadning": {
     title: "Byggstädning Stockholm – bodstädning och slutstädning",
     description:
       "Byggstädning i Stockholm för entreprenörer och fastighetsägare: etableringsstädning, bodstädning och slutstädning vid renovering. Begär offert från oss.",
@@ -148,7 +148,7 @@ export const PAGES = {
     },
   },
 
-  "/carpetwashing": {
+  "/tjanster/mattvatt": {
     title: "Mattvätt Stockholm – professionell rengöring av mattor",
     description:
       "Mattvätt i Stockholm för privatpersoner, företag och bostadsrättsföreningar. Vi rengör mattan på djupet och återställer färg och fräschör. Begär offert.",
@@ -162,7 +162,7 @@ export const PAGES = {
     },
   },
 
-  "/floorcare": {
+  "/foretag/golvvard": {
     title: "Golvvård Stockholm – behandling och underhåll av golv",
     description:
       "Golvvård i Stockholm för företag och privatpersoner. Vi behandlar och underhåller golvet så att det håller längre och ser bättre ut. Begär offert från oss.",
@@ -176,7 +176,7 @@ export const PAGES = {
     },
   },
 
-  "/gardening": {
+  "/tjanster/tradgardsskotsel": {
     title: "Trädgårdsskötsel Stockholm – hjälp med RUT-avdrag | Aurel",
     description:
       "Trädgårdsskötsel i Stockholm för privatpersoner, med RUT-avdrag. Vi håller trädgården välskött och i gott skick under hela säsongen. Begär offert från oss.",
@@ -190,7 +190,7 @@ export const PAGES = {
     },
   },
 
-  "/snowremoval": {
+  "/tjanster/snorojning": {
     title: "Snöröjning Stockholm – plogning och halkbekämpning | Aurel",
     description:
       "Snöröjning i Stockholm för företag, bostadsrättsföreningar och privatpersoner. Vi plogar, skottar och halkbekämpar så att ytorna blir säkra att gå på.",
@@ -204,7 +204,7 @@ export const PAGES = {
     },
   },
 
-  "/movinghelp": {
+  "/tjanster/flytthjalp": {
     title: "Flytthjälp Stockholm – smidig och säker flytt | Aurel",
     description:
       "Flytthjälp i Stockholm för privatpersoner, företag och bostadsrättsföreningar. Vi packar, bär och transporterar så att flytten går smidigt. Begär offert.",
@@ -218,7 +218,7 @@ export const PAGES = {
     },
   },
 
-  "/construction": {
+  "/foretag/byggtjanster": {
     title: "Byggtjänster Stockholm – renovering för BRF och företag",
     description:
       "Byggtjänster i Stockholm för företag, bostadsrättsföreningar och privatpersoner. Vi utför bygg- och renoveringsarbeten med fokus på kvalitet. Begär offert.",
@@ -232,7 +232,7 @@ export const PAGES = {
     },
   },
 
-  "/movecleaningbusiness": {
+  "/foretag/flyttstadning": {
     title: "Flyttstädning för företag i Stockholm – lokal och kontor",
     description:
       "Flyttstädning för företag i Stockholm när ni lämnar lokalen. Vi städar kontoret så att det uppfyller kraven vid överlämning och besiktning. Begär offert.",
@@ -247,7 +247,7 @@ export const PAGES = {
     },
   },
 
-  "/windowcleaningbusiness": {
+  "/foretag/fonsterputs": {
     title: "Fönsterputs för företag i Stockholm – kontor och butik",
     description:
       "Fönsterputsning för företag i Stockholm, anpassad efter era lokaler. Rena fönster i kontor, butik och entré ger ett professionellt intryck. Begär offert.",
@@ -261,23 +261,24 @@ export const PAGES = {
     },
   },
 
-  "/services": {
-    title: "Våra tjänster – städning och service i Stockholm | Aurel",
+  "/foretag": {
+    title: "Städning för företag och BRF i Stockholm – Aurel Städ AB",
     description:
-      "Alla tjänster från Aurel Städ & Allservice i Stockholm: hemstädning, flyttstädning, kontorsstädning, fönsterputs, trappstädning, flytthjälp och mycket mer.",
-    keywords: "städtjänster Stockholm, allservice Stockholm, städfirma tjänster",
-    image: "/images/services-bg.jpg",
+      "Kontorsstädning, trappstädning, byggstädning, fönsterputs, golvvård och byggtjänster för företag och BRF i Stockholm. Alltid offert, alla priser exkl. moms.",
+    keywords:
+      "städfirma företag Stockholm, lokalvård Stockholm, städning BRF Stockholm, kontorsstädning",
+    image: "/images/banners/kontorsstadning.webp",
   },
 
-  "/private-services": {
-    title: "Städning för privatpersoner i Stockholm – våra tjänster",
+  "/tjanster": {
+    title: "Städning för privatpersoner i Stockholm – Aurel Städ AB",
     description:
-      "Städning för dig som privatperson i Stockholm: hemstädning, storstädning, flyttstädning och fönsterputs. Välj tjänst och få ett pris direkt i formuläret.",
+      "Hemstädning, storstädning, flyttstädning och fönsterputs för dig som privatperson i Stockholm. Räkna ut ditt pris inkl. moms och efter RUT direkt i formuläret.",
     keywords: "städning privatpersoner Stockholm, hemstädning, storstädning, flyttstädning",
     image: "/images/banners/hemstadning.webp",
   },
 
-  "/about-us": {
+  "/om-oss": {
     title: "Om oss – Aurel Städ & Allservice, städfirma i Stockholm",
     description:
       "Lär känna Aurel Städ & Allservice AB, städ- och servicefirma i Skärholmen som arbetar i hela Stockholm åt privatpersoner, företag och bostadsrättsföreningar.",
@@ -285,7 +286,7 @@ export const PAGES = {
     image: "/images/banners/hemstadning.webp",
   },
 
-  "/careers": {
+  "/karriar": {
     title: "Jobba hos oss – lediga jobb inom städ i Stockholm | Aurel",
     description:
       "Vill du arbeta med städning i Stockholm? Aurel Städ & Allservice söker engagerade medarbetare och erbjuder trygga villkor med kollektivavtal och försäkring.",
@@ -293,7 +294,7 @@ export const PAGES = {
     image: "/images/banners/kontorsstadning.webp",
   },
 
-  "/contact": {
+  "/kontakt": {
     title: "Kontakta Aurel Städ & Allservice i Stockholm | Offert",
     description:
       "Kontakta Aurel Städ & Allservice i Stockholm. Ring 076-045 02 28 eller 08-708 97 77, mejla info@aurelservice.se eller skicka din fråga via formuläret.",
@@ -301,7 +302,7 @@ export const PAGES = {
     image: "/images/contact.png",
   },
 
-  "/faq": {
+  "/vanliga-fragor": {
     title: "Vanliga frågor om våra städtjänster – Aurel Städ Stockholm",
     description:
       "Svar på vanliga frågor om hemstädning, flyttstädning, bokning, nycklar, avbokning och RUT-avdrag hos Aurel Städ & Allservice i Stockholm. Hittar du inte svaret?",
@@ -309,7 +310,7 @@ export const PAGES = {
     image: "/images/page-title-bg-2.jpg",
   },
 
-  "/privacy-policy": {
+  "/integritetspolicy": {
     title: "Integritetspolicy – så hanterar vi dina personuppgifter",
     description:
       "Integritetspolicy för Aurel Städ & Allservice AB: vilka personuppgifter vi samlar in, varför vi gör det, hur länge vi sparar dem och vilka rättigheter du har.",
@@ -317,7 +318,7 @@ export const PAGES = {
     image: "/images/page-title-bg-5.jpg",
   },
 
-  "/terms-condition": {
+  "/allmanna-villkor": {
     title: "Allmänna villkor för städtjänster – Aurel Städ i Stockholm",
     description:
       "Allmänna villkor för tjänster från Aurel Städ & Allservice AB i Stockholm: bokning, avbokning, betalning, ansvar och vad som ingår i ett städuppdrag hos oss.",
@@ -341,7 +342,7 @@ export const SITEMAP_EXCLUDE = ["/404"];
 // canonical URLs and sitemap URLs can never disagree.
 export const TRAILING_SLASH = false;
 
-/** "/homecleaning" -> "/homecleaning" or "/homecleaning/", per TRAILING_SLASH. */
+/** "/tjanster/hemstadning" -> that path, or with a trailing slash, per TRAILING_SLASH. */
 export function canonicalPath(route, trailingSlash = TRAILING_SLASH) {
   if (!route || route === "/") return "/";
   const path = route.startsWith("/") ? route : `/${route}`;

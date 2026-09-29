@@ -31,7 +31,7 @@ export const FAQ_ITEMS = [
       "Vid hemstädning dammsuger vi golv och mattor, våttorkar golven, rengör kök och badrum – bland annat bänkar, spis, diskho och toalett – torkar av ytor och möbler och tömmer soporna.",
       "Du bestämmer själv hur ofta vi kommer: varje vecka, varannan vecka, en gång i månaden eller vid ett enstaka tillfälle.",
     ],
-    link: { href: "/homecleaning", label: "Läs mer och beräkna pris för hemstädning" },
+    link: { href: "/tjanster/hemstadning", label: "Läs mer och beräkna pris för hemstädning" },
   },
   {
     id: "storstadning",
@@ -40,7 +40,7 @@ export const FAQ_ITEMS = [
       "Hemstädning håller hemmet rent i vardagen. Storstädning är en grundlig rengöring av hela bostaden från golv till tak, där vi även tar lister, dörrkarmar och skåp, kyl och frys utvändigt samt brunnar i kök och badrum.",
       "Vi har med oss all utrustning och alla städprodukter. Fönsterputsning ingår inte, men du kan boka den som tillägg. Priset beror på bostadens storlek.",
     ],
-    link: { href: "/deepcleaning", label: "Läs mer och beräkna pris för storstädning" },
+    link: { href: "/tjanster/storstadning", label: "Läs mer och beräkna pris för storstädning" },
   },
   {
     id: "flyttstadning",
@@ -50,7 +50,7 @@ export const FAQ_ITEMS = [
       "Kyl och frys ska vara tömda och avfrostade när vi kommer. Synliga fläckar på väggar och tak tar vi bort så långt det går utan att skada ytan, men kraftiga fläckar, missfärgningar, färg, fett och skador ingår inte.",
       "Som tillägg kan du boka avfrostning av kyl och frys, rengöring av persienner, städning av förråd, garage och balkong samt fönsterputs av inglasad balkong.",
     ],
-    link: { href: "/movecleaning", label: "Läs mer och beräkna pris för flyttstädning" },
+    link: { href: "/tjanster/flyttstadning", label: "Läs mer och beräkna pris för flyttstädning" },
   },
   {
     id: "fonsterputs",
@@ -59,7 +59,7 @@ export const FAQ_ITEMS = [
       "Vi putsar fönstren på in- och utsidan, rengör bågarna, torkar av karmar och kanter och dammar av persiennerna.",
       "Priset beror på hur många rum bostaden har. Har bostaden fem rum och kök eller fler, eller är den större än 120 kvadratmeter, lämnar vi en offert. [ATT BEKRÄFTA: om bostäder med fem rum och kök får pris direkt eller offert] Spröjs, takhöjd över 280 cm och treglasfönster ger ett tillägg på 25 procent vardera.",
     ],
-    link: { href: "/windowcleaning", label: "Läs mer och beräkna pris för fönsterputsning" },
+    link: { href: "/tjanster/fonsterputs", label: "Läs mer och beräkna pris för fönsterputsning" },
   },
   {
     id: "nedsmutsad",
@@ -137,7 +137,7 @@ export const FAQ_ITEMS = [
       "Ja. Vi erbjuder bland annat kontorsstädning, trappstädning, bodstädning, fönsterputsning och flyttstädning för företag samt byggstädning och golvvård.",
       "Skicka er förfrågan, så bokar vi ett kostnadsfritt platsbesök och tar fram en offert anpassad efter lokalen eller fastigheten.",
     ],
-    link: { href: "/services", label: "Se våra tjänster för företag och BRF" },
+    link: { href: "/foretag", label: "Se våra tjänster för företag och BRF" },
   },
   {
     id: "sprak",

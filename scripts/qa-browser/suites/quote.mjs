@@ -6,16 +6,16 @@ import { defineSuite } from "../lib/runner.mjs";
 import { fillContact, fillFields, readFeedback, submitContact, waitForApiCall } from "../lib/flows.mjs";
 
 export const QUOTE_PAGES = [
-  { route: "/carpetwashing", service: "mattvätt" },
-  { route: "/construction", service: "bygg" },
-  { route: "/floorcare", service: "golvvård" },
-  { route: "/gardening", service: "trädgård" },
-  { route: "/movecleaningbusiness", service: "flyttstädning" },
-  { route: "/movinghelp", service: "flytthjälp" },
-  { route: "/snowremoval", service: "snöröjning" },
-  { route: "/staircleaning", service: "trappstädning" },
-  { route: "/windowcleaningbusiness", service: "fönsterputs" },
-  { route: "/officecleaning", service: "kontorsstädning", button: "Boka tjänsten", prepare: [["#size", "120"], ["#frequency", "2"]] },
+  { route: "/tjanster/mattvatt", service: "mattvätt" },
+  { route: "/foretag/byggtjanster", service: "bygg" },
+  { route: "/foretag/golvvard", service: "golvvård" },
+  { route: "/tjanster/tradgardsskotsel", service: "trädgård" },
+  { route: "/foretag/flyttstadning", service: "flyttstädning" },
+  { route: "/tjanster/flytthjalp", service: "flytthjälp" },
+  { route: "/tjanster/snorojning", service: "snöröjning" },
+  { route: "/foretag/trappstadning", service: "trappstädning" },
+  { route: "/foretag/fonsterputs", service: "fönsterputs" },
+  { route: "/foretag/kontorsstadning", service: "kontorsstädning", button: "Boka tjänsten", prepare: [["#size", "120"], ["#frequency", "2"]] },
 ];
 
 const DIALOG = ".quote-modal, [role=dialog][aria-modal=true]";
@@ -116,8 +116,8 @@ export default defineSuite("quote", async (test) => {
     });
   }
 
-  test("/carpetwashing popup: triple clic en enviar = 1 POST y confirmación (control)", async ({ page, api, expect }) => {
-    await page.goto("/carpetwashing");
+  test("/tjanster/mattvatt popup: triple clic en enviar = 1 POST y confirmación (control)", async ({ page, api, expect }) => {
+    await page.goto("/tjanster/mattvatt");
     if (!(await openModal(page, QUOTE_PAGES[0]))) throw new Error("el popup no se abrió");
     await fillContact(page);
     api.setScenario("slow");
@@ -130,8 +130,8 @@ export default defineSuite("quote", async (test) => {
     expect(/tack/i.test(done), "no se muestra la confirmación dentro del popup");
   });
 
-  test("/carpetwashing popup: error 500 muestra el aviso y conserva los datos (control)", async ({ page, api, expect }) => {
-    await page.goto("/carpetwashing");
+  test("/tjanster/mattvatt popup: error 500 muestra el aviso y conserva los datos (control)", async ({ page, api, expect }) => {
+    await page.goto("/tjanster/mattvatt");
     if (!(await openModal(page, QUOTE_PAGES[0]))) throw new Error("el popup no se abrió");
     await fillContact(page);
     api.setScenario("server-error");

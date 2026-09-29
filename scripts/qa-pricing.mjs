@@ -144,18 +144,18 @@ function numbersInCode(source) {
 // Every figure lib/pricing.js hands each page. If one of these turns up as a
 // literal in the page, the page is pricing with its own copy again.
 const PAGE_RATES = {
-  "pages/homecleaning.js": {
+  "pages/tjanster/hemstadning.js": {
     ...HOME_FREQUENCY_RATES,
     ...HOME_WEEKDAY_RATES,
     baseHours: HOME_TIME_ESTIMATE.baseHours,
     hoursPerSqm: HOME_TIME_ESTIMATE.hoursPerSqm,
   },
-  "pages/deepcleaning.js": {
+  "pages/tjanster/storstadning.js": {
     ...DEEP_CLEANING_EXTRAS,
     quoteAboveArea: DEEP_CLEANING_QUOTE_ABOVE_AREA,
     ...Object.fromEntries([1, 50.5, 71, 101].map((area) => [`${area} m²`, deepCleaningBasePrice(area)])),
   },
-  "pages/movecleaning.js": {
+  "pages/tjanster/flyttstadning.js": {
     ...MOVE_CLEANING_EXTRAS,
     baseHours: MOVE_TIME_ESTIMATE.baseHours,
     hoursPerSqm: MOVE_TIME_ESTIMATE.hoursPerSqm,
@@ -166,7 +166,7 @@ const PAGE_RATES = {
       ])
     ),
   },
-  "pages/windowcleaning.js": {
+  "pages/tjanster/fonsterputs.js": {
     ...WINDOW_ROOM_PRICES,
     balcony: WINDOW_BALCONY_PRICE,
     quoteAboveArea: WINDOW_QUOTE_ABOVE_AREA,
@@ -174,14 +174,14 @@ const PAGE_RATES = {
     surchargePercent: WINDOW_SURCHARGE_PERCENT,
     surchargeRate: WINDOW_SURCHARGE_RATE,
   },
-  "pages/officecleaning.js": {
+  "pages/foretag/kontorsstadning.js": {
     ...Object.fromEntries(
       Object.entries(OFFICE_FREQUENCIES).map(([id, plan]) => [`${id}/mes`, plan.hourlyRate])
     ),
     baseHours: OFFICE_TIME_ESTIMATE.baseHours,
     hoursPerSqm: OFFICE_TIME_ESTIMATE.hoursPerSqm,
   },
-  "pages/containercleaning.js": {
+  "pages/foretag/bodstadning.js": {
     ...Object.fromEntries(
       S.containercleaning.tiers.flatMap((tier, index) =>
         Object.entries(tier.pricePerUnitByVisitsPerWeek).map(([visits, price]) => [
