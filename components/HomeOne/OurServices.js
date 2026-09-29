@@ -154,7 +154,9 @@ const OurServices = () => {
                   slutstädning. Vi anpassar oss efter dina behov.
                 </p>
 
-                <Link href="/foretag" className="service-btn">
+                {/* The card describes byggstädning, so it links to that page
+                    and not to the business index. */}
+                <Link href="/foretag/bodstadning" className="service-btn">
                   Läs Mer
                   <i className="flaticon-right"></i>
                 </Link>
