@@ -1,0 +1,58 @@
+# Aurel Städ & Allservice AB — redirecciones 301 de las rutas en inglés a las
+# rutas en sueco (renombrado de 2026-09-29).
+#
+# Este archivo tiene que acabar en la RAÍZ del sitio publicado (el mismo
+# directorio que index.html), no dentro de una subcarpeta. Está en `public/`
+# porque Next copia ese directorio tal cual a la raíz de la salida.
+#
+# Se usa RedirectMatch con `^...` y `/?$` en lugar de `Redirect`, porque
+# `Redirect` hace coincidencia por PREFIJO: `Redirect 301 /kontakt` también
+# capturaría `/kontakt-oss` o `/kontakt/algo`. Cada regla de abajo casa
+# exactamente la ruta vieja, con y sin barra final, y nada más.
+#
+# Ninguna ruta nueva aparece como origen: no hay bucles de redirección.
+# Las rutas nuevas (/tjanster/..., /foretag/..., /om-oss, /kontakt, /karriar,
+# /vanliga-fragor, /integritetspolicy, /allmanna-villkor) se sirven directamente.
+#
+# Las URLs canónicas no llevan barra final (config/seo.js TRAILING_SLASH = false),
+# así que todos los destinos se escriben sin ella.
+
+<IfModule mod_alias.c>
+
+  # --- Tjänster för privatpersoner (inkl. moms, efter RUT) ------------------
+  RedirectMatch 301 ^/homecleaning/?$            /tjanster/hemstadning
+  RedirectMatch 301 ^/deepcleaning/?$            /tjanster/storstadning
+  RedirectMatch 301 ^/movecleaning/?$            /tjanster/flyttstadning
+  RedirectMatch 301 ^/windowcleaning/?$          /tjanster/fonsterputs
+  RedirectMatch 301 ^/carpetwashing/?$           /tjanster/mattvatt
+  RedirectMatch 301 ^/gardening/?$               /tjanster/tradgardsskotsel
+  RedirectMatch 301 ^/movinghelp/?$              /tjanster/flytthjalp
+  RedirectMatch 301 ^/snowremoval/?$             /tjanster/snorojning
+  RedirectMatch 301 ^/private-services/?$        /tjanster
+
+  # --- Tjänster för företag och BRF (exkl. moms, alltid offert) -------------
+  # Ojo: /movecleaningbusiness y /windowcleaningbusiness van a las páginas de
+  # EMPRESA (/foretag/...), no a las de particular con el mismo nombre sueco.
+  RedirectMatch 301 ^/officecleaning/?$          /foretag/kontorsstadning
+  RedirectMatch 301 ^/staircleaning/?$           /foretag/trappstadning
+  RedirectMatch 301 ^/containercleaning/?$       /foretag/bodstadning
+  RedirectMatch 301 ^/floorcare/?$               /foretag/golvvard
+  RedirectMatch 301 ^/movecleaningbusiness/?$    /foretag/flyttstadning
+  RedirectMatch 301 ^/windowcleaningbusiness/?$  /foretag/fonsterputs
+  RedirectMatch 301 ^/construction/?$            /foretag/byggtjanster
+  RedirectMatch 301 ^/services/?$                /foretag
+
+  # --- Sidor om företaget och systemsidor ----------------------------------
+  RedirectMatch 301 ^/about-us/?$                /om-oss
+  RedirectMatch 301 ^/contact/?$                 /kontakt
+  RedirectMatch 301 ^/careers/?$                 /karriar
+  RedirectMatch 301 ^/faq/?$                     /vanliga-fragor
+  RedirectMatch 301 ^/privacy-policy/?$          /integritetspolicy
+  RedirectMatch 301 ^/terms-condition/?$         /allmanna-villkor
+
+</IfModule>
+
+# Nota para la fase del export estático: cuando el sitio se sirva como HTML
+# plano, las páginas quedan en /tjanster/hemstadning.html y hará falta una
+# regla aparte (mod_rewrite) para servirlas sin la extensión. No se añade aquí
+# para no tocar el comportamiento actual.
