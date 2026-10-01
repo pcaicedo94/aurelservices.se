@@ -2,9 +2,13 @@
    wrapped to two lines between 768 and 1199px, and translated labels will be
    longer. Keep in sync with DESKTOP_QUERY in components/Layouts/Navbar.js. */
 @media only screen and (max-width: 1199.98px) {
+  /* Same solid bar, light: the collapsed menu drops over the page, so it
+     needs a light ground for the dark labels. The old shadow was almost
+     opaque black and painted a grey haze over the top of the hero. */
   .navbar-area {
-    box-shadow: 0 5px 40px 0 rgba(0, 0, 0, 0.8);
     background-color: #ffffff;
+    border-bottom-color: #e3e6ea;
+    box-shadow: 0 2px 14px rgba(9, 16, 41, 0.14);
   }
   .navbar-area .navbar-light .navbar-toggler {
     background-color: #ffffff;
@@ -244,40 +248,6 @@
   .main-banner-content .banner-btn .default-btn {
     margin-left: 5px;
     margin-right: 5px;
-  }
-  .main-banner-two {
-    height: 100%;
-    padding-top: 40px;
-  }
-  .main-banner-two .banner-image {
-    margin-top: 30px;
-  }
-  .main-banner-two .banner-image img {
-    position: relative;
-  }
-  .main-banner-two .banner-image img:nth-child(1) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(2) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(3) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(4) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(5) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:last-child {
-    display: block;
-  }
-  .main-banner-two .circle-img {
-    display: none;
-  }
-  .main-banner-two .creative-shape {
-    bottom: -3px;
   }
   .main-banner-three {
     height: 100%;
@@ -886,42 +856,6 @@
   .main-banner-content .banner-btn {
     margin-top: 20px;
   }
-  .main-banner-two {
-    height: 100%;
-  }
-  .main-banner-two .banner-image {
-    margin-top: 50px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .main-banner-two .banner-image img {
-    position: relative;
-  }
-  .main-banner-two .banner-image img:nth-child(1) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(2) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(3) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(4) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(5) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:last-child {
-    display: block;
-  }
-  .main-banner-two .circle-img img {
-    display: none;
-  }
-  .main-banner-two .creative-shape {
-    bottom: -3px;
-  }
   .main-banner-three {
     height: 100%;
     padding-top: 130px;
@@ -1332,36 +1266,6 @@
   .main-banner-area .creative-shape {
     bottom: -12px;
   }
-  .main-banner-two {
-    height: 100%;
-  }
-  .main-banner-two .container-fluid {
-    max-width: 980px;
-  }
-  .main-banner-two .banner-image {
-    margin-top: -200px;
-  }
-  .main-banner-two .banner-image img:nth-child(1) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(2) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(3) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(4) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:nth-child(5) {
-    display: none;
-  }
-  .main-banner-two .banner-image img:last-child {
-    display: block;
-  }
-  .main-banner-two .circle-img img {
-    display: none;
-  }
   .main-banner-three {
     height: 800px;
   }
@@ -1515,34 +1419,6 @@
   .main-banner-area .banner-image img:nth-child(4) {
     left: 46%;
     top: 184px;
-  }
-  .main-banner-two {
-    height: 100%;
-  }
-  .main-banner-two .banner-image img:nth-child(1) {
-    top: -275px;
-    left: 26%;
-  }
-  .main-banner-two .banner-image img:nth-child(2) {
-    right: 22%;
-    top: -211px;
-  }
-  .main-banner-two .banner-image img:nth-child(3) {
-    left: 20%;
-    top: -37px;
-  }
-  .main-banner-two .banner-image img:nth-child(4) {
-    right: 22%;
-    top: -38px;
-  }
-  .main-banner-two .banner-image img:nth-child(5) {
-    left: 30%;
-    top: -112px;
-  }
-  .main-banner-two .circle-img {
-    top: -415px;
-    left: 0;
-    width: unset;
   }
   .main-banner-three {
     height: 1000px;

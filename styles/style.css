@@ -64,6 +64,9 @@ img {
   --aurel-green-action: #1f7a5c; /* white text on it: 5.25:1 */
   --aurel-green-action-hover: #186349; /* white text on it: 7.2:1 */
   --aurel-focus-ring: #1f7a5c;
+  /* Solid navbar ground. Deep enough for the white menu labels (16.0:1) and
+     for the green hover colour (5.8:1). */
+  --aurel-navbar-bg: #0d1b2a;
 }
 
 /* Keyboard focus. The template removed every outline; keyboard users now get
@@ -552,7 +555,7 @@ Navbar Area CSS
   color: #34a783;
 }
 @media only screen and (min-width: 1200px) {
-  /* The bar is dark glass over the hero photo until it turns sticky */
+  /* The bar is solid dark until it turns sticky and goes white (17.4:1) */
   .navbar-area:not(.is-sticky) .navbar-brand:focus-visible,
   .navbar-area:not(.is-sticky) .navbar-nav > .nav-item > .nav-link:focus-visible,
   .navbar-area:not(.is-sticky) .navbar-nav > .nav-item > .submenu-toggle:focus-visible {
@@ -1281,40 +1284,31 @@ Navbar Area CSS
   display: none;
 }
 
+/* One solid bar from edge to edge. It used to be a translucent floating pill
+   (inset 20px, rounded, backdrop-filter) that mixed with the photo behind it
+   and read as a half-loaded page. It still sits on top of the hero, so every
+   page reserves its height instead of pushing content down. */
 .navbar-area {
   position: absolute;
   z-index: 999;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 1400px;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  transition: all 0.4s ease;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--aurel-navbar-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
   height: auto;
 }
 .navbar-area.is-sticky {
   position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 1400px;
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 999999;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-bottom: 1px solid #e3e6ea;
+  box-shadow: 0 2px 14px rgba(9, 16, 41, 0.14);
   -webkit-animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
   animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
-  transition: all 0.4s ease;
 }
 .navbar-area.is-sticky.is-sticky .main-nav .navbar .navbar-brand {
   color: #000000;
@@ -1385,10 +1379,6 @@ Navbar Area CSS
 Main Home Form CSS
 =================================================*/
 
-.main-banner-two {
-  display: flex;
-  flex-direction: column;
-}
 .home-form-container {
   position: absolute;
  display: flex;
@@ -1457,9 +1447,6 @@ Main Home Form CSS
    padding-top: 0;
    margin-top: 2rem;
    margin-bottom: 2rem;
-  }
-  .main-banner-two {
-    flex-direction: column-reverse;
   }
   .home-form {
    width: 95%;
@@ -2019,97 +2006,12 @@ Main Banner Area CSS
     top: 110%;
   }
 }
-/*================================================
-Main Banner Two Area CSS
-=================================================*/
-.main-banner-two {
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-  height: auto;
-  background: #f3f3f3;
-
-}
-.main-banner-two .container-fluid {
-  max-width: 1920px;
-}
-.main-banner-two .container-fluid .col-lg-6 {
-  position: relative;
-}
-.main-banner-two .banner-image {
-  margin-top: 150px;
-  position: relative;
-}
-.main-banner-two .banner-image img {
-  position: absolute;
-}
-.main-banner-two .banner-image img:nth-child(1) {
-  top: -307px;
-  left: 9%;
-}
-.main-banner-two .banner-image img:nth-child(2) {
-  right: 20%;
-  top: -236px;
-}
-.main-banner-two .banner-image img:nth-child(3) {
-  left: 0;
-  z-index: 999;
-  top: -70px;
-}
-.main-banner-two .banner-image img:nth-child(4) {
-  right: 22%;
-  top: -65px;
-  z-index: 999;
-}
-.main-banner-two .banner-image img:nth-child(5) {
-  left: 12%;
-  top: -138px;
-  z-index: 1;
-}
-.main-banner-two .banner-image img:last-child {
-  display: none;
-}
-.main-banner-two .circle-img {
-  position: absolute;
-  top: -350px;
-  right: 50px;
-  width: 800px;
-}
-.main-banner-two .circle-img img {
-  -webkit-animation-name: rotateMe;
-  animation-name: rotateMe;
-  -webkit-animation-duration: 35s;
-  animation-duration: 35s;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-}
-.main-banner-two .creative-shape {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  z-index: -1;
-}
-.main-banner-two .creative-shape img {
-  width: 100%;
-}
-.main-banner-two .shape-dot {
-  position: absolute;
-  z-index: -1;
-  -webkit-animation: movebounce 5s linear infinite;
-  animation: movebounce 5s linear infinite;
-}
-@keyframes rotateMe {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* The old "Main Banner Two" block lived here: a stack of loose photos
+   (.banner-image img:nth-child(n)) pinned with negative offsets, a rotating
+   .circle-img and a .creative-shape, plus a duplicate @keyframes rotateMe.
+   None of those elements exist in components/HomeOne/MainBanner.js any more,
+   and their absolute positioning fought the split hero, so they are gone.
+   The hero now lives in one place: "Home Hero CSS" at the end of this file. */
 
 /*================================================
 Main Banner Three Area CSS
@@ -5813,84 +5715,121 @@ Go Top CSS
   animation: fadeAnimation 9s infinite 6s;
   z-index: 3;
 } */
-/* Basic Carousel Styles */
-/* Container for text and carousel */
-.content-container {
-  display: flex;
-  align-items: flex-start; /* Align items to the top */
-  margin-top: 60px; /* Adjust this value based on your navbar height */
-}
+/*================================================
+Hero slideshow (right half of the home hero)
+=================================================*/
+/* The previous version faded every slide through white: all three slides were
+   opacity 0 with a white background and a shared 12s "fade-effect", so for
+   most of the cycle two half-transparent photos were layered over white and
+   the hero looked like a page that had not finished loading.
 
-/* Text section */
-.text-section {
-  flex: 1; /* Take up remaining space */
-  padding: 20px;
-}
+   This one never loses an opaque layer. Slide 1 is the ground and always
+   stays at opacity 1; each later slide sits on a higher z-index and only
+   fades IN over the one below, never out. ::after carries slide 1's photo
+   again and fades in at the end of the cycle, so when every animation wraps
+   back to 0 — all top layers snapping to opacity 0 in the same frame — what
+   is already on screen is the image slide 1 is painting underneath. The
+   result is a true cross-fade with no white, no gap and no seam.
 
-/* Carousel section */
-.carousel-section {
-  flex: 0 0 40%; /* Adjust the width of the carousel section */
-  padding: 20px;
-}
-
+   Timing (18s): cover1 0-5s · cover2 6-11s · cover3 12-17s, ~1s each fade. */
 .carousel {
   position: relative;
-  width: 100%;
-  height: 60vh; /* Adjust height as needed */
   overflow: hidden;
+  /* Deep ground so an image that has not decoded yet does not flash white. */
+  background-color: #10243a;
 }
 
 .carousel__viewport {
-  width: 100%;
-  height: 100%;
-  position: relative;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .carousel__slide {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  animation: fade-effect 12s infinite;
-  list-style-type: none;
-  background-color: #ffffff;
+  inset: 0;
+  margin: 0;
+  list-style: none;
 }
 
 .carousel__slide img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensures images cover the slide area */
+  object-fit: cover;
+  /* The source photos are 1536x512 panoramas; the hero crops a tall slice,
+     so bias it towards the right third, which is where each photo has its
+     subject. */
+  object-position: 62% 50%;
 }
 
-/* Animation delay for each slide */
+/* Ground layer: visible whenever nothing is fading over it, and the frame
+   every cycle wraps back to. */
 .carousel__slide:nth-child(1) {
-  animation-delay: 0s;
+  z-index: 1;
+  opacity: 1;
 }
 .carousel__slide:nth-child(2) {
-  animation-delay: 4s;
+  z-index: 2;
+  opacity: 0;
+  animation: hero-slide-2 18s infinite;
 }
 .carousel__slide:nth-child(3) {
-  animation-delay: 8s;
+  z-index: 3;
+  opacity: 0;
+  animation: hero-slide-3 18s infinite;
+}
+/* Second copy of the first photo, on top, so the loop closes with a fade
+   instead of a cut. */
+.carousel__viewport::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  opacity: 0;
+  background-image: url("/images/cover1.jpg");
+  background-size: cover;
+  background-position: 62% 50%;
+  animation: hero-slide-wrap 18s infinite;
 }
 
-/* Keyframe animation for the fade effect */
-@keyframes fade-effect {
-  0% {
+@keyframes hero-slide-2 {
+  0%,
+  28% {
     opacity: 0;
   }
-  25% {
+  33%,
+  100% {
     opacity: 1;
   }
-  33% {
+}
+@keyframes hero-slide-3 {
+  0%,
+  61% {
+    opacity: 0;
+  }
+  66%,
+  100% {
     opacity: 1;
   }
-  58% {
+}
+@keyframes hero-slide-wrap {
+  0%,
+  94% {
     opacity: 0;
   }
   100% {
-    opacity: 0;
+    opacity: 1;
+  }
+}
+
+/* Anyone who asked for less motion gets the first photo, held. */
+@media (prefers-reduced-motion: reduce) {
+  .carousel__slide,
+  .carousel__viewport::after {
+    animation: none;
   }
 }
 
@@ -6332,24 +6271,49 @@ Quote Modal CSS
 /*================================================
 Home Hero CSS
 =================================================*/
-/* The copy sits in a solid white card so every string keeps its contrast
-   whichever slide of the photo carousel happens to be showing. No animation
-   is added here on purpose: the H1 and both CTAs must be clickable as soon as
-   the page paints. */
+/* Split hero: a solid panel with the copy on one side, the photo bleeding to
+   the edge on the other. The copy used to be a white card floating in
+   absolute position over the left half of the slideshow, which left the right
+   half empty and cut the photo along the card's edge.
+
+   The solid navbar is absolutely positioned on top of the hero, so the panel
+   reserves its height as padding instead of the page pushing content down;
+   the photo runs underneath it, full bleed. */
+:root {
+  --hero-nav-offset: 124px;
+}
+
+.main-banner-two {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  background-color: #f3f6f5;
+}
+
+/* Copy panel. Grid so the column can be centred vertically while every line
+   keeps a sane measure on very wide screens. */
 .hero-copy {
-  background-color: #ffffff;
-  padding: 26px 20px 30px 20px;
+  display: grid;
+  align-content: center;
+  justify-items: stretch;
+  background-color: #f3f6f5;
+  padding: calc(var(--hero-nav-offset) + 26px) 20px 32px 20px;
+}
+.hero-copy > * {
+  max-width: 620px;
 }
 .hero-copy h1 {
   font-size: 30px;
   line-height: 1.25;
   margin: 0 0 14px 0;
-  color: #091029; /* 16.1:1 on white */
+  color: #091029; /* 15.7:1 on the panel */
 }
 .hero-copy .hero-lead {
   font-size: 16px;
   margin: 0 0 16px 0;
-  max-width: 44em;
+  color: #2a3042; /* 9.8:1 on the panel */
 }
 .hero-trust {
   list-style: none;
@@ -6383,8 +6347,8 @@ Home Hero CSS
   display: inline-block;
   text-align: center;
   background-color: #ffffff;
-  color: var(--aurel-green-action); /* 5.25:1 on white */
-  border: 2px solid var(--aurel-green-action);
+  color: var(--aurel-green-action); /* 5.25:1 on the white button */
+  border: 2px solid var(--aurel-green-action); /* 4.8:1 on the panel */
   border-radius: 10px;
   font-weight: 600;
   font-size: 16px;
@@ -6399,9 +6363,10 @@ Home Hero CSS
 .hero-links {
   font-size: 14px;
   margin: 0;
+  color: #2a3042;
 }
 .hero-links a {
-  color: var(--aurel-green-action); /* 5.25:1 on white */
+  color: var(--aurel-green-action); /* 4.8:1 on the panel */
   text-decoration: underline;
   font-weight: 600;
 }
@@ -6410,48 +6375,48 @@ Home Hero CSS
   color: var(--aurel-green-action-hover);
 }
 
-/* Wide screens: the card floats over the left half of the slideshow. The
-   header is absolutely positioned over the banner and ends around 145px, so
-   the card starts below that and the slideshow is given room for both. */
+/* Stacked: copy first, then the photo as a band under it. The H1 is the
+   first thing on screen because it is also first in the DOM. */
+.main-banner-two .carousel {
+  height: 32vh;
+  min-height: 170px;
+  max-height: 280px;
+}
+
+/* Two columns from the width where the menu stops collapsing. */
 @media only screen and (min-width: 1201px) {
-  .carousel {
-    min-height: 660px;
+  :root {
+    --hero-nav-offset: 132px;
+  }
+  .main-banner-two {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 620px;
   }
   .hero-copy {
-    position: absolute;
-    top: 170px;
-    left: 40px;
-    width: min(580px, calc(50% - 40px));
-    padding: 34px 36px;
-    border-radius: 16px;
-    box-shadow: 0 10px 34px rgba(9, 16, 41, 0.22);
-    z-index: 2;
+    padding: calc(var(--hero-nav-offset) + 40px) 56px 56px 56px;
   }
   .hero-copy h1 {
     font-size: 38px;
   }
+  /* Fills its grid cell: the row is as tall as the copy, never shorter than
+     the 620px floor above. */
+  .main-banner-two .carousel {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
 }
 
-/* Below that width the legacy `.main-banner-two` rule flips to
-   column-reverse, so the card lands above the photos and the H1 is the first
-   thing on screen — once it clears the header floating over it. */
-@media only screen and (max-width: 1200px) {
+/* Narrow desktops and tablets keep the single column but can afford more
+   room around the copy. */
+@media only screen and (min-width: 768px) and (max-width: 1200px) {
   .hero-copy {
-    padding-top: 150px;
+    padding-left: 40px;
+    padding-right: 40px;
   }
-  /* A 3:1 photo cropped to 60vh fills a whole phone screen; keep it a band
-     under the copy instead. */
-  .carousel {
+  .main-banner-two .carousel {
     height: 34vh;
-    min-height: 200px;
     max-height: 320px;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  /* responsive.css already pads `.main-banner-two` by 40px at this width. */
-  .hero-copy {
-    padding-top: 110px;
   }
 }
 

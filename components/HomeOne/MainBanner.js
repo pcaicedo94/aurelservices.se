@@ -18,12 +18,11 @@ const MainBanner = () => {
 
   return (
     <>
-      {/* The slideshow comes first in the DOM; the stylesheet lifts the copy
-          over it on wide screens and puts it above the photos on narrow ones,
-          so the H1 is the first thing a phone shows. */}
+      {/* Split hero: the copy panel is first in the DOM and in the grid, so
+          the H1 is the first thing on screen at every width — the left half
+          on desktop, the top band on a phone. The slideshow follows and
+          bleeds to the edge of its own half. */}
       <div className="main-banner-two">
-        <Banner />
-
         <div className="hero-copy">
           <h1>Städfirma i Stockholm – hemstädning, flyttstädning och storstädning</h1>
           <p className="hero-lead">
@@ -57,6 +56,8 @@ const MainBanner = () => {
             ))}
           </p>
         </div>
+
+        <Banner />
       </div>
 
       <QuoteModal
