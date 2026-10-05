@@ -1,0 +1,10 @@
+# Este directorio NO debe ser accesible por web. En el servidor vive fuera de
+# la raíz (~/aurel-app/), así que esta regla no debería hacer falta nunca;
+# está aquí por si alguien copia el árbol entero dentro del sitio.
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

@@ -52,6 +52,49 @@
 
 </IfModule>
 
+# --- API en PHP (Simply.com) -----------------------------------------------
+# En producción no hay Node, así que pages/api/booking.js y pages/api/contact.js
+# dejan de existir y los sustituyen php/api/booking.php y php/api/contact.php.
+# Estas reglas conservan las MISMAS URLs que ya pide el JavaScript del
+# navegador (lib/booking/useBookingSubmit.js, components/Contact/ContactForm.js
+# y components/Common/QuoteModal.js), así que no cambia ni una línea de front.
+#
+# Por qué no chocan con las 301 de arriba:
+#   - ninguna de esas 23 rutas antiguas empieza por /api/, así que no hay
+#     solape posible;
+#   - mod_alias (RedirectMatch) actúa en la fase de traducción del nombre y
+#     mod_rewrite dentro de un .htaccess en la de fixup, es decir DESPUÉS: las
+#     301 conservan su prioridad y su orden pase lo que pase aquí abajo.
+#
+# Por qué no hay bucle: la sustitución es RELATIVA (`api/booking.php`, sin
+# barra inicial), de modo que Apache resuelve el fichero directamente sin
+# reiniciar el motor de reescritura. Además la condición descarta de entrada
+# cualquier petición que ya termine en .php.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{REQUEST_URI} !\.php$
+  RewriteRule ^api/booking/?$           api/booking.php   [L,QSA]
+
+  RewriteCond %{REQUEST_URI} !\.php$
+  RewriteRule ^api/contact/?$           api/contact.php   [L,QSA]
+
+  # Feed iCalendar de las reservas. La URL a la que se suscribe el móvil es
+  # /api/calendar.ics?token=...; se acepta también /api/calendar. Sin el token
+  # correcto el endpoint responde 404 (ver php/api/calendar.php).
+  RewriteCond %{REQUEST_URI} !\.php$
+  RewriteRule ^api/calendar(\.ics)?/?$  api/calendar.php  [L,QSA]
+</IfModule>
+
+# Las credenciales viven FUERA de la raíz web (~/aurel-app/config/config.php,
+# ver php/README.md). Por si algún despliegue copia de más, se niega el acceso
+# a cualquier cosa que las contenga.
+<IfModule mod_authz_core.c>
+  <FilesMatch "^(config\.php|composer\.(json|lock)|\.env.*)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+
 # Nota para la fase del export estático: cuando el sitio se sirva como HTML
 # plano, las páginas quedan en /tjanster/hemstadning.html y hará falta una
 # regla aparte (mod_rewrite) para servirlas sin la extensión. No se añade aquí

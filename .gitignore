@@ -71,3 +71,10 @@ package-lock.json
 # Documentos fuente del cliente (viven en Documents/AurelServices, no en el repo)
 /*.pdf
 /*.docx
+
+# Backend PHP: dependencias, credenciales y contadores locales.
+# config.example.php sí se versiona; config.php con las contraseñas NO.
+php/vendor/
+php/config/config.php
+php/storage/
+php/composer.phar
