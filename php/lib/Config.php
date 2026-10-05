@@ -31,6 +31,9 @@ final class Config
     private array $values;
 
     /** @var array<string,string> */
+    /** Every placeholder in config.example.php starts with this. */
+    private const PLACEHOLDER_PREFIX = 'PON_AQUI';
+
     private const DEFAULTS = [
         // Simply.com SMTP. Only the password is a secret.
         'smtp_host' => 'smtp.simply.com',
@@ -102,6 +105,15 @@ final class Config
 
         foreach ($overrides as $key => $value) {
             if (array_key_exists((string) $key, $values) && $value !== null && $value !== '') {
+                // A placeholder left over from config.example.php is not a
+                // value: copying the example unedited must leave the key unset,
+                // or the .ics feed would ship with a token anyone can read in
+                // this repository.
+                if (is_string($value) && str_starts_with($value, self::PLACEHOLDER_PREFIX)) {
+                    error_log(sprintf('Config key "%s" still holds the example placeholder; treated as unset', (string) $key));
+
+                    continue;
+                }
                 $values[(string) $key] = (string) $value;
             }
         }
