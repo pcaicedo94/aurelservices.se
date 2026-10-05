@@ -139,7 +139,7 @@ export const PAGES = {
     description:
       "Byggstädning i Stockholm för entreprenörer och fastighetsägare: etableringsstädning, bodstädning och slutstädning vid renovering. Begär offert från oss.",
     keywords: "byggstädning, byggstädning Stockholm, bodstädning, etableringsstädning, slutstädning",
-    image: "/images/Bodstädning.png",
+    image: "/images/banners/bodstadning.webp",
     service: {
       name: "Byggstädning och bodstädning i Stockholm",
       serviceType: "Byggstädning",
@@ -238,7 +238,7 @@ export const PAGES = {
       "Flyttstädning för företag i Stockholm när ni lämnar lokalen. Vi städar kontoret så att det uppfyller kraven vid överlämning och besiktning. Begär offert.",
     keywords:
       "flyttstädning företag Stockholm, kontorsflytt städning, lokalstädning vid avflyttning",
-    image: "/images/Flyttstädning-kontor.png",
+    image: "/images/banners/flyttstadning-foretag.webp",
     service: {
       name: "Flyttstädning för företag i Stockholm",
       serviceType: "Flyttstädning för företag",
@@ -252,7 +252,7 @@ export const PAGES = {
     description:
       "Fönsterputsning för företag i Stockholm, anpassad efter era lokaler. Rena fönster i kontor, butik och entré ger ett professionellt intryck. Begär offert.",
     keywords: "fönsterputs företag Stockholm, fönsterputsning kontor, fasadfönster putsning",
-    image: "/images/Fönsterputs_kontor.png",
+    image: "/images/banners/fonsterputs-foretag.webp",
     service: {
       name: "Fönsterputsning för företag i Stockholm",
       serviceType: "Fönsterputsning för företag",

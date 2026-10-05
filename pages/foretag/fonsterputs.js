@@ -13,7 +13,7 @@ const WindowCleaningBusiness = () => {
       <Seo route="/foretag/fonsterputs" />
 
       <Navbar />
-      <PageBanner pageTitle="Fönsterputsning för företag" bgImage="/images/Fönsterputs_kontor.png" />
+      <PageBanner pageTitle="Fönsterputsning för företag" bgImage="/images/banners/fonsterputs-foretag.webp" />
 
       <div className="container ptb-50">
         <div className="row">

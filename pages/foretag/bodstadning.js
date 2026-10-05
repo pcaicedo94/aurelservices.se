@@ -94,7 +94,7 @@ const ContainerCleaning = () => {
         breadcrumbTextOne="Start"
         breadcrumbTextTwo="Bodstädning och etableringsstädning"
         breadcrumbUrl="/"
-        bgImage="/images/Bodstädning.png"
+        bgImage="/images/banners/bodstadning.webp"
       />
 
       <div className="container ptb-50">

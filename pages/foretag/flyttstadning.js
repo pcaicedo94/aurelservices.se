@@ -13,7 +13,7 @@ const MoveCleaningBusiness = () => {
       <Seo route="/foretag/flyttstadning" />
 
       <Navbar />
-      <PageBanner pageTitle="Flyttstädning för företag" bgImage="/images/Flyttstädning-kontor.png" />
+      <PageBanner pageTitle="Flyttstädning för företag" bgImage="/images/banners/flyttstadning-foretag.webp" />
 
       <div className="container ptb-50">
         <div className="row">
