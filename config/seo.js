@@ -337,10 +337,20 @@ export const PAGES = {
 // Real pages that must stay out of the sitemap.
 export const SITEMAP_EXCLUDE = ["/404"];
 
-// Must mirror `trailingSlash` in next.config.js. scripts/build-sitemap.mjs
-// compares both and refuses to write the sitemap if they ever diverge, so
-// canonical URLs and sitemap URLs can never disagree.
-export const TRAILING_SLASH = false;
+// Must mirror `trailingSlash` in next.config.js, which is driven by the same
+// flag: the static export for Simply writes one directory per route with its
+// own index.html, so on that host the real URL of a page ends in a slash and a
+// canonical without it would 301 (Apache mod_dir adds the slash). The Node
+// build keeps the slash-free URLs it has always used.
+//
+// NEXT_PUBLIC_ so that Next inlines the value in the client bundle as well:
+// this module renders the canonical link during hydration too, and a
+// server-only variable would produce a different href in the browser.
+//
+// scripts/build-sitemap.mjs compares this with next.config.js and refuses to
+// write the sitemap if they ever diverge, so canonical URLs and sitemap URLs
+// can never disagree.
+export const TRAILING_SLASH = process.env.NEXT_PUBLIC_STATIC_EXPORT === "1";
 
 /** "/tjanster/hemstadning" -> that path, or with a trailing slash, per TRAILING_SLASH. */
 export function canonicalPath(route, trailingSlash = TRAILING_SLASH) {
