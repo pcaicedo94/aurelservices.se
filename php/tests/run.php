@@ -51,7 +51,7 @@ foreach ($files as $file) {
 
 /* -------------------------------- the tests ------------------------------- */
 
-foreach (['test_escape.php', 'test_clock.php', 'test_booking_rules.php', 'test_anti_spam.php', 'test_ics.php', 'test_messages.php', 'test_config.php'] as $test) {
+foreach (['test_escape.php', 'test_clock.php', 'test_booking_rules.php', 'test_anti_spam.php', 'test_ics.php', 'test_messages.php', 'test_config.php', 'test_sql_script.php'] as $test) {
     require __DIR__ . '/' . $test;
 }
 

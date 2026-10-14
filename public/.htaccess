@@ -97,6 +97,19 @@
   </FilesMatch>
 </IfModule>
 
+# El subdominio de pruebas sirve EXACTAMENTE el mismo sitio que el dominio
+# real, así que para Google sería contenido duplicado y podría acabar
+# mostrando ny.aurelservice.se en los resultados. La cabecera lo impide, y es
+# una cabecera y no una etiqueta en el HTML porque el HTML es el mismo archivo
+# en los dos sitios. robots.txt no sirve aquí: prohibir el rastreo no impide
+# que la URL aparezca indexada sin contenido.
+<IfModule mod_setenvif.c>
+  SetEnvIf Host "^ny\." AUREL_STAGING=1
+</IfModule>
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow" env=AUREL_STAGING
+</IfModule>
+
 # Página de error del export estático. Next deja 404.html en la raíz, pero
 # Apache no la usa si no se le dice.
 ErrorDocument 404 /404.html
