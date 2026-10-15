@@ -156,8 +156,8 @@ const TermsConditionContent = () => {
           <h2>8. Avbokning och ombokning</h2>
           <ul>
             <li>
-              Avbokning eller ombokning ska göras via telefon eller e-post senast{" "}
-              <mark>[ATT BEKRÄFTA: antal dagar – i dag anges 3 dagar på webbplatsen]</mark> före det
+              {/* Q24, bekräftat av kunden 2026-09-17: två dagar, inte tre. */}
+              Avbokning eller ombokning ska göras via telefon eller e-post senast två dagar före det
               bokade tillfället.
             </li>
             <li>

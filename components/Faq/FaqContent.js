@@ -97,7 +97,9 @@ export const FAQ_ITEMS = [
     question: "Hur avbokar eller flyttar jag en städning?",
     answer: [
       "Kontakta oss på 076-045 02 28 eller info@aurelservice.se så snart du vet att tiden inte passar.",
-      "Avbokning ska göras senast [ATT BEKRÄFTA: antal dagar – i dag anges 3 dagar på webbplatsen] före det bokade tillfället. Vid senare avbokning debiteras [ATT BEKRÄFTA: avgift – i dag anges 50 procent av priset].",
+      // Q24, bekräftat av kunden 2026-09-17: två dagar. Avgiften vid senare
+      // avbokning är fortfarande obesvarad (fråga 101), därför markören.
+      "Avbokning ska göras senast två dagar före det bokade tillfället. Vid senare avbokning debiteras [ATT BEKRÄFTA: avgift – i dag anges 50 procent av priset].",
     ],
   },
   {
