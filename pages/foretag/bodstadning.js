@@ -120,7 +120,12 @@ const ContainerCleaning = () => {
             <p>
               Vi erbjuder både löpande byggstädning under projektets gång samt slutstädning inför färdigställande. Priserna är exklusive moms och baserade på antal bodar och önskad städfrekvens.
             </p>
-            <form onSubmit={(e) => e.preventDefault()} className="container-cleaning-form">
+            {/* The chatbot links straight to the calculator, so it needs an anchor. */}
+            <form
+              id="berakna-pris"
+              onSubmit={(e) => e.preventDefault()}
+              className="container-cleaning-form"
+            >
               <div className="form-group">
                 <label htmlFor="numberOfUnits">Antal bodar</label>
                 <input

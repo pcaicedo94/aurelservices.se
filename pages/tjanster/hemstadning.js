@@ -172,7 +172,7 @@ const HomeCleaning = () => {
         {/* Form + Summary Section */}
         <div className="row">
           <div className="col-lg-6">
-            <h3>Beräkna pris</h3>
+            <h3 id="berakna-pris">Beräkna pris</h3>
             <form onSubmit={(e) => e.preventDefault()} className="home-cleaning-form">
               <div className="form-group">
                 <label htmlFor="size">Storlek i m²</label>
