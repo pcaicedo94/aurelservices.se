@@ -531,6 +531,58 @@
       "alwaysQuoted": true
     }
   },
+  "terms": {
+    "_readme": "Commercial terms the client confirmed on 2026-09-17 (Q24, Q25). They sit next to the prices because the pages and the chatbot must quote the same figures, and lib/pricing.js exposes them the same way it exposes a rate. Amounts are SEK.",
+    "firstCleaningDiscountPercent": {
+      "value": 10,
+      "source": "clientAnswers Q25",
+      "pendingConfirmation": false,
+      "question": "Q25",
+      "confirmedByClient": "2026-09-17",
+      "clientAnswer": "10 % rabatt på första städningen"
+    },
+    "cancellationNoticeDays": {
+      "value": 2,
+      "source": "clientAnswers Q24",
+      "pendingConfirmation": false,
+      "question": "Q24",
+      "confirmedByClient": "2026-09-17",
+      "clientAnswer": "avbokning senast 2 dagar innan",
+      "note": "allmanna-villkor.js and the FAQ still print 3 days behind an [ATT BEKRÄFTA] marker; Q24 settled it at 2 days, so that copy is the one that has to change."
+    },
+    "lateCancellationFeePercent": {
+      "value": null,
+      "source": "website copy before the questionnaire (50 %)",
+      "pendingConfirmation": true,
+      "question": "Q24",
+      "note": "Q24 settled the notice period but not the fee for a later cancellation, so no figure may be quoted."
+    },
+    "paymentTermsDays": {
+      "value": 20,
+      "source": "clientAnswers Q24",
+      "pendingConfirmation": false,
+      "question": "Q24",
+      "confirmedByClient": "2026-09-17",
+      "clientAnswer": "20 dagars betalningsvillkor"
+    },
+    "invoiceFee": {
+      "value": 45,
+      "currency": "SEK",
+      "source": "clientAnswers Q24",
+      "pendingConfirmation": false,
+      "question": "Q24",
+      "confirmedByClient": "2026-09-17",
+      "clientAnswer": "45 kr fakturaavgift"
+    },
+    "noticePeriodMonths": {
+      "value": 3,
+      "source": "clientAnswers Q24",
+      "pendingConfirmation": false,
+      "question": "Q24",
+      "confirmedByClient": "2026-09-17",
+      "clientAnswer": "3 månaders uppsägningstid"
+    }
+  },
   "clientAnswers": {
     "answeredOn": "2026-09-17",
     "source": "docs/cuestionario-cliente.md + C:/Users/pcaic/Documents/AurelServices",

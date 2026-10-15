@@ -92,7 +92,7 @@ const OfficeCleaning = () => {
               className="home-cleaning-form"
               style={{ marginTop: 0, height: "100%" }}
             >
-              <h3>Beräkna pris</h3>
+              <h3 id="berakna-pris">Beräkna pris</h3>
               <p>
                 Pris för kontorsstädning varierar beroende på antalet städtillfällen per månad. Se ditt preliminära städpris och boka tjänsten.
               </p>

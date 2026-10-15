@@ -199,7 +199,7 @@ const MoveCleaning = () => {
         {/* Form + Summary Section */}
         <div className="row">
           <div className="col-lg-6">
-            <h3>Beräkna pris</h3>
+            <h3 id="berakna-pris">Beräkna pris</h3>
             <form className="move-cleaning-form" onSubmit={(e) => e.preventDefault()}>
               <div className="form-group">
                 <label htmlFor="size">Storlek i m²</label>
