@@ -6,6 +6,14 @@ import Link from "next/link";
 // pages/api/contact.js (Simply SMTP), pages/index.js (Shapo widget) and
 // pages/_document.js (Google Fonts preconnect). Every [ATT BEKRÄFTA: …] is
 // unconfirmed by the client and must be resolved before launch.
+//
+// Q109 and Q110, answered on 2026-10-15: data-protection requests are handled
+// by the company and reach us at info@aurelservice.se — the GDPR asks for the
+// controller and a way to reach it, not for an employee's name, and the client
+// did not ask for his. The bookkeeping and the RUT applications are done by an
+// external accounting firm, which makes it a processor that has to be named
+// here; the client did not give the name, hence the one marker left in
+// section 4.
 const PURPOSES = [
   [
     "Ta emot, bekräfta och planera din bokning och utföra tjänsten",
@@ -59,6 +67,12 @@ const PrivacyPolicyContent = () => {
               Telefon: <a href="tel:+46760450228">076-045 02 28</a>
             </li>
           </ul>
+          <p>
+            Frågor om hur vi behandlar personuppgifter, och begäranden enligt
+            dataskyddsförordningen, tar du upp med oss på{" "}
+            <a href="mailto:info@aurelservice.se">info@aurelservice.se</a>. Din begäran tas emot av
+            den hos oss som ansvarar för dataskyddsfrågor.
+          </p>
 
           <h2>2. Vilka personuppgifter vi behandlar</h2>
           <p>
@@ -143,15 +157,18 @@ const PrivacyPolicyContent = () => {
               <mark>[ATT BEKRÄFTA: vilket företag som driftar webbplatsen och var]</mark>
             </li>
             <li>
+              <strong>Redovisningsbyrå</strong> –{" "}
+              <mark>[ATT BEKRÄFTA: namn på redovisningsbyrån]</mark> sköter vår bokföring och våra
+              ansökningar om RUT-avdrag hos Skatteverket, och behandlar därför fakturauppgifter och
+              personnummer för vår räkning.
+            </li>
+            <li>
               <strong>Shapo</strong> – visar kundomdömen på startsidan, se avsnitt 8.
             </li>
           </ul>
           <p>
             Vi lämnar också ut uppgifter till Skatteverket när vi ansöker om RUT-avdrag och till
-            andra myndigheter när lagen kräver det.{" "}
-            <mark>
-              [ATT BEKRÄFTA: om redovisningsbyrå eller annan extern part får ta del av kunduppgifter]
-            </mark>
+            andra myndigheter när lagen kräver det.
           </p>
 
           <h2>5. Överföring utanför EU/EES</h2>
@@ -241,8 +258,9 @@ const PrivacyPolicyContent = () => {
           <h2>9. Säkerhet</h2>
           <p>
             Vi skyddar dina uppgifter med tekniska och organisatoriska åtgärder. Kunddatabasen går
-            inte att nå från webbläsaren, och bara de som behöver uppgifterna i sitt arbete ska ha
-            tillgång till dem. <mark>[ATT BEKRÄFTA: behörigheter och rutiner]</mark>
+            inte att nå från webbläsaren, och bara de som behöver uppgifterna i sitt arbete har
+            tillgång till dem. Nycklar, portkoder och larminformation hanteras konfidentiellt och
+            endast av behörig personal.
           </p>
 
           <h2>10. Klagomål</h2>

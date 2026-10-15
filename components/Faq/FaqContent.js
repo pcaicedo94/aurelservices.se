@@ -10,9 +10,11 @@ import {
 
 const PENDING = "[ATT BEKRÄFTA";
 
-// Sources: Prislista 2026 (pages 1-3) and the service copy in "Servicios
-// privados". Answers are plain paragraphs so the same text feeds the FAQPage
-// JSON-LD. Passages in [ATT BEKRÄFTA: …] are not confirmed by the client yet.
+// Sources: Prislista 2026 (pages 1-3), the service copy in "Servicios
+// privados" and the client's own Swedish wording in Q90, Q92 and Q101-Q110,
+// answered on 2026-10-15. Answers are plain paragraphs so the same text feeds
+// the FAQPage JSON-LD. Passages in [ATT BEKRÄFTA: …] are not confirmed by the
+// client yet, and isConfirmed() keeps them out of the structured data.
 export const FAQ_ITEMS = [
   {
     id: "rut",
@@ -21,6 +23,7 @@ export const FAQ_ITEMS = [
       "Som privatperson kan du få RUT-avdrag när du köper hemstädning, storstädning, flyttstädning eller fönsterputsning. Avdraget är upp till 50 procent av arbetskostnaden.",
       "Vi drar av RUT direkt på fakturan och sköter ansökan hos Skatteverket, så du betalar bara din del. För att vi ska kunna ansöka behöver vi ditt personnummer.",
       "Avdraget förutsätter att du har betalat tillräckligt med skatt och inte redan har använt hela årets utrymme. Aktuella regler och belopp finns hos Skatteverket.",
+      "Du ansvarar själv för att du uppfyller villkoren och har tillräckligt avdragsutrymme. Avslår Skatteverket avdraget helt eller delvis har vi rätt att fakturera dig motsvarande belopp, och du betalar då mellanskillnaden.",
       "Priserna på vår webbplats anges inklusive moms och efter RUT-avdrag.",
     ],
   },
@@ -65,7 +68,9 @@ export const FAQ_ITEMS = [
     id: "nedsmutsad",
     question: "Vad händer om bostaden är smutsigare än normalt?",
     answer: [
-      "Priset för storstädning och flyttstädning utgår från att bostaden är i normalt skick. Är den hårt nedsmutsad kan ett tillägg på upp till 20 procent tillkomma, och du får alltid veta det innan vi börjar. [ATT BEKRÄFTA: om tillägget är 20 procent eller upp till 20 procent]",
+      "Priset för storstädning och flyttstädning utgår från att bostaden är i normalt skick. Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 procent tillkomma.",
+      "Vid extrem nedsmutsning, där arbetsinsatsen väsentligt överstiger vad som normalt kan förväntas, görs en separat bedömning och priset kan justeras utöver 20 procent.",
+      "Du informeras alltid på plats och ska godkänna pristillägget innan vi utför något extra arbete. Godkänner du inte det justerade priset utför vi endast det arbete som ryms inom den ursprungliga beställningen, alternativt avbryter vi uppdraget efter överenskommelse. Vi kan då inte garantera det avtalade slutresultatet.",
     ],
   },
   {
@@ -81,15 +86,15 @@ export const FAQ_ITEMS = [
     id: "nycklar",
     question: "Hur fungerar det med nycklar och tillträde?",
     answer: [
-      "Vi behöver kunna komma in i bostaden vid den bokade tiden. Du kan vara hemma när vi städar eller lämna en nyckel till oss. [ATT BEKRÄFTA: vilka sätt att ge tillträde som erbjuds]",
-      "Lämnar du en nyckel skriver vi en nyckelkvittens. Nyckeln märks bara med en intern kod – aldrig med namn eller adress – och förvaras säkert. När avtalet upphör får du tillbaka den. [ATT BEKRÄFTA: att nyckelrutinen gäller i dag]",
+      "Vi behöver kunna komma in i bostaden vid den bokade tiden. Du kan vara hemma när vi städar eller lämna en nyckel till oss. Nycklar, portkoder och larminformation hanteras konfidentiellt och endast av behörig personal.",
+      "Du som kund ansvarar för att vi har tillgång till bostaden vid avtalad tid. Kommer vi inte in kontaktar vi dig och försöker i första hand hitta en lösning tillsammans. Kan tillträde inte ordnas och arbetet därför inte utföras kan vi debitera den bokade tiden eller framkörningen.",
     ],
   },
   {
     id: "husdjur",
     question: "Kan ni städa hos mig om jag har husdjur?",
     answer: [
-      "Berätta gärna redan när du bokar om du har husdjur, så kan vi planera besöket. [ATT BEKRÄFTA: att ni städar i hem med husdjur och om det finns villkor, t.ex. att djuret hålls i ett annat rum]",
+      "Berätta gärna redan när du bokar om du har husdjur, så kan vi planera besöket. Det vi ber om är att husdjuret hålls på ett säkert sätt under städningen, så att arbetet kan utföras utan hinder eller risk.",
     ],
   },
   {
@@ -97,9 +102,12 @@ export const FAQ_ITEMS = [
     question: "Hur avbokar eller flyttar jag en städning?",
     answer: [
       "Kontakta oss på 076-045 02 28 eller info@aurelservice.se så snart du vet att tiden inte passar.",
-      // Q24, bekräftat av kunden 2026-09-17: två dagar. Avgiften vid senare
-      // avbokning är fortfarande obesvarad (fråga 101), därför markören.
-      "Avbokning ska göras senast två dagar före det bokade tillfället. Vid senare avbokning debiteras [ATT BEKRÄFTA: avgift – i dag anges 50 procent av priset].",
+      // Q24 (2026-09-17) och Q101 (2026-10-15) gäller samma tidsgräns: 48
+      // timmar är de två dagarna, och hela webbplatsen skriver den som
+      // "48 timmar (2 dagar)". Avgifterna är tak, aldrig fasta belopp.
+      "Avbokning och ombokning är kostnadsfri senast 48 timmar (2 dagar) före den bokade tiden.",
+      "Avbokar du senare än så kan en avgift på upp till 50 procent av det avtalade priset debiteras, och vid avbokning samma dag, eller om vi inte får tillträde till bostaden, upp till 100 procent av det avtalade priset.",
+      "Vi försöker alltid vara flexibla. Går tiden att boka om, eller personalen att planera om, hittar vi hellre en lösning tillsammans med dig. Behöver vi på Aurel avboka erbjuder vi en ny tid så snart som möjligt, och du debiteras självklart inte för arbete som inte har utförts.",
     ],
   },
   {
@@ -107,7 +115,15 @@ export const FAQ_ITEMS = [
     question: "Hur betalar jag?",
     answer: [
       "Du betalar mot faktura med 20 dagars betalningstid. Fakturaavgiften är 45 kr, och vid försenad betalning debiteras dröjsmålsränta enligt räntelagen.",
-      "RUT-avdraget är redan draget på fakturan. Återkommande hemstädning faktureras månadsvis. [ATT BEKRÄFTA: hur engångsuppdrag faktureras och vilka betalningssätt som finns]",
+      "All betalning sker mot faktura – vi tar inte emot Swish eller kortbetalning – och det gäller både enstaka uppdrag och återkommande städning. RUT-avdraget är redan draget på fakturan, och återkommande hemstädning faktureras månadsvis.",
+    ],
+  },
+  {
+    id: "bekraftelse",
+    question: "När är min bokning bekräftad?",
+    answer: [
+      // Q105, bekräftat av kunden 2026-10-15.
+      "Bokningen är klar först när du har fått vår bekräftelse via e-post. Du skriver inte under något och betalar ingenting i förväg.",
     ],
   },
   {
@@ -128,7 +144,7 @@ export const FAQ_ITEMS = [
     id: "forsakring",
     question: "Är ni försäkrade?",
     answer: [
-      "Ja, Aurel Städ & Allservice AB har ansvarsförsäkring. [ATT BEKRÄFTA: försäkringsbolag, vad försäkringen täcker och eventuell självrisk]",
+      "Ja, Aurel Städ & Allservice AB har giltig företags- och ansvarsförsäkring, och försäkringsbevis kan uppvisas vid behov – säg till om du vill se det.",
       "Skulle något skadas i samband med vårt arbete vill vi att du kontaktar oss så snart som möjligt.",
     ],
   },
@@ -138,6 +154,7 @@ export const FAQ_ITEMS = [
     answer: [
       "Ja. Vi erbjuder bland annat kontorsstädning, trappstädning, bodstädning, fönsterputsning och flyttstädning för företag samt byggstädning och golvvård.",
       "Skicka er förfrågan, så bokar vi ett kostnadsfritt platsbesök och tar fram en offert anpassad efter lokalen eller fastigheten.",
+      "För företag och bostadsrättsföreningar gäller egna villkor: där är det den offert eller det undertecknade avtal vi har kommit överens om som gäller, inte de allmänna villkoren för privatpersoner.",
     ],
     link: { href: "/foretag", label: "Se våra tjänster för företag och BRF" },
   },
@@ -182,7 +199,7 @@ const FaqContent = () => {
 
         <p className="text-center" style={{ marginBottom: "40px" }}>
           Hittar du inte svaret du letar efter? Skriv till oss i formuläret längre ner eller ring{" "}
-          <a href="tel:+46760450228">076-045 02 28</a>.
+          <a href="tel:+46760450228">076-045 02 28</a>. Du får svar inom 24 timmar.
         </p>
 
         <div className="faq-accordion">

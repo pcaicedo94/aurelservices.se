@@ -31,7 +31,8 @@ const MAX_FIELD_LENGTH = 300;
 const MAX_MESSAGE_LENGTH = 5000;
 const MAX_DETAIL_ROWS = 15;
 const EMAIL_PATTERN = '/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/';
-const SUCCESS_MESSAGE = 'Tack! Vi återkommer så snart som möjligt.';
+// Q90, confirmed by the client on 2026-10-15: always within 24 hours.
+const SUCCESS_MESSAGE = 'Tack! Du får svar inom 24 timmar.';
 const INVALID_MESSAGE = 'Vänligen fyll i alla uppgifter korrekt.';
 const SERVER_ERROR_MESSAGE = 'Meddelandet kunde inte skickas. Vänligen försök igen eller ring oss '
     . 'på 076-045 02 28.';

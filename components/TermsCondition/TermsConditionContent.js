@@ -2,9 +2,15 @@ import React from "react";
 import Link from "next/link";
 
 // Sources: Prislista 2026 (payment terms, notice period, materials, soiling
-// surcharge) and the service copy in "Servicios privados". Every
+// surcharge), the service copy in "Servicios privados" and the client's own
+// Swedish wording in Q90, Q92 and Q101-Q110, answered on 2026-10-15. Every
 // [ATT BEKRÄFTA: …] is unconfirmed by the client and must be resolved before
 // launch.
+//
+// Figures here mirror the `terms` block of config/prices.json, which is the
+// single source of truth the chatbot reads: the cancellation deadline is one
+// deadline written both ways, "48 timmar (2 dagar)", and the two cancellation
+// fees are ceilings, so every sentence says "upp till".
 const TermsConditionContent = () => {
   return (
     <div className="privacy-policy ptb-100">
@@ -14,8 +20,8 @@ const TermsConditionContent = () => {
           <p>
             De här villkoren gäller när du som privatperson köper städtjänster av Aurel Städ &amp;
             Allservice AB, organisationsnummer 556725-2340. För företag och
-            bostadsrättsföreningar gäller i första hand den offert eller det avtal som vi har kommit
-            överens om. <mark>[ATT BEKRÄFTA: om villkoren även ska gälla företagskunder]</mark>
+            bostadsrättsföreningar gäller andra villkor: där är det den offert eller det
+            undertecknade avtal som vi har kommit överens om som gäller, inte de här villkoren.
           </p>
           <p>
             Som konsument har du alltid de rättigheter som tvingande lag ger dig. Villkoren begränsar
@@ -33,11 +39,10 @@ const TermsConditionContent = () => {
               webbplatsen. Övriga tjänster utförs efter offert.
             </li>
             <li>
-              När vi har tagit emot din bokning får du en bekräftelse via e-post.{" "}
-              <mark>
-                [ATT BEKRÄFTA: när avtalet anses ingånget – vid bokningen eller när vi har bekräftat
-                tiden]
-              </mark>
+              {/* Q105, bekräftat av kunden 2026-10-15. */}
+              När vi har tagit emot din bokning får du en bekräftelse via e-post. Avtalet är slutet
+              när du har fått den bekräftelsen. Du skriver inte under något och betalar ingenting i
+              förväg.
             </li>
             <li>
               Återkommande tjänster, till exempel hemstädning varje vecka, varannan vecka eller en
@@ -60,11 +65,20 @@ const TermsConditionContent = () => {
                 större än angivet]
               </mark>
             </li>
+            {/* Q104, bekräftat av kunden 2026-10-15: upp till 20 procent, inte 20 procent fast. */}
             <li>
               Priset för storstädning och flyttstädning förutsätter att bostaden är i normalt skick.
-              Är bostaden hårt nedsmutsad kan ett tillägg på upp till 20 procent tillkomma. Du får
-              alltid veta det innan arbetet påbörjas.{" "}
-              <mark>[ATT BEKRÄFTA: om tillägget är 20 procent eller upp till 20 procent]</mark>
+              Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 procent tillkomma.
+            </li>
+            <li>
+              Vid extrem nedsmutsning, där arbetsinsatsen väsentligt överstiger vad som normalt kan
+              förväntas, görs en separat bedömning och priset kan justeras utöver 20 procent.
+            </li>
+            <li>
+              Du informeras alltid på plats och ska godkänna pristillägget innan något extra arbete
+              utförs. Godkänner du inte det justerade priset utför vi endast det arbete som ryms
+              inom den ursprungliga beställningen, alternativt avbryter vi uppdraget efter
+              överenskommelse. Vi kan då inte garantera det avtalade slutresultatet.
             </li>
             <li>
               Hemstädning debiteras per timme, med minst 2 timmar per tillfälle.{" "}
@@ -84,23 +98,29 @@ const TermsConditionContent = () => {
             </li>
             <li>
               För att vi ska kunna ansöka behöver du lämna ditt personnummer. Du ansvarar för att du
-              har rätt till avdraget, till exempel att du har betalat tillräckligt med skatt och inte
-              har använt hela årets utrymme.
+              uppfyller villkoren för RUT-avdrag och för att du har tillräckligt avdragsutrymme, till
+              exempel att du har betalat tillräckligt med skatt och inte har använt hela årets
+              utrymme.
             </li>
             <li>
-              Om Skatteverket helt eller delvis nekar avdraget betalar du mellanskillnaden.{" "}
-              <mark>[ATT BEKRÄFTA]</mark>
+              {/* Q103, bekräftat av kunden 2026-10-15. */}
+              Om Skatteverket helt eller delvis avslår RUT-avdraget har vi rätt att fakturera dig
+              motsvarande belopp. Du ansvarar då för att betala mellanskillnaden.
             </li>
           </ul>
 
           <h2>4. Betalning</h2>
           <ul>
-            <li>Betalning sker mot faktura med 20 dagars betalningstid.</li>
+            {/* Q92, bekräftat av kunden 2026-10-15: all betalning sker mot faktura. */}
+            <li>
+              All betalning sker mot faktura med 20 dagars betalningstid. Vi tar inte emot Swish
+              eller kortbetalning.
+            </li>
             <li>Fakturaavgiften är 45 kr.</li>
             <li>Vid försenad betalning debiteras dröjsmålsränta enligt räntelagen.</li>
             <li>
-              Återkommande hemstädning faktureras månadsvis.{" "}
-              <mark>[ATT BEKRÄFTA: hur övriga återkommande tjänster och engångsuppdrag faktureras]</mark>
+              Återkommande hemstädning faktureras månadsvis. Övriga uppdrag faktureras mot faktura på
+              samma villkor.
             </li>
           </ul>
 
@@ -120,22 +140,39 @@ const TermsConditionContent = () => {
           </ul>
 
           <h2>6. Förberedelser och tillträde</h2>
+          {/* Q102 och Q107, bekräftade av kunden 2026-10-15. Avgiften vid
+              uteblivet tillträde står också i punkt 8, och de två måste säga
+              samma sak. */}
           <ul>
             <li>
-              Du ser till att vi kan komma in i bostaden vid den bokade tiden.{" "}
-              <mark>[ATT BEKRÄFTA: vad som gäller om vi inte kommer in, t.ex. om besöket debiteras]</mark>
+              Du ansvarar för att vi har tillgång till bostaden vid avtalad tid. Kommer vi inte in
+              kontaktar vi dig och försöker i första hand hitta en lösning tillsammans.
+            </li>
+            <li>
+              Kan tillträde inte ordnas och arbetet därför inte utföras kan vi debitera den bokade
+              tiden eller framkörningen, enligt punkt 8.
+            </li>
+            <li>
+              Nycklar, portkoder och larminformation hanteras konfidentiellt och endast av behörig
+              personal.
             </li>
             <li>Vid flyttstädning ska kyl och frys vara tömda och avfrostade.</li>
+            <li>Du ansvarar för att fungerande vatten och el finns tillgängligt under städningen.</li>
             <li>
-              El och vatten ska vara påslagna under städningen. <mark>[ATT BEKRÄFTA]</mark>
+              Ömtåliga eller särskilt känsliga material och ytor, till exempel marmor, mässing eller
+              natursten, ska meddelas oss innan arbetet påbörjas.
             </li>
             <li>
-              Berätta i förväg om det finns känsliga material, till exempel marmor, mässing eller
-              natursten. <mark>[ATT BEKRÄFTA]</mark>
+              Husdjur ska hållas på ett säkert sätt så att städningen kan utföras utan hinder eller
+              risk.
             </li>
             <li>
-              Lämnar du en nyckel till oss skriver vi en nyckelkvittens. Nyckeln märks bara med en
-              intern kod och lämnas tillbaka när avtalet upphör. <mark>[ATT BEKRÄFTA]</mark>
+              Du ansvarar för att personliga och värdefulla föremål är undanplockade innan städningen
+              påbörjas.
+            </li>
+            <li>
+              Tunga möbler, vitvaror och andra större föremål flyttas normalt inte inom ordinarie
+              städning, om detta inte har avtalats i förväg.
             </li>
           </ul>
 
@@ -154,18 +191,28 @@ const TermsConditionContent = () => {
           </ul>
 
           <h2>8. Avbokning och ombokning</h2>
+          {/* Q24 (2026-09-17) och Q101 (2026-10-15) gäller samma tidsgräns:
+              48 timmar är de två dagarna, och hela webbplatsen skriver den
+              som "48 timmar (2 dagar)". Avgifterna är tak, aldrig fasta
+              belopp. */}
           <ul>
+            <li>Avbokning och ombokning gör du via telefon eller e-post.</li>
+            <li>Avbokning är kostnadsfri senast 48 timmar (2 dagar) före den bokade tiden.</li>
             <li>
-              {/* Q24, bekräftat av kunden 2026-09-17: två dagar, inte tre. */}
-              Avbokning eller ombokning ska göras via telefon eller e-post senast två dagar före det
-              bokade tillfället.
+              Vid avbokning senare än 48 timmar (2 dagar) före den bokade tiden kan en avgift på upp
+              till 50 procent av det avtalade priset debiteras.
             </li>
             <li>
-              Vid senare avbokning debiteras{" "}
-              <mark>[ATT BEKRÄFTA: avgift – i dag anges 50 procent av priset]</mark>.
+              Vid avbokning samma dag, eller om vi inte får tillträde till bostaden, kan
+              upp till 100 procent av det avtalade priset debiteras.
             </li>
             <li>
-              <mark>[ATT BEKRÄFTA: vad som gäller om vi behöver ställa in eller flytta ett uppdrag]</mark>
+              Vi försöker alltid vara flexibla. Går tiden att boka om, eller personalen att planera
+              om, hittar vi hellre en lösning tillsammans med dig.
+            </li>
+            <li>
+              Behöver vi på Aurel avboka erbjuder vi en ny tid så snart som möjligt. Du debiteras
+              självklart inte för arbete som inte har utförts.
             </li>
           </ul>
 
@@ -198,11 +245,15 @@ const TermsConditionContent = () => {
           <ul>
             <li>Om något skadas i samband med vårt arbete ska du meddela oss så snart som möjligt.</li>
             <li>
-              <mark>[ATT BEKRÄFTA: ansvarsförsäkring – försäkringsbolag, vad den täcker och eventuell självrisk]</mark>
+              {/* Q108, bekräftat av kunden 2026-10-15. Försäkringsbolag och
+                  försäkringsbelopp är inte lämnade och får inte skrivas här. */}
+              Aurel Städ &amp; Allservice AB har giltig företags- och ansvarsförsäkring.
+              Försäkringsbevis kan uppvisas vid behov.
             </li>
             <li>
-              Av arbetsmiljöskäl flyttar vi inte tunga vitvaror som kyl, frys eller spis.{" "}
-              <mark>[ATT BEKRÄFTA]</mark>
+              Av arbetsmiljöskäl flyttar vi inte tunga möbler, vitvaror som kyl, frys eller spis
+              eller andra större föremål inom ordinarie städning, om vi inte har avtalat det i
+              förväg.
             </li>
           </ul>
 

@@ -188,7 +188,9 @@ const DeepCleaning = () => {
         <div className="row">
           <div className="col-lg-12">
             <div className="brand-card-warning">
-              <strong>Viktig information:</strong> Om bostaden är hårt nedsmutsad kan en tilläggskostnad på upp till 20 procent tillkomma. Kunden informeras alltid innan arbetet påbörjas. <strong>OBS!</strong> Fönsterputs ingår inte men kan bokas som tilläggstjänst.
+              {/* Q104, bekräftat av kunden 2026-10-15: upp till 20 procent, och
+                  kunden godkänner tillägget innan något extra arbete utförs. */}
+              <strong>Viktig information:</strong> Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 procent tillkomma. Du informeras alltid på plats och ska godkänna pristillägget innan vi utför något extra arbete. <strong>OBS!</strong> Fönsterputs ingår inte men kan bokas som tilläggstjänst.
             </div>
           </div>
         </div>

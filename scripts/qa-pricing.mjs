@@ -39,6 +39,7 @@ import {
   OFFICE_FREQUENCIES,
   OFFICE_TIME_ESTIMATE,
   PRICE_FLAGS,
+  SOILING_SURCHARGE_MAX_PERCENT,
   WINDOW_BALCONY_PRICE,
   WINDOW_QUOTE_ABOVE_AREA,
   WINDOW_QUOTE_FROM_ROOMS,
@@ -495,8 +496,12 @@ finding(
 );
 
 // Not in the client questionnaire yet
+finding(
+  "Q104",
+  `Recargo por vivienda muy sucia: resuelto el 2026-10-15 como "hasta ${SOILING_SURCHARGE_MAX_PERCENT} %" (no fijo), con aprobación del cliente en el sitio antes de hacer trabajo extra; en casos extremos se valora aparte y puede superarlo. Ninguna calculadora lo aplica: sigue siendo solo un aviso de texto.`
+);
+
 const NO_Q = "Sin pregunta asignada (proponer)";
-finding(NO_Q, "Recargo por vivienda muy sucia: hay que aclarar si es 20 % fijo (Prislista: \"tilläggskostnad på 20%\") o hasta 20 % (docx: \"upp till 20 procent\"); ninguna calculadora lo contempla y solo aparece como aviso.");
 finding(NO_Q, `La estimación de horas (${HOME_TIME_ESTIMATE.baseHours} + ${HOME_TIME_ESTIMATE.hoursPerSqm} × m²) no figura en la Prislista y determina el precio de hemstädning, kontorsstädning y del extra biytor.`);
 const unrounded = billable(homeHours(120)) * HOME_WEEKDAY_RATES.mondayToWednesday * 2;
 const rounded = billable(Number(homeHours(120).toFixed(2))) * HOME_WEEKDAY_RATES.mondayToWednesday * 2;

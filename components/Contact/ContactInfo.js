@@ -8,6 +8,8 @@ const ContactInfo = () => {
           {/* Section heading: the four cards below are H3, so without it the
               page jumped straight from the H1 in the page banner to H3. */}
           <h2 className="contact-box-title">Kontaktuppgifter</h2>
+          {/* Q90, bekräftat av kunden 2026-10-15: alltid svar inom 24 timmar. */}
+          <p className="text-center">Du får svar på din förfrågan inom 24 timmar.</p>
           <div className="row justify-content-center">
             <div className="col-lg-3 col-md-6">
               <div className="single-contact-box">

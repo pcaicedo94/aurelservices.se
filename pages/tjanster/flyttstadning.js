@@ -191,7 +191,9 @@ const MoveCleaning = () => {
         <div className="row" style={{ marginTop: "10px" }}>
           <div className="col-lg-12">
             <div className="brand-card-warning">
-              <strong>Viktig information om pris:</strong> Priset baseras på att bostaden är i normalt skick. Om bostaden visar sig vara mer smutsig än normalt kan ett pristillägg på upp till 20 procent tillkomma. Kunden informeras alltid innan arbetet påbörjas.
+              {/* Q104, bekräftat av kunden 2026-10-15: upp till 20 procent, och
+                  kunden godkänner tillägget innan något extra arbete utförs. */}
+              <strong>Viktig information om pris:</strong> Priset baseras på att bostaden är i normalt skick. Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 procent tillkomma. Du informeras alltid på plats och ska godkänna pristillägget innan vi utför något extra arbete.
             </div>
           </div>
         </div>

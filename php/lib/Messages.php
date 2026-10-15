@@ -83,8 +83,9 @@ final class Messages
         $name = AntiSpam::greetingName($data['name'] ?? '');
         $greeting = $name === '' ? '' : ' <strong>' . Escape::html($name) . '</strong>';
         $inner = "\n            <p style=\"font-size: 16px;\">Hej" . $greeting . ",</p>"
-            . "\n            <p>Tack för att du kontaktar oss. Vi har tagit emot ditt meddelande och återkommer så "
-            . "snart som möjligt.</p>"
+            // Q90, confirmed by the client on 2026-10-15: always within 24 hours.
+            . "\n            <p>Tack för att du kontaktar oss. Vi har tagit emot ditt meddelande och du får svar "
+            . "inom 24 timmar.</p>"
             . "\n            " . EmailLayout::SIGNATURE;
 
         return EmailLayout::shell('Tack för ditt meddelande!', $inner);

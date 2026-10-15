@@ -494,19 +494,18 @@ for (const [privateId, businessId] of [
 
 console.log("\n=== Sin respuesta del cliente, se deriva a contacto ===");
 
+// Q90, Q92 and Q101-Q110 (answered 2026-10-15) took cancellation, keys and
+// access, heavy soiling, a denied RUT deduction, insurance, pets, when a
+// booking is closed and how we are paid off this list; what is left is still
+// unanswered: the guarantee, the cleaning materials, the staff's languages,
+// the areas covered and how a recurring agreement is signed.
 const PENDING_NODES = [
   "info.garanti",
   "info.material",
-  "info.nycklar",
-  "info.forsakring",
-  "info.husdjur",
   "info.sprak",
-  "info.avbokning",
-  "info.betalning",
   "info.avtal",
   "info.omrade",
   "tjanst.hemstadning.fraga3",
-  "tjanst.storstadning.fraga3",
 ];
 for (const id of PENDING_NODES) {
   const node = byId[id];
@@ -524,16 +523,87 @@ for (const id of PENDING_NODES) {
   );
 }
 
-// The 20 % soiling surcharge is still pendingConfirmation in prices.json: the
-// bot may warn about it but may not put a number on it.
+/* ------------------- lo que el cliente ya confirmó ----------------------- */
+
+console.log("\n=== Lo confirmado el 2026-10-15 sale de los datos ===");
+
+// Q104: a ceiling and an approval, never a flat surcharge.
+const soiling = byId["tjanst.storstadning.fraga3"].message;
 ok(
-  "no se cita el porcentaje del tillägg por suciedad (pendiente)",
-  !/\d+\s*procent/.test(byId["tjanst.storstadning.fraga3"].message)
+  "el tillägg por suciedad sale de los datos",
+  soiling.includes(`${prices.services.deepcleaning.soilingSurcharge.maxPercent} procent`)
+);
+ok("el tillägg por suciedad se dice como techo", /upp till \d+ procent/.test(soiling));
+ok(
+  "el tillägg por suciedad exige la aprobación del cliente",
+  /godkänna/i.test(soiling) && /på plats/i.test(soiling)
+);
+
+// Q101: free up to the deadline, then two ceilings, and nothing charged when
+// Aurel is the one that cancels.
+const cancellation = byId["info.avbokning"].message;
+ok(
+  "la antelación de cancelación se dice en horas y en días",
+  cancellation.includes(`${prices.terms.cancellationNoticeHours.value} timmar`) &&
+    cancellation.includes(`${prices.terms.cancellationNoticeDays.value} dagar`)
+);
+ok("la antelación de cancelación es gratuita", /[Kk]ostnadsfri/.test(cancellation));
+ok(
+  "la penalización tardía sale de los datos y es un techo",
+  cancellation.includes(`upp till ${prices.terms.lateCancellationFeePercent.value} procent`)
 );
 ok(
-  "no se cita la penalización por cancelación tardía (pendiente)",
-  !/\d+\s*procent/.test(byId["info.avbokning"].message) &&
-    amountsIn(byId["info.avbokning"].message).length === 0
+  "la penalización del mismo día sale de los datos y es un techo",
+  cancellation.includes(`upp till ${prices.terms.sameDayCancellationFeePercent.value} procent`)
+);
+ok(
+  "no haber tenido acceso se trata como el mismo día",
+  /tillträde/i.test(cancellation)
+);
+ok(
+  "si cancela Aurel no se cobra nada",
+  /ny tid/i.test(cancellation) && /inte för arbete som inte har utförts/i.test(cancellation)
+);
+ok(
+  "ninguna cifra de cancelación se escribe en kr",
+  amountsIn(cancellation).length === 0,
+  amountsIn(cancellation).join(", ")
+);
+
+// Q92, Q102, Q105, Q108 and Q90: stated, not deferred.
+ok(
+  "el pago es solo por factura",
+  /mot faktura/i.test(byId["info.betalning"].message) &&
+    /inte emot Swish eller kortbetalning/i.test(byId["info.betalning"].message)
+);
+ok(
+  "las llaves se tratan confidencialmente y por personal autorizado",
+  /konfidentiellt/i.test(byId["info.nycklar"].message) &&
+    /behörig personal/i.test(byId["info.nycklar"].message)
+);
+ok(
+  "sin tillträde se puede cobrar el tiempo reservado o el desplazamiento",
+  /den bokade tiden eller framkörningen/i.test(byId["info.nycklar"].message)
+);
+ok(
+  "la reserva queda cerrada con la confirmación por correo",
+  /bekräftelse via e-post/i.test(byId["info.hurbokar"].message) &&
+    /skriver inte under något/i.test(byId["info.hurbokar"].message)
+);
+ok(
+  "el seguro se nombra sin inventar aseguradora ni importe",
+  /företags- och ansvarsförsäkring/i.test(byId["info.forsakring"].message) &&
+    /[Ff]örsäkringsbevis/.test(byId["info.forsakring"].message) &&
+    !/försäkringsbolag|självrisk/i.test(byId["info.forsakring"].message)
+);
+ok(
+  "un RUT denegado se factura al cliente",
+  /avslår Skatteverket avdraget/i.test(byId["info.rut"].message) &&
+    /mellanskillnaden/i.test(byId["info.rut"].message)
+);
+ok(
+  "el tiempo de respuesta sale de los datos",
+  byId[CONTACT_ID].message.includes(`${prices.terms.responseTimeHours.value} timmar`)
 );
 
 /* -------------------------------- resumen -------------------------------- */

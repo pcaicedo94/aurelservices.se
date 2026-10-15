@@ -9,7 +9,8 @@ const MySwal = withReactContent(Swal);
 const alertContent = () => {
   MySwal.fire({
     title: "Tack!",
-    text: "Ditt meddelande har skickats. Vi återkommer så snart som möjligt.",
+    // Q90, bekräftat av kunden 2026-10-15: alltid svar inom 24 timmar.
+    text: "Ditt meddelande har skickats. Du får svar inom 24 timmar.",
     icon: "success",
     timer: 2500,
     timerProgressBar: true,

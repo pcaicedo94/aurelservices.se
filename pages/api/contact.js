@@ -22,7 +22,9 @@ const MAX_FIELD_LENGTH = 300;
 const MAX_MESSAGE_LENGTH = 5000;
 const MAX_DETAIL_ROWS = 15;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const SUCCESS_MESSAGE = "Tack! Vi återkommer så snart som möjligt.";
+// Q90, confirmed by the client on 2026-10-15: an enquiry is always answered
+// within 24 hours, so the page, the autoreply and the chatbot say so.
+const SUCCESS_MESSAGE = "Tack! Du får svar inom 24 timmar.";
 
 // 5 messages per 10 minutes per IP. Kept in memory, so on serverless hosting
 // it is per instance; the PHP version keeps the counters in the database.
@@ -71,7 +73,7 @@ function customerEmail(data) {
   const name = greetingName(data.name);
   const inner = `
             <p style="font-size: 16px;">Hej${name ? ` <strong>${escapeHtml(name)}</strong>` : ""},</p>
-            <p>Tack för att du kontaktar oss. Vi har tagit emot ditt meddelande och återkommer så snart som möjligt.</p>
+            <p>Tack för att du kontaktar oss. Vi har tagit emot ditt meddelande och du får svar inom 24 timmar.</p>
             ${SIGNATURE}`;
   return shell("Tack för ditt meddelande!", inner);
 }

@@ -145,11 +145,15 @@
       "includesWindowCleaning": false,
       "soilingSurcharge": {
         "maxPercent": 20,
+        "isMaximum": true,
+        "requiresCustomerApproval": true,
         "appliedByCalculator": false,
-        "source": "prislista p. 1; docx Storstädning",
-        "pendingConfirmation": true,
-        "question": null,
-        "note": "Unclear whether it is a flat 20 % or up to 20 %: the price list says \"tilläggskostnad på 20%\", the docx \"upp till 20 procent\". Only shown as a text notice on the page."
+        "source": "prislista p. 1; docx Storstädning; clientAnswers Q104",
+        "pendingConfirmation": false,
+        "question": "Q104",
+        "confirmedByClient": "2026-10-15",
+        "clientAnswer": "Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 % tillkomma. Vid extrem nedsmutsning, där arbetsinsatsen väsentligt överstiger vad som normalt kan förväntas, görs en separat bedömning och priset kan justeras utöver 20 %. Kunden informeras alltid på plats och ska godkänna pristillägget innan extra arbete utförs.",
+        "note": "Q104 settled it: up to 20 %, never a flat 20 %, and in extreme cases judged separately and possibly above 20 %. The customer is always told on site and has to approve before any extra work; without approval only the original order is carried out, or the job is stopped by agreement, and the end result is not guaranteed. No calculator applies it; it stays a text notice."
       },
       "extras": {
         "kylFrys": {
@@ -299,11 +303,15 @@
       },
       "soilingSurcharge": {
         "maxPercent": 20,
+        "isMaximum": true,
+        "requiresCustomerApproval": true,
         "appliedByCalculator": false,
-        "source": "prislista p. 2; docx Flyttstädning",
-        "pendingConfirmation": true,
-        "question": null,
-        "note": "Unclear whether it is a flat 20 % or up to 20 %: the price list says \"tilläggskostnad på 20%\", the docx \"upp till 20 procent\". Only shown as a text notice on the page."
+        "source": "prislista p. 2; docx Flyttstädning; clientAnswers Q104",
+        "pendingConfirmation": false,
+        "question": "Q104",
+        "confirmedByClient": "2026-10-15",
+        "clientAnswer": "Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 % tillkomma. Vid extrem nedsmutsning, där arbetsinsatsen väsentligt överstiger vad som normalt kan förväntas, görs en separat bedömning och priset kan justeras utöver 20 %. Kunden informeras alltid på plats och ska godkänna pristillägget innan extra arbete utförs.",
+        "note": "Q104 settled it: up to 20 %, never a flat 20 %, and in extreme cases judged separately and possibly above 20 %. The customer is always told on site and has to approve before any extra work; without approval only the original order is carried out, or the job is stopped by agreement, and the end result is not guaranteed. No calculator applies it; it stays a text notice."
       },
       "extras": {
         "kylFrysDefrost": {
@@ -532,7 +540,7 @@
     }
   },
   "terms": {
-    "_readme": "Commercial terms the client confirmed on 2026-09-17 (Q24, Q25). They sit next to the prices because the pages and the chatbot must quote the same figures, and lib/pricing.js exposes them the same way it exposes a rate. Amounts are SEK.",
+    "_readme": "Commercial terms the client confirmed on 2026-09-17 (Q24, Q25) and on 2026-10-15 (Q101-Q110). They sit next to the prices because the pages, the legal documents and the chatbot must quote the same figures, and lib/pricing.js exposes them the same way it exposes a rate. Amounts are SEK.",
     "firstCleaningDiscountPercent": {
       "value": 10,
       "source": "clientAnswers Q25",
@@ -548,14 +556,98 @@
       "question": "Q24",
       "confirmedByClient": "2026-09-17",
       "clientAnswer": "avbokning senast 2 dagar innan",
-      "note": "allmanna-villkor.js and the FAQ still print 3 days behind an [ATT BEKRÄFTA] marker; Q24 settled it at 2 days, so that copy is the one that has to change."
+      "note": "Q101 restated the very same deadline in hours (\"senast 48 timmar\"). Both figures are the one deadline, so cancellationNoticeHours holds the client's wording and every piece of copy quotes them together: \"48 timmar (2 dagar)\". They must never drift apart."
+    },
+    "cancellationNoticeHours": {
+      "value": 48,
+      "source": "clientAnswers Q101",
+      "pendingConfirmation": false,
+      "question": "Q101",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Kostnadsfri avbokning senast 48 timmar före bokad tid.",
+      "note": "48 hours = the 2 days of cancellationNoticeDays; the client wrote the deadline in hours."
     },
     "lateCancellationFeePercent": {
-      "value": null,
-      "source": "website copy before the questionnaire (50 %)",
-      "pendingConfirmation": true,
-      "question": "Q24",
-      "note": "Q24 settled the notice period but not the fee for a later cancellation, so no figure may be quoted."
+      "value": 50,
+      "isMaximum": true,
+      "source": "clientAnswers Q101",
+      "pendingConfirmation": false,
+      "question": "Q101",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Vid avbokning senare än 48 timmar kan en avgift på upp till 50 % av det avtalade priset debiteras.",
+      "note": "A ceiling, not a flat fee: every sentence that quotes it says \"upp till\"."
+    },
+    "sameDayCancellationFeePercent": {
+      "value": 100,
+      "isMaximum": true,
+      "source": "clientAnswers Q101",
+      "pendingConfirmation": false,
+      "question": "Q101",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Vid avbokning samma dag eller om vi inte får tillträde till lokalen kan upp till 100 % av det avtalade priset debiteras.",
+      "note": "Also a ceiling, and it covers being denied access, which is why section 6 and section 8 of the terms have to say the same thing."
+    },
+    "cancellationByCompanyFeePercent": {
+      "value": 0,
+      "source": "clientAnswers Q101",
+      "pendingConfirmation": false,
+      "question": "Q101",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Om Aurel behöver avboka erbjuder vi en ny tid så snart som möjligt. Kunden debiteras självklart inte för arbete som inte utförts."
+    },
+    "rutDeniedRebilledToCustomer": {
+      "value": true,
+      "source": "clientAnswers Q103",
+      "pendingConfirmation": false,
+      "question": "Q103",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Om Skatteverket helt eller delvis avslår RUT-avdraget har Aurel rätt att fakturera kunden motsvarande belopp. Kunden ansvarar då för att betala mellanskillnaden."
+    },
+    "bookingClosedBy": {
+      "value": "email-confirmation",
+      "source": "clientAnswers Q105",
+      "pendingConfirmation": false,
+      "question": "Q105",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Solo se confirma por correo, pero no firman o pagan algo anticipado."
+    },
+    "responseTimeHours": {
+      "value": 24,
+      "isMaximum": true,
+      "source": "clientAnswers Q90",
+      "pendingConfirmation": false,
+      "question": "Q90",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Yo Diego. Siempre en 24 horas o menos."
+    },
+    "paymentMethods": {
+      "value": ["invoice"],
+      "source": "clientAnswers Q92",
+      "pendingConfirmation": false,
+      "question": "Q92",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Todo pago es con faktura.",
+      "note": "No Swish and no card: the copy may rule both out by name."
+    },
+    "businessTermsSeparate": {
+      "value": true,
+      "source": "clientAnswers Q106",
+      "pendingConfirmation": false,
+      "question": "Q106",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Son diferentes",
+      "note": "The allmänna villkor are for private customers; for companies and BRF the signed quote or contract governs."
+    },
+    "liabilityInsurance": {
+      "value": true,
+      "insurer": null,
+      "coverAmount": null,
+      "source": "clientAnswers Q108",
+      "pendingConfirmation": false,
+      "question": "Q108",
+      "confirmedByClient": "2026-10-15",
+      "clientAnswer": "Aurel Städ & Allservice AB har giltig företags- och ansvarsförsäkring. Försäkringsbevis kan uppvisas vid behov.",
+      "note": "The client did not name the insurer and did not give a cover amount, so no figure and no company name may appear anywhere on the site."
     },
     "paymentTermsDays": {
       "value": 20,
