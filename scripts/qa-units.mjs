@@ -10,6 +10,7 @@
  *   node scripts/qa-units.mjs
  */
 import { escapeHtml, singleLine } from "../utils/escapeHtml.js";
+import { redirectForStaging } from "../utils/mailer.js";
 import {
   stockholmToUtc,
   utcToStockholmWallClock,
@@ -507,6 +508,18 @@ check("link dropped", greetingName("Köp på https://spam.example"), "");
 check("domain dropped", greetingName("billigt.se"), "");
 check("e-mail address dropped", greetingName("mail me@spam.example"), "");
 check("long text dropped", greetingName("A".repeat(41)), "");
+
+console.log("\n=== mailer: staging mail redirect ===");
+// A staging deployment must exercise the real SMTP path without a test booking
+// ever reaching a customer or info@aurelservice.se.
+const stagingMail = { to: "info@aurelservice.se", subject: "Ny bokning", html: "<p>x</p>" };
+check("without MAIL_REDIRECT_TO the recipient is untouched", redirectForStaging(stagingMail, {}).to, "info@aurelservice.se");
+check("with MAIL_REDIRECT_TO it goes to the test mailbox", redirectForStaging(stagingMail, { MAIL_REDIRECT_TO: "qa@example.com" }).to, "qa@example.com");
+check("the real recipient is kept in the subject", redirectForStaging(stagingMail, { MAIL_REDIRECT_TO: "qa@example.com" }).subject, "[staging → info@aurelservice.se] Ny bokning");
+check("the live site ignores the redirect", redirectForStaging(stagingMail, { MAIL_REDIRECT_TO: "qa@example.com", APP_ENV: "production" }).to, "info@aurelservice.se");
+check("an unlabelled Vercel production deploy counts as live", redirectForStaging(stagingMail, { MAIL_REDIRECT_TO: "qa@example.com", VERCEL_ENV: "production" }).to, "info@aurelservice.se");
+check("but a Vercel deploy labelled staging keeps the redirect", redirectForStaging(stagingMail, { MAIL_REDIRECT_TO: "qa@example.com", VERCEL_ENV: "production", APP_ENV: "staging" }).to, "qa@example.com");
+check("and leaves the subject alone", redirectForStaging(stagingMail, { MAIL_REDIRECT_TO: "qa@example.com", APP_ENV: "production" }).subject, "Ny bokning");
 
 console.log(`\n=== ${passed}/${passed + failures.length} OK ===`);
 if (failures.length) {

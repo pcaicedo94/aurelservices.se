@@ -27,13 +27,32 @@ export const TEST_SCENARIOS = ["conflict", "race", "calendar-error", "mail-error
 
 let productionWarningShown = false;
 
+/**
+ * Is this deployment the live site that real customers use?
+ *
+ * `VERCEL_ENV === "production"` alone is not that question: a Vercel project
+ * whose whole purpose is staging still calls its main branch "production", and
+ * the live site is moving to Simply, where these Node endpoints do not run at
+ * all. Keying the safety guards off VERCEL_ENV alone would therefore disable
+ * test mode and the staging mail redirect on precisely the deployment we use
+ * for QA — and send test bookings to the customer's inbox.
+ *
+ * So: APP_ENV decides when it is set; VERCEL_ENV is the fallback for a
+ * deployment nobody labelled.
+ */
+export function isLiveSite(env = process.env) {
+  if (env.APP_ENV === "staging") return false;
+  if (env.APP_ENV === "production") return true;
+  return env.VERCEL_ENV === "production";
+}
+
 export function isTestMode(env = process.env) {
   if (env.APP_TEST_MODE !== "1") return false;
-  // Left on by mistake in the live deployment it would silently swallow every
+  // Left on by mistake on the live site it would silently swallow every
   // booking, so it is refused there.
-  if (env.VERCEL_ENV === "production") {
+  if (isLiveSite(env)) {
     if (!productionWarningShown) {
-      console.error("APP_TEST_MODE=1 is ignored in the production deployment.");
+      console.error("APP_TEST_MODE=1 is ignored on the live site.");
       productionWarningShown = true;
     }
     return false;
