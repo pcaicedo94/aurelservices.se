@@ -283,7 +283,7 @@ export const PAGES = {
   },
 
   "/foretag": {
-    title: "Städning för företag och BRF i Stockholm – Aurel Städ AB",
+    title: "Städning för företag och BRF i Stockholm – Aurel",
     description:
       "Kontorsstädning, trappstädning, byggstädning, fönsterputs, golvvård och byggtjänster för företag och BRF i Stockholm. Alltid offert, alla priser exkl. moms.",
     keywords:
@@ -292,7 +292,7 @@ export const PAGES = {
   },
 
   "/tjanster": {
-    title: "Städning för privatpersoner i Stockholm – Aurel Städ AB",
+    title: "Städning för privatpersoner i Stockholm – Aurel",
     description:
       "Hemstädning, storstädning, flyttstädning och fönsterputs för dig som privatperson i Stockholm. Räkna ut ditt pris inkl. moms och efter RUT direkt i formuläret.",
     keywords: "städning privatpersoner Stockholm, hemstädning, storstädning, flyttstädning",

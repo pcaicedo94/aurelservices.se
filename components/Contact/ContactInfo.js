@@ -17,7 +17,7 @@ const ContactInfo = () => {
                 <div className="content-title">
                   <a href="https://tinyurl.com/AurelstadAB">
                     <h3>Adress</h3>
-                    <p>Aurel Städ AB</p>
+                    <p>Aurel Städ & Allservice AB</p>
                     <p>
                       Bredängs Allé 10 NB
                       <br />

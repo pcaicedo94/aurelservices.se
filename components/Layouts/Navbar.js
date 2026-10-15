@@ -208,13 +208,13 @@ const Navbar = () => {
                 <img
                   src="/images/logo.png"
                   className="white-logo"
-                  alt="Aurel Städ AB – till startsidan"
+                  alt="Aurel Städ & Allservice AB – till startsidan"
                   loading="lazy"
                 />
                 <img
                   src="/images/logo-white.png"
                   className="black-logo"
-                  alt="Aurel Städ AB – till startsidan"
+                  alt="Aurel Städ & Allservice AB – till startsidan"
                   loading="lazy"
                 />
               </Link>

@@ -16,7 +16,7 @@ const Footer = () => {
           <div className="col-lg-4 col-md-6 col-sm-6">
             <div className="single-footer-widget">
               <div className="footer-heading">
-                <h3>Aurel Städ AB</h3>
+                <h3>Aurel Städ & Allservice AB</h3>
               </div>
               <p>
                 Din pålitliga partner för professionell städning i 18 år.
@@ -28,7 +28,7 @@ const Footer = () => {
                   href="https://www.instagram.com/aurel.allservice/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Aurel Städ AB på Instagram (öppnas i en ny flik)"
+                  aria-label="Aurel Städ & Allservice AB på Instagram (öppnas i en ny flik)"
                 >
                   <i className="fab fa-instagram" aria-hidden="true"></i>
                 </a>
@@ -122,7 +122,7 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <p>
-            &copy; {new Date().getFullYear()} Aurel Städ AB. Alla rättigheter
+            &copy; {new Date().getFullYear()} Aurel Städ & Allservice AB. Alla rättigheter
             förbehållna.
           </p>
         </div>
