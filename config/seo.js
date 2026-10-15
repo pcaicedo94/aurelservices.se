@@ -134,17 +134,36 @@ export const PAGES = {
     },
   },
 
+  // Site huts only. "byggstädning Stockholm" belongs to /foretag/byggstadning
+  // below; the two pages are different services and must not compete for it.
   "/foretag/bodstadning": {
-    title: "Byggstädning Stockholm – bodstädning och slutstädning",
+    title: "Bodstädning Stockholm – etableringsstädning på bygget",
     description:
-      "Byggstädning i Stockholm för entreprenörer och fastighetsägare: etableringsstädning, bodstädning och slutstädning vid renovering. Begär offert från oss.",
-    keywords: "byggstädning, byggstädning Stockholm, bodstädning, etableringsstädning, slutstädning",
+      "Bodstädning i Stockholm för entreprenörer och fastighetsägare: etableringsstädning och löpande städning av bodar, baracker och personalutrymmen på bygget.",
+    keywords: "bodstädning, bodstädning Stockholm, etableringsstädning, städning av byggbodar",
     image: "/images/banners/bodstadning.webp",
     service: {
-      name: "Byggstädning och bodstädning i Stockholm",
+      name: "Bodstädning och etableringsstädning i Stockholm",
+      serviceType: "Bodstädning",
+      description:
+        "Etableringsstädning och löpande bodstädning i Stockholm: manskapsbodar, baracker och personalutrymmen på arbetsplatsen, städade enligt överenskommet schema.",
+    },
+  },
+
+  "/foretag/byggstadning": {
+    title: "Byggstädning Stockholm – slutstädning efter renovering",
+    description:
+      "Byggstädning i Stockholm under och efter byggprojektet: vi tar bort byggdamm och rester och lämnar lokalen redo för besiktning. Begär offert efter platsbesök.",
+    keywords:
+      "byggstädning Stockholm, byggstädning, slutstädning efter renovering, städning efter byggprojekt",
+    // No byggstädning photo exists yet; this one shows final cleaning of an
+    // empty flat (window frames, cabinets inside), which is what it looks like.
+    image: "/images/banners/flyttstadning-foretag.webp",
+    service: {
+      name: "Byggstädning i Stockholm",
       serviceType: "Byggstädning",
       description:
-        "Byggstädning i Stockholm under och efter projektet: etableringsstädning, löpande bodstädning av manskapsbodar och slutstädning vid renovering.",
+        "Byggstädning i Stockholm under pågående byggprojekt och slutstädning efter nybyggnation, renovering och ombyggnation, inför besiktning och överlämning.",
     },
   },
 
@@ -221,14 +240,16 @@ export const PAGES = {
   "/foretag/byggtjanster": {
     title: "Byggtjänster Stockholm – renovering för BRF och företag",
     description:
-      "Byggtjänster i Stockholm för företag, bostadsrättsföreningar och privatpersoner. Vi utför bygg- och renoveringsarbeten med fokus på kvalitet. Begär offert.",
+      "Byggtjänster i Stockholm för företag, bostadsrättsföreningar och privatpersoner: renovering, snickeri och måleri genom våra samarbetspartners. Begär offert.",
     keywords: "byggtjänster Stockholm, renovering Stockholm, byggfirma BRF Stockholm",
     image: "/images/banners/byggtjanster.webp",
     service: {
+      // Q78: the work is carried out by partner companies, so the Service node
+      // describes what Aurel actually sells – a coordinated job, not own labour.
       name: "Byggtjänster i Stockholm",
       serviceType: "Byggtjänster",
       description:
-        "Bygg- och renoveringsarbeten i Stockholm för företag, bostadsrättsföreningar och privatpersoner, utförda med fokus på kvalitet och noggrannhet.",
+        "Bygg- och renoveringsarbeten i Stockholm för företag, bostadsrättsföreningar och privatpersoner, samordnade av oss och utförda av våra samarbetspartners.",
     },
   },
 
@@ -286,11 +307,14 @@ export const PAGES = {
     image: "/images/banners/hemstadning.webp",
   },
 
+  // Q94-Q99: no collective agreement, salary, benefit or working condition may
+  // be named here either – the client left those blank and handles hiring
+  // internally. The page (and this description) offer only the CV address.
   "/karriar": {
-    title: "Jobba hos oss – lediga jobb inom städ i Stockholm | Aurel",
+    title: "Jobba hos oss – skicka ditt CV till Aurel Städ i Stockholm",
     description:
-      "Vill du arbeta med städning i Stockholm? Aurel Städ & Allservice söker engagerade medarbetare och erbjuder trygga villkor med kollektivavtal och försäkring.",
-    keywords: "jobb städning Stockholm, lediga jobb städare, jobba som lokalvårdare",
+      "Vill du arbeta med städning i Stockholm? Aurel Städ & Allservice utlyser inga tjänster här, men tar emot spontanansökningar – skicka ditt CV till oss via mejl.",
+    keywords: "jobb städning Stockholm, spontanansökan städare, jobba som lokalvårdare",
     image: "/images/banners/kontorsstadning.webp",
   },
 

@@ -3,8 +3,16 @@ import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
 import Footer from "../../components/Layouts/Footer";
+import Link from "next/link";
 import Seo from "../../components/Common/Seo";
 
+// Client Q78: the building work itself is not done by Aurel's own staff. Aurel
+// works with established construction and renovation companies and the partner
+// carries out the job. The page used to read as if Aurel held the tools, which
+// is not what the client confirmed, so the copy now says who does what: Aurel
+// takes the order, coordinates the project and answers to the customer; the
+// partner performs the work. ROT is unchanged — the client confirmed it still
+// applies and Aurel still handles it on the invoice.
 const Construction = () => {
   const [showQuote, setShowQuote] = useState(false);
 
@@ -20,26 +28,23 @@ const Construction = () => {
           <div className="col-lg-8">
             <h2>Byggtjänster i Stockholm – För företag, BRF och privatpersoner</h2>
             <p>
-              Behöver du hjälp med byggarbeten eller renovering? Aurel Städ &amp; Allservice erbjuder byggtjänster i Stockholm för företag, bostadsrättsföreningar och privatpersoner. Vi utför arbeten med fokus på kvalitet, noggrannhet och ett professionellt slutresultat.
+              Behöver du hjälp med byggarbeten eller renovering? Aurel Städ &amp; Allservice samarbetar med etablerade företag inom bygg och renovering i Stockholm. Genom våra samarbetspartners kan vi erbjuda byggtjänster till företag, bostadsrättsföreningar och privatpersoner – du har kvar oss som kontakt och vi håller ihop projektet från förfrågan till färdigt arbete.
             </p>
 
-            <h3>Vad vi erbjuder</h3>
+            <h3>Vad vi kan erbjuda genom våra samarbetspartners</h3>
             <ul>
-              <li>Mindre byggarbeten och renoveringar</li>
+              <li>Renovering och mindre byggarbeten</li>
               <li>Reparationer och underhåll</li>
               <li>Montering och demontering</li>
               <li>Snickeriarbeten</li>
               <li>Måleriarbeten, inklusive målning av väggar, tak och snickerier</li>
-              <li>Anpassade lösningar efter behov</li>
+              <li>Andra byggrelaterade arbeten efter behov</li>
             </ul>
 
-            <h3>Fördelar</h3>
-            <ul>
-              <li>En pålitlig partner för bygg och service</li>
-              <li>Noggrant utfört arbete med hög kvalitet</li>
-              <li>Flexibla lösningar för olika typer av projekt</li>
-              <li>Ett professionellt och hållbart resultat</li>
-            </ul>
+            <h3>Vem gör vad</h3>
+            <p>
+              Själva bygg- och renoveringsarbetet utförs av våra samarbetspartners inom respektive område – företag som är etablerade i sin bransch och arbetar med det här varje dag. Vi tar emot förfrågan, samordnar arbetet och är den du har avtal med och vänder dig till under hela projektet. Det gör att du får en smidig helhetslösning med ett enda kontaktnummer, i stället för att själv leta upp och hålla ihop flera hantverkare.
+            </p>
 
             <h3>ROT-avdrag</h3>
             <p>
@@ -49,9 +54,14 @@ const Construction = () => {
             <h3>Så fungerar det</h3>
             <ol>
               <li>Kontakta oss med din eller er förfrågan</li>
-              <li>Vi bokar vid behov ett kostnadsfritt platsbesök</li>
-              <li>Du eller ni får en offert baserad på projektets omfattning</li>
+              <li>Vi tar in rätt samarbetspartner för arbetet och bokar vid behov ett kostnadsfritt platsbesök</li>
+              <li>Du eller ni får en offert från oss, baserad på projektets omfattning</li>
             </ol>
+
+            <p>
+              Ska lokalen eller bostaden städas när bygget är klart är det en egen tjänst:{" "}
+              <Link href="/foretag/byggstadning">byggstädning och slutstädning</Link>.
+            </p>
           </div>
 
           <div className="col-lg-4">

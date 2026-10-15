@@ -23,6 +23,7 @@ const MENU = [
     href: "/foretag",
     children: [
       { label: "Kontorsstädning", href: "/foretag/kontorsstadning" },
+      { label: "Byggstädning", href: "/foretag/byggstadning" },
       { label: "Bod- och Etableringstädning", href: "/foretag/bodstadning" },
       { label: "Fönsterputsning", href: "/foretag/fonsterputs" },
       { label: "Trappstädning", href: "/foretag/trappstadning" },

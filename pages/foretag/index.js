@@ -22,9 +22,14 @@ const SERVICES = [
     text: "Återkommande städning av trapphus, entré, hiss och gemensamma utrymmen för bostadsrättsföreningar och fastighetsägare.",
   },
   {
+    href: "/foretag/byggstadning",
+    title: "Byggstädning",
+    text: "Städning under pågående byggprojekt och slutstädning efter nybyggnation, renovering och ombyggnation – byggdamm, golv, fönster, skåp och sanitetsutrymmen inför besiktning.",
+  },
+  {
     href: "/foretag/bodstadning",
-    title: "Bodstädning och byggstädning",
-    text: "Etableringsstädning, löpande städning av bodar och personalutrymmen samt slutstädning inför överlämning. Uppskatta kostnaden utifrån antal bodar och städfrekvens.",
+    title: "Bodstädning och etableringsstädning",
+    text: "Etableringsstädning och löpande städning av bodar, baracker och personalutrymmen på arbetsplatsen. Uppskatta kostnaden utifrån antal bodar och städfrekvens.",
     cta: "Läs mer och uppskatta kostnad",
   },
   {
@@ -45,7 +50,7 @@ const SERVICES = [
   {
     href: "/foretag/byggtjanster",
     title: "Byggtjänster",
-    text: "Mindre byggarbeten och renoveringar, reparationer, snickeri och måleri – utfört med fokus på kvalitet och ett hållbart slutresultat.",
+    text: "Renovering, reparationer, snickeri och måleri genom våra samarbetspartners inom bygg. Vi tar emot förfrågan, samordnar arbetet och lämnar offert.",
   },
 ];
 

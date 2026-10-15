@@ -9,7 +9,7 @@
  *      "180 kr/timme" and "195 kr per timme" for hemstädning while the
  *      calculator on the same site charged 200–270 kr; those figures are now
  *      checked for explicitly so they cannot come back.
- *   2. Every service on the site is reachable. The 15 service pages under
+ *   2. Every service on the site is reachable. The 16 service pages under
  *      pages/tjanster/ and pages/foretag/ are read from disk, not from a list
  *      kept here, so a new page that the bot does not cover fails the run.
  *   3. Nobody gets stranded. Every node has a way out, and from every node the
@@ -119,7 +119,7 @@ check(`desde cualquier nodo se llega a "${QUOTE_ID}"`, stranded[QUOTE_ID].join("
 check(`desde cualquier nodo se llega a "${CONTACT_ID}"`, stranded[CONTACT_ID].join(", ") || "sí", "sí");
 check("desde cualquier nodo se vuelve al menú principal", stranded[ROOT_ID].join(", ") || "sí", "sí");
 
-/* ------------------------- 15 servicios cubiertos ------------------------- */
+/* ------------------------- 16 servicios cubiertos ------------------------- */
 
 console.log("\n=== Cobertura de servicios ===");
 
@@ -130,8 +130,8 @@ function servicePages(dir) {
     .map((file) => `/${dir}/${file.replace(/\.js$/, "")}`);
 }
 const pagesOnDisk = [...servicePages("tjanster"), ...servicePages("foretag")].sort();
-check("pages/ contiene 15 páginas de servicio", pagesOnDisk.length, 15);
-check("el bot conoce 15 servicios", CHAT_SERVICES.length, 15);
+check("pages/ contiene 16 páginas de servicio", pagesOnDisk.length, 16);
+check("el bot conoce 16 servicios", CHAT_SERVICES.length, 16);
 
 const serviceNodeId = (service) => `tjanst.${service.id}`;
 const covered = [...new Set(CHAT_SERVICES.map((service) => service.page))].sort();
@@ -145,7 +145,7 @@ const unreachableServices = CHAT_SERVICES.filter(
   (service) => !fromRoot.has(serviceNodeId(service))
 ).map((s) => s.id);
 check(
-  "los 15 servicios son alcanzables desde la raíz",
+  "los 16 servicios son alcanzables desde la raíz",
   unreachableServices.join(", ") || "ninguno",
   "ninguno"
 );
