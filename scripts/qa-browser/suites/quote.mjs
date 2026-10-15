@@ -1,4 +1,4 @@
-// The quote popup (QuoteModal) works today on these ten pages and must keep
+// The quote popup (QuoteModal) works today on these eleven pages and must keep
 // working: it opens with the right service, closes with Escape and with a
 // click outside, has no grey box around the form, and submits once.
 import { sleep } from "../lib/browser.mjs";
@@ -8,6 +8,7 @@ import { fillContact, fillFields, readFeedback, submitContact, waitForApiCall } 
 export const QUOTE_PAGES = [
   { route: "/tjanster/mattvatt", service: "mattvätt" },
   { route: "/foretag/byggtjanster", service: "bygg" },
+  { route: "/foretag/byggstadning", service: "byggstädning" },
   { route: "/foretag/golvvard", service: "golvvård" },
   { route: "/tjanster/tradgardsskotsel", service: "trädgård" },
   { route: "/foretag/flyttstadning", service: "flyttstädning" },
