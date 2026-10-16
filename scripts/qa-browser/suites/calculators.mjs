@@ -4,7 +4,19 @@
 // to /api/booking leaves the page (the API is mocked).
 import { sleep } from "../lib/browser.mjs";
 import { defineSuite } from "../lib/runner.mjs";
-import { CALCULATORS, attemptBooking, fillFields, findBookButton, payloadPrice, readSummary, withFields } from "../lib/flows.mjs";
+import {
+  CALCULATORS,
+  DAY_FIELD,
+  TIME_FIELD,
+  attemptBooking,
+  dateTimeFields,
+  fillFields,
+  findBookButton,
+  payloadPrice,
+  readStartTimes,
+  readSummary,
+  withFields,
+} from "../lib/flows.mjs";
 
 const priceLine = (s) => (s ? s.priceLine || "sin línea de precio" : "sin resumen");
 const posted = (a) => a.posts.map((p) => `totalPrice=${JSON.stringify(p.json?.totalPrice)}`).join(", ");
@@ -25,6 +37,12 @@ function expectNoZeroPrice(expect, attempt) {
 }
 
 const STYLE_PROPS = ["backgroundColor", "backgroundImage", "color", "opacity", "filter", "boxShadow", "borderColor", "textDecorationLine"];
+
+// Client Q16: a booking starts on the hour, from 07:00 to 15:00 included. The
+// field used to take any time typed by hand and complain afterwards, so these
+// are the values that must not even be on offer any more.
+const START_HOURS = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"];
+const NOT_OFFERED = ["06:00", "06:30", "07:30", "09:47", "14:30", "15:30", "16:00", "23:00"];
 
 export default defineSuite("calculators", async (test, ctx) => {
   const d = ctx.dates;
@@ -48,12 +66,12 @@ export default defineSuite("calculators", async (test, ctx) => {
     });
 
     test(`${calc.route} fecha pasada no se puede reservar`, { bug: "QA-13" }, async ({ page, api, expect }) => {
-      const a = await attemptBooking(page, api, { route: calc.route, fields: withFields(calc.valid(d), [["#dateTime", d.past]]) });
+      const a = await attemptBooking(page, api, { route: calc.route, fields: withFields(calc.valid(d), dateTimeFields(d.past)) });
       expectNotBookable(expect, a, `fecha ${d.past}`);
     });
 
     test(`${calc.route} domingo no se puede reservar`, { bug: "QA-13" }, async ({ page, api, expect }) => {
-      const a = await attemptBooking(page, api, { route: calc.route, fields: withFields(calc.valid(d), [["#dateTime", d.sunday]]) });
+      const a = await attemptBooking(page, api, { route: calc.route, fields: withFields(calc.valid(d), dateTimeFields(d.sunday)) });
       expectNotBookable(expect, a, `domingo ${d.sunday}`);
     });
 
@@ -68,8 +86,60 @@ export default defineSuite("calculators", async (test, ctx) => {
     }
   }
 
+  // Replaces what used to be checked by typing an impossible time by hand: the
+  // interface no longer lets it be typed, so the check is that it is not
+  // offered either.
+  test("la hora solo se elige en punto entre 07:00 y 15:00", { bug: "QA-19" }, async ({ page, expect, note }) => {
+    const wrong = [];
+    for (const calc of Object.values(CALCULATORS)) {
+      await page.goto(calc.route);
+      const select = await readStartTimes(page);
+      if (!select) throw new Error(`${calc.route}: no se encontró el selector de hora (${TIME_FIELD})`);
+      if (select.options.join(" ") !== START_HOURS.join(" ")) wrong.push(`${calc.route} ofrece ${select.options.join(", ") || "nada"}`);
+      const offered = NOT_OFFERED.filter((t) => select.options.includes(t));
+      if (offered.length) wrong.push(`${calc.route} sigue ofreciendo ${offered.join(", ")}`);
+    }
+    expect(!wrong.length, wrong.join("; "));
+    note(`${START_HOURS.length} horas de ${START_HOURS[0]} a ${START_HOURS[START_HOURS.length - 1]} en ${Object.keys(CALCULATORS).length} calculadoras`);
+  });
+
+  test("el campo de fecha no ofrece días antes de la antelación mínima", { bug: "QA-19" }, async ({ page, expect, note }) => {
+    const wrong = [];
+    for (const calc of Object.values(CALCULATORS)) {
+      await page.goto(calc.route);
+      const min = await page.eval((sel) => document.querySelector(sel)?.getAttribute("min") ?? null, DAY_FIELD);
+      if (min !== d.earliestDay) wrong.push(`${calc.route} min="${min}"`);
+    }
+    expect(!wrong.length, `se esperaba min="${d.earliestDay}": ${wrong.join("; ")}`);
+    note(`min="${d.earliestDay}"`);
+  });
+
+  test("con un sábado elegido la hora queda bloqueada y el aviso enlaza a /kontakt", { bug: "QA-03" }, async ({ page, expect, note }) => {
+    await page.goto("/tjanster/hemstadning");
+    await fillFields(page, CALCULATORS.home.valid(d));
+    const weekdayState = await readStartTimes(page);
+    if (weekdayState.disabled) throw new Error("la hora ya está bloqueada con un día laborable");
+    await fillFields(page, [[DAY_FIELD, d.saturday.slice(0, 10)]]);
+    const state = await readStartTimes(page);
+    expect(state.disabled, "con un sábado elegido la hora sigue activa");
+    const notice = await page.eval((sel) => {
+      const group = document.querySelector(sel)?.closest("fieldset") || document.body;
+      const error = group.querySelector("[role=alert]");
+      if (!error) return null;
+      const link = error.querySelector("a");
+      return { text: window.__qa.norm(error.innerText), href: link ? link.getAttribute("href") : null };
+    }, DAY_FIELD);
+    if (expect(notice, "no se muestra ningún aviso con un sábado elegido")) {
+      expect(/måndag till fredag/i.test(notice.text), `el aviso no explica el horario online: "${notice.text}"`);
+      expect(notice.href === "/kontakt", `el aviso no enlaza a /kontakt (href "${notice.href}")`);
+      note(`"${notice.text}"`);
+    }
+    const book = await findBookButton(page);
+    expect(book.found && book.disabled, "el botón de reservar sigue activo con un sábado elegido");
+  });
+
   test("/tjanster/hemstadning sábado no da 0 kr ni se puede reservar", { bug: "QA-03" }, async ({ page, api, expect }) => {
-    const a = await attemptBooking(page, api, { route: "/tjanster/hemstadning", fields: withFields(CALCULATORS.home.valid(d), [["#dateTime", d.saturday]]) });
+    const a = await attemptBooking(page, api, { route: "/tjanster/hemstadning", fields: withFields(CALCULATORS.home.valid(d), dateTimeFields(d.saturday)) });
     expectNoZeroPrice(expect, a);
     expectNotBookable(expect, a, `sábado ${d.saturday}`);
   });

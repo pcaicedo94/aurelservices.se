@@ -6,6 +6,8 @@ import { defineSuite } from "../lib/runner.mjs";
 import {
   CALCULATORS,
   CONTACT,
+  DAY_FIELD,
+  TIME_FIELD,
   fillContact,
   fillFields,
   findBookButton,
@@ -78,7 +80,7 @@ async function submitAndCheckKept({ page, api, expect, note }, { calcFields = []
   for (const [sel, expected] of calcFields) {
     const got = values[sel];
     if (allowEmpty.includes(sel) && got === "") {
-      note(`${sel} vaciado para elegir otra hora`);
+      note(`${sel} vaciado para elegir otro día u otra hora`);
       continue;
     }
     expect(got === expected, `${sel} = "${got}" (se esperaba "${expected}")`);
@@ -119,7 +121,7 @@ export default defineSuite("booking", async (test, ctx) => {
     test(`/tjanster/hemstadning error ${ERROR_LABELS[scenario]}: sin recarga y con los datos`, { bug: "QA-02" }, async (t) => {
       const calcFields = await openBookingForm(t.page, CALCULATORS.home, d);
       t.api.setScenario(scenario);
-      await submitAndCheckKept(t, { calcFields, scenario, allowEmpty: scenario === "conflict" ? ["#dateTime"] : [] });
+      await submitAndCheckKept(t, { calcFields, scenario, allowEmpty: scenario === "conflict" ? [DAY_FIELD, TIME_FIELD] : [] });
     });
   }
 
@@ -128,7 +130,7 @@ export default defineSuite("booking", async (test, ctx) => {
     test(`${calc.route} error 409: sin recarga y con los datos`, { bug: "QA-02" }, async (t) => {
       const calcFields = await openBookingForm(t.page, calc, d);
       t.api.setScenario("conflict");
-      await submitAndCheckKept(t, { calcFields, scenario: "conflict", allowEmpty: ["#dateTime"] });
+      await submitAndCheckKept(t, { calcFields, scenario: "conflict", allowEmpty: [DAY_FIELD, TIME_FIELD] });
     });
   }
 

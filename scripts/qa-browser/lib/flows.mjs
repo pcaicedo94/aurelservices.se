@@ -14,19 +14,48 @@ export const CONTACT = {
 
 export const BOOK_BUTTON = { selector: "button, a", text: "^\\s*Boka( tjänsten)?\\s*$" };
 
+// The booking date is picked in two controls: a native date input and a list
+// of whole start hours. The suites keep thinking in wall clocks, the format
+// the API and the booking rules use, so a wall clock is split into its two
+// fields here, in the order a visitor fills them.
+export const DAY_FIELD = "#dateTime-day";
+export const TIME_FIELD = "#dateTime-time";
+
+export function dateTimeFields(wallClock) {
+  const [day = "", time = ""] = String(wallClock || "").split("T");
+  return [
+    [DAY_FIELD, day],
+    [TIME_FIELD, time.slice(0, 5)],
+  ];
+}
+
+// State of the start-hour list: which hours it offers (without the "choose
+// one" placeholder), what is selected and whether it is locked.
+export function readStartTimes(page, selector = TIME_FIELD) {
+  return page.eval((sel) => {
+    const select = document.querySelector(sel);
+    if (!select) return null;
+    return {
+      disabled: select.disabled,
+      value: select.value,
+      options: [...select.options].map((o) => o.value).filter((v) => v !== ""),
+    };
+  }, selector);
+}
+
 // Valid inputs per calculator; `size` names the free numeric field.
 export const CALCULATORS = {
-  home: { route: "/tjanster/hemstadning", size: "#size", valid: (d) => [["#size", "60"], ["#frequency", "2"], ["#dateTime", d.weekday]] },
-  deep: { route: "/tjanster/storstadning", size: "#size", valid: (d) => [["#size", "60"], ["#dateTime", d.weekday], ["#contactPreference", "call"]] },
-  move: { route: "/tjanster/flyttstadning", size: "#size", valid: (d) => [["#size", "60"], ["#dateTime", d.weekday]] },
-  window: { route: "/tjanster/fonsterputs", size: null, valid: (d) => [["#rooms", "3"], ["#dateTime", d.weekday]] },
+  home: { route: "/tjanster/hemstadning", size: "#size", valid: (d) => [["#size", "60"], ["#frequency", "2"], ...dateTimeFields(d.weekday)] },
+  deep: { route: "/tjanster/storstadning", size: "#size", valid: (d) => [["#size", "60"], ...dateTimeFields(d.weekday), ["#contactPreference", "call"]] },
+  move: { route: "/tjanster/flyttstadning", size: "#size", valid: (d) => [["#size", "60"], ...dateTimeFields(d.weekday)] },
+  window: { route: "/tjanster/fonsterputs", size: null, valid: (d) => [["#rooms", "3"], ...dateTimeFields(d.weekday)] },
   // Business services are negotiated (client Q29): the page estimates a price
   // and asks for a quote, it never books a slot.
   container: {
     route: "/foretag/bodstadning",
     size: "#numberOfUnits",
     quoteOnly: true,
-    valid: (d) => [["#numberOfUnits", "10"], ["#frequency", "5"], ["#dateTime", d.weekday], ["#contactPreference", "call"]],
+    valid: (d) => [["#numberOfUnits", "10"], ["#frequency", "5"], ...dateTimeFields(d.weekday), ["#contactPreference", "call"]],
   },
 };
 

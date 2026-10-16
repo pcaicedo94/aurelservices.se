@@ -1,6 +1,8 @@
-// Booking dates as wall-clock strings for <input type="datetime-local">,
-// computed for Europe/Stockholm. Calendar math runs on UTC midnights so a DST
-// switch can never move a date by one day.
+// Booking dates as wall-clock strings ("YYYY-MM-DDTHH:MM"), the format the
+// booking API and the booking rules use. The form splits them into a date
+// input and a list of hours; dateTimeFields() in flows.mjs does the splitting.
+// Computed for Europe/Stockholm, with the calendar math on UTC midnights so a
+// DST switch can never move a date by one day.
 
 const TZ = "Europe/Stockholm";
 const DAY_MS = 86400000;
@@ -56,8 +58,11 @@ export function isSwedishHoliday(date) {
   return false;
 }
 
+export const toDayInput = (date) =>
+  `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+
 export const toLocalInput = (date, hour = 10, minute = 0) =>
-  `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}T${pad(hour)}:${pad(minute)}`;
+  `${toDayInput(date)}T${pad(hour)}:${pad(minute)}`;
 
 function findDate(start, step, weekday, skipHolidays) {
   for (let i = 0; i < 60; i++) {
@@ -85,5 +90,7 @@ export function bookingDates(now = new Date()) {
     saturday: toLocalInput(saturday),
     sunday: toLocalInput(sunday),
     past: toLocalInput(pastWednesday),
+    // Client Q16 + two days' notice: the first day a visitor may pick.
+    earliestDay: toDayInput(addDays(today, 2)),
   };
 }
