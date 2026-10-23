@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { QUOTE_FIELDS } from "../../config/quoteFields";
 import Footer from "../../components/Layouts/Footer";
 import Seo from "../../components/Common/Seo";
 
@@ -66,6 +67,7 @@ const CarpetWashing = () => {
         open={showQuote}
         onClose={() => setShowQuote(false)}
         service="Mattvätt"
+        fields={QUOTE_FIELDS["/tjanster/mattvatt"]}
       />
 
       <Footer />
