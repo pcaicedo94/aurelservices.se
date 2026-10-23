@@ -42,7 +42,6 @@ const MENU = [
       { label: "Mattvätt", href: "/tjanster/mattvatt" },
     ],
   },
-  { label: "Produkter", href: "https://yureco.com", external: true },
   { label: "Jobba hos oss", href: "/karriar" },
   { label: "Kontakta oss", href: "/kontakt" },
 ];
