@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { QUOTE_FIELDS } from "../../config/quoteFields";
 import Footer from "../../components/Layouts/Footer";
 import Link from "next/link";
 import Seo from "../../components/Common/Seo";
@@ -80,6 +81,7 @@ const Construction = () => {
         open={showQuote}
         onClose={() => setShowQuote(false)}
         service="Byggtjänster"
+        fields={QUOTE_FIELDS["/foretag/byggtjanster"]}
       />
 
       <Footer />

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { QUOTE_FIELDS } from "../../config/quoteFields";
 import Footer from "../../components/Layouts/Footer";
 import Seo from "../../components/Common/Seo";
 
@@ -63,10 +64,15 @@ const MovingHelp = () => {
         </div>
       </div>
 
+      {/* The address the quote form asks for is where the move starts; where it
+          ends is the first of the service fields. */}
       <QuoteModal
         open={showQuote}
         onClose={() => setShowQuote(false)}
         service="Flytthjälp"
+        addressLabel="Adress du flyttar från"
+        addressPlaceholder="Ange adressen du flyttar från"
+        fields={QUOTE_FIELDS["/tjanster/flytthjalp"]}
       />
 
       <Footer />

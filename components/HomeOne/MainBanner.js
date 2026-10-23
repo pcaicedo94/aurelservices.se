@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Banner from "./Banner.js";
 import QuoteModal from "../Common/QuoteModal";
+import { QUOTE_FIELDS } from "../../config/quoteFields";
 
 // The four private services that have a price calculator of their own. The
 // primary CTA points at the hub page that lists them; these links are the
@@ -64,6 +65,7 @@ const MainBanner = () => {
         open={showQuote}
         onClose={() => setShowQuote(false)}
         service="Städning i Stockholm"
+        fields={QUOTE_FIELDS["/"]}
       />
     </>
   );

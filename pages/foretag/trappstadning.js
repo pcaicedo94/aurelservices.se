@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { QUOTE_FIELDS } from "../../config/quoteFields";
 import Footer from "../../components/Layouts/Footer";
 import Seo from "../../components/Common/Seo";
 
@@ -84,6 +85,7 @@ const StairCleaning = () => {
         onClose={() => setShowQuote(false)}
         service="Trappstädning"
         addressPlaceholder="Ange fastighetens adress"
+        fields={QUOTE_FIELDS["/foretag/trappstadning"]}
       />
 
       <Footer />

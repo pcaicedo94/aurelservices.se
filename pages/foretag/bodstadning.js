@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { QUOTE_FIELDS } from "../../config/quoteFields";
 import Footer from "../../components/Layouts/Footer";
 import BookingSummary from "../../components/Booking/BookingSummary";
 import DateTimeField from "../../components/Booking/DateTimeField";
@@ -237,6 +238,7 @@ const ContainerCleaning = () => {
         service="Bodstädning"
         addressPlaceholder="Ange adressen för bodarna"
         details={quoteDetails}
+        fields={QUOTE_FIELDS["/foretag/bodstadning"]}
       />
 
       <Footer />

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { QUOTE_FIELDS } from "../../config/quoteFields";
 import Footer from "../../components/Layouts/Footer";
 import BookingSummary from "../../components/Booking/BookingSummary";
 import FieldError, { invalidClass } from "../../components/Booking/FieldError";
@@ -186,6 +187,7 @@ const OfficeCleaning = () => {
         subject={needsQuote ? "Offertförfrågan – Kontorsstädning" : "Bokningsförfrågan – Kontorsstädning"}
         addressPlaceholder="Ange kontorets adress"
         details={details}
+        fields={QUOTE_FIELDS["/foretag/kontorsstadning"]}
       />
 
       <Footer />

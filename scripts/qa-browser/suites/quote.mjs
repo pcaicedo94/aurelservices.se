@@ -1,9 +1,11 @@
 // The quote popup (QuoteModal) works today on these eleven pages and must keep
 // working: it opens with the right service, closes with Escape and with a
-// click outside, has no grey box around the form, and submits once.
+// click outside, has no grey box around the form, and submits once. The last
+// two checks cover the service-specific questions the popup now asks.
 import { sleep } from "../lib/browser.mjs";
 import { defineSuite } from "../lib/runner.mjs";
 import { fillContact, fillFields, readFeedback, submitContact, waitForApiCall } from "../lib/flows.mjs";
+import { QUOTE_FIELDS } from "../../../config/quoteFields.js";
 
 export const QUOTE_PAGES = [
   { route: "/tjanster/mattvatt", service: "mattvätt" },
@@ -61,6 +63,31 @@ function modalInfo(page) {
   }, DIALOG);
 }
 
+// Service-specific questions (config/quoteFields.js): every one of them is
+// optional, so the check fills all but the last field of the list and the mail
+// must then carry exactly the answered ones, labelled in Swedish and in the
+// declared order, with no row for the one left blank.
+const FIELD_PAGES = [
+  { route: "/foretag/byggstadning", before: [] },
+  // The only page that renames the address row, because the address it asks
+  // for is the one the move starts at.
+  { route: "/tjanster/flytthjalp", addressLabel: "Adress du flyttar från", before: [] },
+  // A calculator page: its own rows must survive beside the new questions.
+  {
+    route: "/foretag/kontorsstadning",
+    button: "Boka tjänsten",
+    prepare: [["#size", "120"], ["#frequency", "2"]],
+    before: ["Storlek", "Frekvens", "Beräknad tid per städning", "Uppskattat pris per månad"],
+  },
+];
+
+// A plausible answer per field type; selects pick a real option.
+const answerFor = (field, i) => {
+  if (field.type === "select") return field.options[Math.min(i + 1, field.options.length - 1)];
+  if (field.type === "number") return String(10 * (i + 2));
+  return `QA svar ${i + 1}`;
+};
+
 export default defineSuite("quote", async (test) => {
   for (const cfg of QUOTE_PAGES) {
     test(`${cfg.route} popup abre con el servicio correcto y sin caja gris`, async ({ page, expect, note }) => {
@@ -114,6 +141,58 @@ export default defineSuite("quote", async (test) => {
       await page.mouseClick(point.x, point.y);
       await sleep(350);
       expect(!(await modalOpen(page)), `clic fuera (${point.hit}) no cierra el popup`);
+    });
+  }
+
+  for (const cfg of FIELD_PAGES) {
+    test(`${cfg.route} las preguntas propias del servicio llegan en details`, async ({ page, api, expect, note }) => {
+      const fields = QUOTE_FIELDS[cfg.route];
+      if (!expect(Array.isArray(fields) && fields.length >= 2, `sin campos declarados para ${cfg.route}`)) return;
+
+      await page.goto(cfg.route);
+      if (cfg.prepare) await fillFields(page, cfg.prepare);
+      if (!expect(await openModal(page, cfg), "el popup no se abrió")) return;
+      await sleep(250);
+      await fillContact(page);
+
+      // Todos menos el último: el último queda vacío a propósito.
+      const answered = fields.slice(0, -1).map((f, i) => [f, answerFor(f, i)]);
+      const skipped = fields[fields.length - 1];
+      await fillFields(page, answered.map(([f, value]) => [`#quote-field-${f.name}`, value]));
+
+      // Cada campo tiene su <label> asociado y ninguno es obligatorio.
+      const labels = await page.eval(
+        (names) =>
+          names.map((n) => {
+            const el = document.getElementById(`quote-field-${n}`);
+            if (!el) return { n, missing: true };
+            const label = document.querySelector(`label[for="quote-field-${n}"]`);
+            return { n, label: label ? window.__qa.norm(label.innerText) : null, required: el.required };
+          }),
+        fields.map((f) => f.name)
+      );
+      const sinLabel = labels.filter((l) => l.missing || !l.label).map((l) => l.n);
+      expect(!sinLabel.length, `campos sin <label> asociado: ${sinLabel.join(", ")}`);
+      const obligatorios = labels.filter((l) => l.required).map((l) => l.n);
+      expect(!obligatorios.length, `campos propios marcados como obligatorios: ${obligatorios.join(", ")}`);
+
+      api.setScenario("ok");
+      const mark = api.mark();
+      await submitContact(page);
+      if (!expect(await waitForApiCall(api, mark, "/api/contact"), "no hubo POST a /api/contact")) return;
+      const call = api.callsSince(mark, "/api/contact")[0];
+      const details = (call.json && call.json.details) || {};
+
+      const expected = ["Tjänst", cfg.addressLabel || "Adress", ...cfg.before, ...answered.map(([f]) => f.label)];
+      expect(
+        Object.keys(details).join(" | ") === expected.join(" | "),
+        `filas de details: ${Object.keys(details).join(" | ")} (esperado: ${expected.join(" | ")})`
+      );
+      for (const [f, value] of answered) {
+        expect(details[f.label] === value, `"${f.label}" llegó como "${details[f.label]}" en vez de "${value}"`);
+      }
+      expect(!(skipped.label in details), `el campo vacío "${skipped.label}" llegó al correo`);
+      note(`${answered.length} respuestas propias + ${cfg.before.length} de la calculadora`);
     });
   }
 

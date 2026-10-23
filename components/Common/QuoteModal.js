@@ -10,6 +10,20 @@ const EMPTY_FORM = {
   [HONEYPOT_FIELD]: "",
 };
 
+// A blank answer per declared field, so every control stays controlled and a
+// finished request leaves nothing behind for the next visitor.
+const emptyAnswers = (fields) =>
+  (fields || []).reduce((acc, field) => ({ ...acc, [field.name]: "" }), {});
+
+// The answers that were actually given, keyed by their Swedish label and in
+// the order the fields were declared: that is how they read in the mail to the
+// office. An untouched field adds no row.
+const answeredRows = (fields, form) =>
+  (fields || []).reduce((acc, field) => {
+    const value = String(form[field.name] ?? "").trim();
+    return value ? { ...acc, [field.label]: value } : acc;
+  }, {});
+
 // Quote requests reserve no time slot, so they go to the contact endpoint
 // (which mails the office and confirms to the customer), not to /api/booking.
 const QuoteModal = ({
@@ -18,10 +32,14 @@ const QuoteModal = ({
   service,
   title = "Begär offert",
   subject,
+  addressLabel = "Adress",
   addressPlaceholder = "Ange din adress",
   details = null,
+  // Declarative, service-specific questions: see config/quoteFields.js. Every
+  // one of them is optional on purpose.
+  fields = null,
 }) => {
-  const [form, setForm] = useState(EMPTY_FORM);
+  const [form, setForm] = useState(() => ({ ...EMPTY_FORM, ...emptyAnswers(fields) }));
   const [status, setStatus] = useState("idle"); // idle | sending | sent
   const [error, setError] = useState("");
   const firstField = useRef(null);
@@ -71,7 +89,12 @@ const QuoteModal = ({
           phone: form.phone,
           subject: subject || `Offertförfrågan – ${service}`,
           text: form.message,
-          details: { Tjänst: service, Adress: form.address, ...(details || {}) },
+          details: {
+            Tjänst: service,
+            [addressLabel]: form.address,
+            ...(details || {}),
+            ...answeredRows(fields, form),
+          },
           [HONEYPOT_FIELD]: form[HONEYPOT_FIELD],
           [STARTED_AT_FIELD]: startedAt.current,
         }),
@@ -79,7 +102,7 @@ const QuoteModal = ({
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.message);
 
-      setForm(EMPTY_FORM);
+      setForm({ ...EMPTY_FORM, ...emptyAnswers(fields) });
       setStatus("sent");
     } catch (err) {
       setStatus("idle");
@@ -176,7 +199,7 @@ const QuoteModal = ({
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="quote-address">Adress</label>
+                <label htmlFor="quote-address">{addressLabel}</label>
                 <input
                   type="text"
                   id="quote-address"
@@ -187,6 +210,48 @@ const QuoteModal = ({
                   required
                 />
               </div>
+              {(fields || []).map((field) => {
+                const id = `quote-field-${field.name}`;
+                const hintId = field.hint ? `${id}-hint` : undefined;
+                const shared = {
+                  id,
+                  className: "form-control",
+                  value: form[field.name] ?? "",
+                  onChange: update(field.name),
+                  "aria-describedby": hintId,
+                };
+                return (
+                  <div className="form-group" key={field.name}>
+                    <label htmlFor={id}>{field.label}</label>
+                    {field.type === "select" ? (
+                      <select {...shared}>
+                        <option value="">{field.placeholder || "Välj ett alternativ"}</option>
+                        {(field.options || []).map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : field.type === "textarea" ? (
+                      <textarea {...shared} rows="3" placeholder={field.placeholder} />
+                    ) : (
+                      <input
+                        {...shared}
+                        type={field.type === "number" ? "number" : "text"}
+                        inputMode={field.type === "number" ? "decimal" : undefined}
+                        min={field.type === "number" ? "0" : undefined}
+                        step={field.type === "number" ? "any" : undefined}
+                        placeholder={field.placeholder}
+                      />
+                    )}
+                    {field.hint && (
+                      <small className="form-text text-muted" id={hintId}>
+                        {field.hint}
+                      </small>
+                    )}
+                  </div>
+                );
+              })}
               <div className="form-group">
                 <label htmlFor="quote-message">Meddelande</label>
                 <textarea
