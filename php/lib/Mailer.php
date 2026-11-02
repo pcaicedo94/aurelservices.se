@@ -68,6 +68,7 @@ final class Mailer
             }
             $mail->Subject = $subject;
             $mail->isHTML(true);
+            self::embedLogo($mail, $message['html']);
             $mail->Body = $message['html'];
             $mail->AltBody = self::plainText($message['html']);
             $mail->send();
@@ -76,6 +77,30 @@ final class Mailer
         } finally {
             $mail->clearAllRecipients();
             $mail->clearReplyTos();
+            $mail->clearAttachments();
+        }
+    }
+
+    /**
+     * Attaches the logo inline, and only to the messages whose HTML asks for
+     * it. A missing file is not worth losing a booking over: the mail then
+     * goes out with the image broken, and the reason lands in the log.
+     */
+    private static function embedLogo(PHPMailer $mail, string $html): void
+    {
+        if (!str_contains($html, 'cid:' . EmailLayout::LOGO_CID)) {
+            return;
+        }
+        $path = __DIR__ . '/../assets/logo-email.png';
+        if (!is_readable($path)) {
+            error_log('Email logo missing at ' . $path);
+
+            return;
+        }
+        try {
+            $mail->addEmbeddedImage($path, EmailLayout::LOGO_CID, 'aurel-logo.png', PHPMailer::ENCODING_BASE64, 'image/png');
+        } catch (PHPMailerException $e) {
+            error_log('Email logo could not be attached: ' . $e->getMessage());
         }
     }
 

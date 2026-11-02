@@ -15,6 +15,14 @@ final class EmailLayout
     private const CELL = 'padding: 10px 0; border-bottom: 1px solid #dee2e6;';
     private const LABEL = 'padding: 10px 0; border-bottom: 1px solid #dee2e6; color: #6c757d;';
 
+    /**
+     * The logo is attached inline by Mailer, never linked: see utils/emailLogo.js
+     * for why. php/assets/logo-email.png is the same 400x157 file the Node
+     * mailer carries as base64; both come from scripts/build-email-logo.mjs.
+     */
+    public const LOGO_CID = 'aurel-logo';
+    public const LOGO_WIDTH = 200;
+
     public const FROM_NAME = 'Aurel Städ & Allservice';
     public const FROM_ADDRESS = 'info@aurelservice.se';
     public const ADMIN_EMAIL = 'info@aurelservice.se';
@@ -54,8 +62,14 @@ final class EmailLayout
     public static function shell(string $heading, string $inner, string $footer = ''): string
     {
         return "\n        <div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">"
-            . "\n          <div style=\"background: linear-gradient(135deg, #2d9070, #34a783); padding: 25px 30px; "
-            . "border-radius: 12px 12px 0 0;\">"
+            . "\n          <div style=\"background: #ffffff; padding: 20px 30px; border: 1px solid #e9ecef; "
+            . "border-bottom: none; border-radius: 12px 12px 0 0; text-align: center;\">"
+            . "\n            <img src=\"cid:" . self::LOGO_CID . '" alt="Aurel Städ &amp; Allservice AB" width="'
+            . self::LOGO_WIDTH . '" style="display: block; margin: 0 auto; width: ' . self::LOGO_WIDTH
+            . 'px; max-width: 100%; height: auto; border: 0;" />'
+            . "\n          </div>"
+            . "\n          <div style=\"background-color: #2d9070; "
+            . "background: linear-gradient(135deg, #2d9070, #34a783); padding: 20px 30px;\">"
             . "\n            <h2 style=\"color: #fff; margin: 0; font-size: 22px;\">" . Escape::html($heading) . '</h2>'
             . "\n          </div>"
             . "\n          <div style=\"background: #f8f9fa; padding: 25px 30px; border-radius: 0 0 12px 12px; "

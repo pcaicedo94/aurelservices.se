@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { simulatedError, isLiveSite } from "./testMode.js";
+import { LOGO_CID, logoAttachment } from "./emailLogo.js";
 
 // Nodemailer only connects when a message is sent, so creating the transports
 // lazily once per server instance is enough.
@@ -48,16 +49,24 @@ export function redirectForStaging(message, env = process.env) {
   };
 }
 
+// The logo travels as an inline attachment, attached here rather than by each
+// caller: every message built with emailLayout.shell() references it, and one
+// that does not (a future plain-text notice) must not carry a stray image.
+export function withLogo(message) {
+  if (!String(message.html || "").includes(`cid:${LOGO_CID}`)) return message;
+  return { ...message, attachments: [...(message.attachments || []), logoAttachment()] };
+}
+
 // Outside test mode (no trace) mail goes out through Simply SMTP. In test mode
 // it is only rendered and recorded in the trace; see utils/testMode.js.
 export function createMailer({ trace = null } = {}) {
   return {
     async send(message) {
-      if (!trace) return smtp().sendMail(redirectForStaging(message));
+      if (!trace) return smtp().sendMail(redirectForStaging(withLogo(message)));
 
       if (trace.scenario === "mail-error") throw simulatedError("mail");
 
-      const info = await json().sendMail(message);
+      const info = await json().sendMail(withLogo(message));
       trace.mails.push({
         to: message.to,
         replyTo: message.replyTo || null,

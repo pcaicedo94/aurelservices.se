@@ -1,4 +1,5 @@
 import { escapeHtml } from "./escapeHtml";
+import { LOGO_CID, LOGO_WIDTH } from "./emailLogo";
 
 // Shared chrome for the transactional emails, so bookings and contact messages
 // look like they come from the same company.
@@ -30,7 +31,10 @@ export function row(label, value, { last = false, bold = false, href = null } = 
 export function shell(heading, inner, footer = "") {
   return `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: linear-gradient(135deg, #2d9070, #34a783); padding: 25px 30px; border-radius: 12px 12px 0 0;">
+          <div style="background: #ffffff; padding: 20px 30px; border: 1px solid #e9ecef; border-bottom: none; border-radius: 12px 12px 0 0; text-align: center;">
+            <img src="cid:${LOGO_CID}" alt="Aurel Städ &amp; Allservice AB" width="${LOGO_WIDTH}" style="display: block; margin: 0 auto; width: ${LOGO_WIDTH}px; max-width: 100%; height: auto; border: 0;" />
+          </div>
+          <div style="background-color: #2d9070; background: linear-gradient(135deg, #2d9070, #34a783); padding: 20px 30px;">
             <h2 style="color: #fff; margin: 0; font-size: 22px;">${escapeHtml(heading)}</h2>
           </div>
           <div style="background: #f8f9fa; padding: 25px 30px; border-radius: 0 0 12px 12px; border: 1px solid #e9ecef; border-top: none;">
