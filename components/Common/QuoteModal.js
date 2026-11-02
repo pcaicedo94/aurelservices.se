@@ -15,6 +15,15 @@ const EMPTY_FORM = {
 const emptyAnswers = (fields) =>
   (fields || []).reduce((acc, field) => ({ ...acc, [field.name]: "" }), {});
 
+// Today in the visitor's own timezone, as the `min` of a date field: a quote
+// can be wanted today, never last week. toISOString() would be the UTC day,
+// which is yesterday for anyone east of Greenwich early in the morning.
+const localToday = () => {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
+
 // The answers that were actually given, keyed by their Swedish label and in
 // the order the fields were declared: that is how they read in the mail to the
 // office. An untouched field adds no row.
@@ -42,6 +51,9 @@ const QuoteModal = ({
   const [form, setForm] = useState(() => ({ ...EMPTY_FORM, ...emptyAnswers(fields) }));
   const [status, setStatus] = useState("idle"); // idle | sending | sent
   const [error, setError] = useState("");
+  // Set on opening, not at render: the server has no visitor timezone, and a
+  // modal left open overnight must not keep yesterday as its earliest date.
+  const [today, setToday] = useState("");
   const firstField = useRef(null);
   const startedAt = useRef(0);
 
@@ -50,6 +62,7 @@ const QuoteModal = ({
 
     // Sent along so the API can tell a person from a bot that submits at once.
     startedAt.current = Date.now();
+    setToday(localToday());
 
     // A finished request should not greet the visitor on the next opening.
     if (status === "sent") setStatus("idle");
@@ -234,6 +247,12 @@ const QuoteModal = ({
                       </select>
                     ) : field.type === "textarea" ? (
                       <textarea {...shared} rows="3" placeholder={field.placeholder} />
+                    ) : field.type === "date" ? (
+                      // A date is picked, never typed: the office used to get
+                      // "8:e november" and had to guess the year. A date input
+                      // ignores `placeholder`, so what to do when the date is
+                      // not settled yet belongs in `hint`.
+                      <input {...shared} type="date" min={today || undefined} />
                     ) : (
                       <input
                         {...shared}

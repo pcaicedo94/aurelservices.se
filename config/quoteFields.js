@@ -26,6 +26,9 @@
 const PREMISES = ["Kontor", "Butik", "Restaurang eller café", "Lager eller industrilokal", "Annan lokal"];
 const ONE_OFF_OR_RECURRING = ["Enstaka uppdrag", "Regelbundet enligt schema", "Vet inte än"];
 const AREA_HINT = "Osäker på ytan? Lämna fältet tomt – vi räknar på platsbesöket.";
+// Date fields are pickers, and a picker cannot say "så snart som möjligt". The
+// way out of that is the same everywhere: leave it empty and write it down.
+const DATE_HINT = "Inte bestämt än? Lämna fältet tomt och beskriv tidsplanen i meddelandet.";
 
 export const QUOTE_FIELDS = {
   // The start page hero is not a service page: the popup opens with "Städning i
@@ -84,12 +87,7 @@ export const QUOTE_FIELDS = {
         "Både löpande städning och slutstädning",
       ],
     },
-    {
-      name: "when",
-      label: "När behöver ni städningen?",
-      type: "text",
-      placeholder: "T.ex. vecka 48 eller 15 december",
-    },
+    { name: "when", label: "När behöver ni städningen?", type: "date", hint: DATE_HINT },
   ],
 
   // Page: trapphus, entréer och hissar för fastighetsägare, BRF och företag,
@@ -119,10 +117,13 @@ export const QUOTE_FIELDS = {
     { name: "carpets", label: "Antal mattor", type: "number", placeholder: "T.ex. 2" },
     {
       name: "measurements",
-      label: "Ungefärliga mått",
+      // "Ungefärliga mått" alone was answered with a bare "20", which the
+      // office cannot read: 20 m², 20 cm or a 20-metre runner. The unit and
+      // the two sides are now part of the question.
+      label: "Ungefärliga mått i meter (längd x bredd)",
       type: "text",
       placeholder: "T.ex. 2 x 3 meter",
-      hint: "Har du flera mattor? Ange måtten för var och en.",
+      hint: "Inte kvadratmeter. Har du flera mattor? Ange måtten för var och en.",
     },
     {
       name: "material",
@@ -257,12 +258,7 @@ export const QUOTE_FIELDS = {
       type: "select",
       options: ["Lägenhet", "Villa eller hus", "Lokal eller kontor", "Gemensamma utrymmen i en fastighet"],
     },
-    {
-      name: "when",
-      label: "När vill du att arbetet utförs?",
-      type: "text",
-      placeholder: "T.ex. i november eller så snart som möjligt",
-    },
+    { name: "when", label: "När vill du att arbetet utförs?", type: "date", hint: DATE_HINT },
   ],
 
   // Page: flyttstädning av en lokal inför överlämning och besiktning, med
@@ -270,12 +266,7 @@ export const QUOTE_FIELDS = {
   "/foretag/flyttstadning": [
     { name: "premises", label: "Typ av lokal", type: "select", options: PREMISES },
     { name: "area", label: "Ungefärlig yta (m²)", type: "number", placeholder: "T.ex. 250", hint: AREA_HINT },
-    {
-      name: "handover",
-      label: "När ska lokalen lämnas?",
-      type: "text",
-      placeholder: "T.ex. 30 november eller vecka 49",
-    },
+    { name: "handover", label: "När ska lokalen lämnas?", type: "date", hint: DATE_HINT },
   ],
 
   // Page: fönsterputs invändigt och utvändigt, som enstaka uppdrag eller
@@ -326,12 +317,7 @@ export const QUOTE_FIELDS = {
   // Påfyllning av förbrukningsmaterial is listed on the page as something done
   // "vid behov", so it is worth knowing before the quote.
   "/foretag/kontorsstadning": [
-    {
-      name: "start",
-      label: "Önskat startdatum",
-      type: "text",
-      placeholder: "T.ex. 1 december eller så snart som möjligt",
-    },
+    { name: "start", label: "Önskat startdatum", type: "date", hint: DATE_HINT },
     {
       name: "supplies",
       label: "Ska vi fylla på förbrukningsmaterial?",
