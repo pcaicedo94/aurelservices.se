@@ -10,11 +10,16 @@ import {
 
 const PENDING = "[ATT BEKRÄFTA";
 
-// Sources: Prislista 2026 (pages 1-3), the service copy in "Servicios
-// privados" and the client's own Swedish wording in Q90, Q92 and Q101-Q110,
-// answered on 2026-10-15. Answers are plain paragraphs so the same text feeds
-// the FAQPage JSON-LD. Passages in [ATT BEKRÄFTA: …] are not confirmed by the
-// client yet, and isConfirmed() keeps them out of the structured data.
+// Sources: Prislista för privatpersoner Aurel 2027, the service copy in
+// "Servicios privados" and the client's own Swedish wording in Q90, Q92 and
+// Q101-Q110, answered on 2026-10-15. Answers are plain paragraphs so the same
+// text feeds the FAQPage JSON-LD. Passages in [ATT BEKRÄFTA: …] are not
+// confirmed by the client yet, and isConfirmed() keeps them out of the
+// structured data.
+//
+// The figures here are written out rather than read from config/prices.json,
+// which is why scripts/qa-pricing.mjs checks the ones that can go stale: the
+// 2027 list silently falsified two of these answers before that check existed.
 export const FAQ_ITEMS = [
   {
     id: "rut",
@@ -60,7 +65,7 @@ export const FAQ_ITEMS = [
     question: "Vad ingår i fönsterputsning?",
     answer: [
       "Vi putsar fönstren på in- och utsidan, rengör bågarna, torkar av karmar och kanter och dammar av persiennerna.",
-      "Priset beror på hur många rum bostaden har. Har bostaden fem rum och kök eller fler, eller är den större än 120 kvadratmeter, lämnar vi en offert. [ATT BEKRÄFTA: om bostäder med fem rum och kök får pris direkt eller offert] Spröjs, takhöjd över 280 cm och treglasfönster ger ett tillägg på 25 procent vardera.",
+      "Priset beror på hur många rum bostaden har. Har bostaden fem rum och kök eller fler, eller är den större än 120 kvadratmeter, lämnar vi en offert. I rumspriset ingår tre fönsterbågar per rum; har bostaden fler kostar varje båge därutöver 110 kr, eller 140 kr om fönstren har spröjs. Är fönstren överhängda, svåråtkomliga eller kraftigt nedsmutsade lämnar vi en offert i stället, för då behöver vi se dem först.",
     ],
     link: { href: "/tjanster/fonsterputs", label: "Läs mer och beräkna pris för fönsterputsning" },
   },
@@ -68,8 +73,8 @@ export const FAQ_ITEMS = [
     id: "nedsmutsad",
     question: "Vad händer om bostaden är smutsigare än normalt?",
     answer: [
-      "Priset för storstädning och flyttstädning utgår från att bostaden är i normalt skick. Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 procent tillkomma.",
-      "Vid extrem nedsmutsning, där arbetsinsatsen väsentligt överstiger vad som normalt kan förväntas, görs en separat bedömning och priset kan justeras utöver 20 procent.",
+      "Priset utgår från att bostaden är i normalt skick. Vid kraftig nedsmutsning kan ett pristillägg tillkomma: upp till 20 procent vid storstädning och upp till 25 procent vid flyttstädning.",
+      "Vid extrem nedsmutsning, där arbetsinsatsen väsentligt överstiger vad som normalt kan förväntas, görs en separat bedömning och priset kan justeras utöver de procentsatserna.",
       "Du informeras alltid på plats och ska godkänna pristillägget innan vi utför något extra arbete. Godkänner du inte det justerade priset utför vi endast det arbete som ryms inom den ursprungliga beställningen, alternativt avbryter vi uppdraget efter överenskommelse. Vi kan då inte garantera det avtalade slutresultatet.",
     ],
   },

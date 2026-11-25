@@ -16,7 +16,7 @@ use DateTimeImmutable;
  * JavaScript keep their marker here.
  *
  *   MIN_NOTICE_DAYS / MIN_NOTICE_TIME  utils/bookingRules.js
- *   BOOKABLE_WEEKDAYS                  utils/bookingRules.js  (TODO Q13)
+ *   BOOKABLE_WEEKDAYS                  utils/bookingRules.js  (Q13)
  *   FIRST_START_MINUTE / LAST_START_MINUTE  utils/bookingRules.js (Q16)
  *   MIN_BILLABLE_HOURS / MAX_BOOKING_HOURS  utils/bookingRules.js (TODO Q14)
  *   MAX_ONLINE_AREA                    lib/booking/rules.js
@@ -30,8 +30,13 @@ final class BookingRules
     public const MIN_NOTICE_DAYS = 2;
     public const MIN_NOTICE_TIME = '07:00';
 
-    /** TODO(cliente Q13): confirm that bookings are Monday to Friday only. 0 = Sunday ... 6 = Saturday. */
-    public const BOOKABLE_WEEKDAYS = [1, 2, 3, 4, 5];
+    /**
+     * Q13 (client, confirmed 2026-11-24): Monday to Saturday. The 2027 price
+     * list prices Saturday (320 kr/h, 400 kr/h for a one-off clean), so it is
+     * bookable; Sunday has no rate in any list and stays closed.
+     * 0 = Sunday ... 6 = Saturday.
+     */
+    public const BOOKABLE_WEEKDAYS = [1, 2, 3, 4, 5, 6];
 
     /**
      * Q16 (client, confirmed): a booking may start from 07:00 to 15:00
@@ -337,7 +342,7 @@ final class BookingRules
                 . '. Vänligen välj en senare tid.';
         }
         if ($has('weekday')) {
-            return 'Vi tar emot bokningar måndag till fredag. Vänligen välj en vardag.';
+            return 'Vi tar emot bokningar måndag till lördag. Vänligen välj en annan dag.';
         }
         if ($has('start-time')) {
             return 'Vänligen välj en starttid mellan 07:00 och 15:00.';
@@ -371,6 +376,7 @@ final class BookingRules
                 'format' => static fn (string $v): string => self::CONTACT_PREFERENCES[$v] ?? $v],
             ['key' => 'area', 'label' => 'Yta', 'format' => static fn (string $v): string => $v . ' m²'],
             ['key' => 'rooms', 'label' => 'Rum', 'format' => null],
+            ['key' => 'bagar', 'label' => 'Fönsterbågar', 'format' => null],
             ['key' => 'numberOfUnits', 'label' => 'Enheter', 'format' => null],
             ['key' => 'frequency', 'label' => 'Frekvens', 'format' => null],
             ['key' => 'estimatedHours', 'label' => 'Beräknad tid',

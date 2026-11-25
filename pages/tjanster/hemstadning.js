@@ -21,7 +21,8 @@ import {
 } from "../../lib/booking/rules";
 import {
   estimateHours,
-  HOME_FREQUENCY_RATES,
+  HOME_MONTHLY_RATE,
+  HOME_ONETIME_RATES,
   HOME_TIME_ESTIMATE,
   HOME_WEEKDAY_RATES,
   homeCleaningHourlyRate,
@@ -202,8 +203,12 @@ const HomeCleaning = () => {
                   required
                 >
                   <option value="">Välj frekvens</option>
-                  <option value="onetime">{`Enstaka hemstädning (${HOME_FREQUENCY_RATES.onetime} kr/h)`}</option>
-                  <option value="1">{`1 gång/månad (${HOME_FREQUENCY_RATES[1]} kr/h)`}</option>
+                  {/* "från", because a one-off clean costs more on a Saturday
+                      (HOME_ONETIME_RATES.saturday) and the day is not known
+                      until the date is picked. The monthly plan is one rate
+                      for every bookable day, so it names its figure. */}
+                  <option value="onetime">{`Enstaka hemstädning (från ${HOME_ONETIME_RATES.weekday} kr/h)`}</option>
+                  <option value="1">{`1 gång/månad (${HOME_MONTHLY_RATE} kr/h)`}</option>
                   <option value="2">2 gånger/månad</option>
                   <option value="4">4 gånger/månad</option>
                 </select>
@@ -213,11 +218,21 @@ const HomeCleaning = () => {
                 inputRef={dateInputRef}
                 conflict={flow.isConflict(date.dateTime)}
               >
-                {hourlyRate && (frequency === "2" || frequency === "4") && (
+                {/* Every plan but the monthly one is priced by the day, so
+                    the chosen day's rate is named. Saturday is included since
+                    the 2027 list, at a higher rate than any weekday. */}
+                {hourlyRate && frequency !== "1" && (
                   <small className="form-text text-muted">
                     Timtaxa för vald dag: {formatPrice(hourlyRate)}/h
-                    {hourlyRate === HOME_WEEKDAY_RATES.mondayToWednesday && " (Måndag-Onsdag)"}
-                    {hourlyRate === HOME_WEEKDAY_RATES.thursdayToFriday && " (Torsdag-Fredag)"}
+                    {frequency === "onetime"
+                      ? hourlyRate === HOME_ONETIME_RATES.saturday
+                        ? " (Lördag)"
+                        : " (Måndag-Fredag)"
+                      : [
+                          [HOME_WEEKDAY_RATES.mondayToWednesday, " (Måndag-Onsdag)"],
+                          [HOME_WEEKDAY_RATES.thursdayToFriday, " (Torsdag-Fredag)"],
+                          [HOME_WEEKDAY_RATES.saturday, " (Lördag)"],
+                        ].find(([rate]) => rate === hourlyRate)?.[1]}
                   </small>
                 )}
               </DateTimeField>

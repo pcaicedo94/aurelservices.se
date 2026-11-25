@@ -11,8 +11,11 @@ import { ANTI_SPAM_FIELDS } from "./antiSpam.js";
 export const MIN_NOTICE_DAYS = 2;
 export const MIN_NOTICE_TIME = "07:00";
 
-// TODO(cliente Q13): confirm that bookings are Monday to Friday only.
-export const BOOKABLE_WEEKDAYS = [1, 2, 3, 4, 5]; // 0 = Sunday ... 6 = Saturday
+// Q13 (client, confirmed 2026-11-24): the 2027 price list prices Saturday for
+// the first time — 320 kr/h on a subscription, 400 kr/h for a one-off clean —
+// so Saturday is open to online booking. Sunday appears in no price list and
+// stays closed: there is no rate to charge it at.
+export const BOOKABLE_WEEKDAYS = [1, 2, 3, 4, 5, 6]; // 0 = Sunday ... 6 = Saturday
 
 // Q16 (client, confirmed): a booking may start from 07:00 to 15:00 inclusive.
 // The forms apply the same window.
@@ -162,7 +165,7 @@ export function bookingErrorMessage(errors, now = new Date()) {
   if (has("too-soon")) {
     return `Tidigast bokningsbara tid är ${formatStockholm(earliestBookableStart(now))}. Vänligen välj en senare tid.`;
   }
-  if (has("weekday")) return "Vi tar emot bokningar måndag till fredag. Vänligen välj en vardag.";
+  if (has("weekday")) return "Vi tar emot bokningar måndag till lördag. Vänligen välj en annan dag.";
   if (has("start-time")) return "Vänligen välj en starttid mellan 07:00 och 15:00.";
   if (has("price")) {
     return `Vi kunde inte räkna fram ett pris för den här bokningen. Begär gärna en offert så återkommer vi med ett pris, eller ring oss på ${PHONE}.`;
@@ -180,6 +183,7 @@ export const BOOKING_DETAIL_FIELDS = [
   { key: "contactPreference", label: "Kontaktmetod", format: (v) => CONTACT_PREFERENCES[v] || v },
   { key: "area", label: "Yta", format: (v) => `${v} m²` },
   { key: "rooms", label: "Rum" },
+  { key: "bagar", label: "Fönsterbågar" },
   { key: "numberOfUnits", label: "Enheter" },
   { key: "frequency", label: "Frekvens" },
   { key: "estimatedHours", label: "Beräknad tid", format: (v) => `${v} timmar` },

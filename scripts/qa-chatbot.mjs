@@ -40,7 +40,8 @@ import {
   deepCleaningBasePrice,
   DEEP_CLEANING_EXTRAS,
   DEEP_CLEANING_TIERS,
-  HOME_FREQUENCY_RATES,
+  HOME_MONTHLY_RATE,
+  HOME_ONETIME_RATES,
   HOME_WEEKDAY_RATES,
   INVOICE_FEE,
   MOVE_CLEANING_EXTRAS,
@@ -48,6 +49,7 @@ import {
   moveCleaningBasePrice,
   OFFICE_FREQUENCIES,
   WINDOW_BALCONY_PRICE,
+  WINDOW_EXTRA_BAGE_PRICES,
   WINDOW_ROOM_PRICES,
 } from "../lib/pricing.js";
 
@@ -207,13 +209,18 @@ console.log("\n=== Las cifras en kr vienen de los datos ===");
 const fromPricing = new Set(
   [
     ...Object.values(HOME_WEEKDAY_RATES),
-    ...Object.values(HOME_FREQUENCY_RATES),
+    ...Object.values(HOME_ONETIME_RATES),
+    HOME_MONTHLY_RATE,
     ...DEEP_CLEANING_TIERS.map((tier) => deepCleaningBasePrice(tier.maxSqm)),
     ...Object.values(DEEP_CLEANING_EXTRAS),
-    ...MOVE_CLEANING_TIERS.flatMap((tier) => [tier.price, tier.pricePerSqm]),
+    // minPrice too: since the 2027 list the bot names it next to the rate,
+    // because the rate alone understates every home at the foot of a band.
+    ...MOVE_CLEANING_TIERS.flatMap((tier) => [tier.price, tier.pricePerSqm, tier.minPrice]),
     ...MOVE_CLEANING_TIERS.map((tier) => (tier.maxSqm === null ? null : moveCleaningBasePrice(tier.maxSqm))),
     ...Object.values(MOVE_CLEANING_EXTRAS),
     ...Object.values(WINDOW_ROOM_PRICES),
+    // The bot names both since the client said how many bågar a room includes.
+    ...Object.values(WINDOW_EXTRA_BAGE_PRICES),
     WINDOW_BALCONY_PRICE,
     ...Object.values(OFFICE_FREQUENCIES).map((plan) => plan.hourlyRate),
     ...CONTAINER_CLEANING_TIERS.flatMap((tier) =>
@@ -331,11 +338,15 @@ function checkRates(label, nodeId, expected) {
   check(`${label}: no cita ningún otro importe`, extra.join(", ") || "ninguno", "ninguno");
 }
 
+// Six figures since the 2027 list gave Saturday a rate of its own, in both the
+// subscription plans and the one-off clean.
 checkRates("hemstädning", "tjanst.hemstadning.pris", [
   S.homecleaning.weekdayRates.byDay.monday,
   S.homecleaning.weekdayRates.byDay.thursday,
+  S.homecleaning.weekdayRates.byDay.saturday,
   S.homecleaning.frequencies["1"].hourlyRate,
   S.homecleaning.frequencies.onetime.hourlyRate,
+  S.homecleaning.frequencies.onetime.saturdayHourlyRate,
 ]);
 
 checkRates(
@@ -348,8 +359,12 @@ checkRates("storstädning (tillägg)", "tjanst.storstadning.fraga1", [
   ...new Set(Object.values(S.deepcleaning.extras).map((extra) => extra.price)),
 ]);
 
+// Each band is named by its rate AND its minimum: quoting 55 kr/kvm alone would
+// read as 2 805 kr for a 51 m² home, where the minimum makes it 3 290 kr.
 checkRates("flyttstädning", "tjanst.flyttstadning.pris", [
-  ...new Set(S.movecleaning.tiers.map((tier) => tier.price ?? tier.pricePerSqm)),
+  ...new Set(
+    S.movecleaning.tiers.flatMap((tier) => [tier.price ?? tier.pricePerSqm, tier.minPrice])
+  ),
 ]);
 
 checkRates("flyttstädning (tillägg)", "tjanst.flyttstadning.fraga1", [
@@ -390,14 +405,17 @@ ok(
   byId["tjanst.fonsterputs.pris"].message.includes(`${S.windowcleaning.quote.fromRooms} rum`) &&
     byId["tjanst.fonsterputs.pris"].message.includes(`${S.windowcleaning.quote.aboveSqm} kvm`)
 );
+// The 2027 list has no percentage surcharges, so the answer must not quote a
+// percentage at all, and must send the two "Offert" cases to a quote instead.
 ok(
-  "fönsterputsning nombra el recargo y que se suma",
-  byId["tjanst.fonsterputs.fraga1"].message.includes(
-    `${S.windowcleaning.surcharges.items.sprojs.percent} procent`
-  ) &&
-    byId["tjanst.fonsterputs.fraga1"].message.includes(
-      `${2 * S.windowcleaning.surcharges.items.sprojs.percent} procent`
-    )
+  "fönsterputsning ya no promete ningún recargo porcentual",
+  !/\d+\s*procent/.test(byId["tjanst.fonsterputs.fraga1"].message)
+);
+ok(
+  "fönsterputsning manda a offert los dos casos de la lista",
+  /svåråtkomliga/i.test(byId["tjanst.fonsterputs.fraga1"].message) &&
+    /kraftigt nedsmutsade/i.test(byId["tjanst.fonsterputs.fraga1"].message) &&
+    /offert/i.test(byId["tjanst.fonsterputs.fraga1"].message)
 );
 ok(
   "bodstädning nombra el límite de offert y las semanas",
@@ -420,11 +438,16 @@ ok(
   "el plazo de pago sale de los datos",
   byId["info.betalning"].message.includes(`${prices.terms.paymentTermsDays.value} dagars`)
 );
+// Saturday became bookable on 2026-11-24, when the 2027 list gave it a rate.
+// Sunday is the only closed day, and the answer has to say which is which or a
+// customer who could have booked a Saturday is told the opposite.
 ok(
-  "la ventana de reserva es 07:00–15:00 sin fines de semana",
+  "la ventana de reserva es 07:00–15:00, de lunes a sábado",
   /07:00/.test(byId["info.tider"].message) &&
     /15:00/.test(byId["info.tider"].message) &&
-    /[Ll]ördagar och söndagar går inte att boka/.test(byId["info.tider"].message)
+    /måndag till lördag/.test(byId["info.tider"].message) &&
+    /[Ss]öndagar går inte att boka/.test(byId["info.tider"].message) &&
+    !/lördagar och söndagar går inte att boka/i.test(byId["info.tider"].message)
 );
 
 /* ------------------- offert cuando no hay tarifa fija -------------------- */

@@ -16,6 +16,7 @@ import {
   estimateHours,
   moveCleaningBasePrice,
   MOVE_CLEANING_EXTRAS,
+  MOVE_CLEANING_QUOTE_ABOVE_AREA,
   MOVE_TIME_ESTIMATE,
 } from "../../lib/pricing";
 import {
@@ -46,7 +47,10 @@ const MoveCleaning = () => {
 
   // Derived on every render, so the summary and the payload always follow the
   // current inputs and never keep a price from values that were cleared.
-  const area = parseArea(size);
+  // New in the 2027 list: over 150 m² flyttstädning is quoted, not priced
+  // online. The 2026 list went on at 42 kr/m² with no upper limit, so without
+  // this the page would keep pricing sizes the client no longer prices.
+  const area = parseArea(size, { max: MOVE_CLEANING_QUOTE_ABOVE_AREA });
   // Rounded to two decimals as before: side areas are billed per estimated hour.
   const cleaningTime =
     area.status === "ok" ? Number(estimateHours(area.value, MOVE_TIME_ESTIMATE).toFixed(2)) : null;
@@ -289,7 +293,7 @@ const MoveCleaning = () => {
               hint={needsQuote ? "" : hint}
               onBook={flow.openContact}
               onQuote={() => setShowQuote(true)}
-              quoteNote="Så stora ytor prissätter vi med en offert. Skicka en förfrågan så återkommer vi."
+              quoteNote={`Över ${MOVE_CLEANING_QUOTE_ABOVE_AREA} m² prissätter vi med en offert. Skicka en förfrågan så återkommer vi.`}
             >
               <li>
                 <strong>Storlek:</strong> {describeArea(area)}

@@ -103,6 +103,7 @@ function stockholmDate(daysAhead) {
 
 const isWeekday = (weekday) => weekday >= 1 && weekday <= 5;
 const isSaturday = (weekday) => weekday === 6;
+const isSunday = (weekday) => weekday === 0;
 
 // First Stockholm date at least `daysAhead` days out whose weekday matches.
 function dayFrom(daysAhead, accept) {
@@ -269,11 +270,27 @@ async function runTestModeTests() {
     );
   }
 
-  const weekend = await post(booking({ dateTime: `${dayFrom(7, isSaturday)}T10:00` }), CONFLICT);
+  // Q13 was reopened on 2026-11-24: the 2027 price list prices Saturday, so
+  // Sunday is the only day the server still refuses on its weekday rule.
+  const sunday = await post(booking({ dateTime: `${dayFrom(7, isSunday)}T10:00` }), CONFLICT);
   check(
-    "Lördag avvisas med 400 (client Q13, bekräftat)",
-    weekend.status === 400 && /måndag till fredag/i.test(weekend.body?.message || ""),
-    `status ${weekend.status}: ${weekend.body?.message}`
+    "Söndag avvisas med 400 (client Q13, bekräftat)",
+    sunday.status === 400 && /måndag till lördag/i.test(sunday.body?.message || ""),
+    `status ${sunday.status}: ${sunday.body?.message}`
+  );
+  // The other half of the same rule: a Saturday must NOT be refused for being
+  // a Saturday. Sent with a price of 0 so the request is still rejected and
+  // nothing is written or mailed -- a valid Saturday booking would be accepted
+  // now, and this suite must stay side-effect free without --live. If the
+  // weekday rule had fired it would outrank the price in the message.
+  const saturday = await post(
+    booking({ dateTime: `${dayFrom(7, isSaturday)}T10:00`, totalPrice: 0 }),
+    CONFLICT
+  );
+  check(
+    "Lördag avvisas INTE på veckodagsregeln (2027 års prislista)",
+    saturday.status === 400 && /offert/i.test(saturday.body?.message || ""),
+    `status ${saturday.status}: ${saturday.body?.message}`
   );
 
   const early = await post(booking({ dateTime: `${weekday}T06:30` }), CONFLICT);
