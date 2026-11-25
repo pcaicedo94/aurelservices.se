@@ -11,6 +11,9 @@ import FAQbot from "../components/ChatBot/FAQbot";
 // Globals CSS
 import "../styles/style.css";
 import "../styles/responsive.css";
+// Glass + bento design layer. Last on purpose: it restyles the shared classes
+// above without editing the template stylesheet.
+import "../styles/glass.css";
 
 import Head from "next/head";
 import GoTop from "../components/Shared/GoTop";

@@ -207,8 +207,9 @@ const WindowCleaning = () => {
         {/* Form + Summary Section */}
         <div className="row">
           <div className="col-lg-6">
-            <h3 id="berakna-pris">Beräkna pris</h3>
+            {/* The heading lives inside the card, like "Summering" in the summary. */}
             <form onSubmit={(e) => e.preventDefault()} className="window-cleaning-form">
+              <h3 id="berakna-pris">Beräkna pris</h3>
               <div className="form-group">
                 <label htmlFor="rooms">Antal rum</label>
                 <select id="rooms" className="form-control" value={rooms} onChange={(e) => { setRooms(e.target.value); setOnlyBalcony(false); }} required={!onlyBalcony}>
