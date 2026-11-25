@@ -10,16 +10,18 @@ import DateTimeField from "../../components/Booking/DateTimeField";
 import useBookingFlow from "../../lib/booking/useBookingFlow";
 import useBookingDate from "../../lib/booking/useBookingDate";
 import FieldError, { invalidClass } from "../../components/Booking/FieldError";
-import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../../lib/booking/rules";
+import { bookingHint, isQuoteOnly, parseArea, parseCount, QUOTE_ONLY_HINT } from "../../lib/booking/rules";
 import {
   WINDOW_BALCONY_PRICE,
+  WINDOW_EXTRA_BAGE_PRICES,
+  windowExtraBagePrice,
+  windowIncludedBagar,
+  WINDOW_INCLUDED_BAGAR_PER_ROOM,
   WINDOW_QUOTE_ABOVE_AREA,
   WINDOW_QUOTE_FROM_ROOMS,
   WINDOW_ROOM_PRICES,
-  WINDOW_SURCHARGE_PERCENT,
-  WINDOW_SURCHARGE_RATE,
 } from "../../lib/pricing";
-import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET, roundKronor } from "../../lib/booking/format";
+import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET } from "../../lib/booking/format";
 import Seo from "../../components/Common/Seo";
 
 // Q21 (client, confirmed): a home of this many rooms, or larger than
@@ -27,13 +29,23 @@ import Seo from "../../components/Common/Seo";
 // is compared against the value of the select, which is a string.
 const QUOTE_FROM_ROOMS = String(WINDOW_QUOTE_FROM_ROOMS);
 
+// A home with more frames than this is not a flat the room price was written
+// for, so it is quoted instead of priced. It also stops a typo in the number
+// field from producing a five-figure total.
+const MAX_BAGAR = 100;
+
 const WindowCleaning = () => {
-  // Form state
+  // Form state. The two flags replace the three +25 % add-ons the 2026 list
+  // had (spröjs, ceilings over 280 cm, triple glazing): the 2027 list prices
+  // none of them, and the only two window conditions it still singles out are
+  // these, both as "Offert".
   const [rooms, setRooms] = useState("");
   const [size, setSize] = useState("");
+  const [bagarInput, setBagarInput] = useState("");
   const [hasSprojs, setHasSprojs] = useState(false);
-  const [hasHighCeiling, setHasHighCeiling] = useState(false);
-  const [hasTripleGlass, setHasTripleGlass] = useState(false);
+  const [hasOverhanging, setHasOverhanging] = useState(false);
+  const [hasHardToReach, setHasHardToReach] = useState(false);
+  const [hasHeavySoiling, setHasHeavySoiling] = useState(false);
   const [onlyBalcony, setOnlyBalcony] = useState(false);
   const [showQuote, setShowQuote] = useState(false);
   const date = useBookingDate();
@@ -46,15 +58,33 @@ const WindowCleaning = () => {
   // current inputs and never keep a price from values that were cleared.
   const area = parseArea(size, { max: WINDOW_QUOTE_ABOVE_AREA });
   const basePrice = onlyBalcony ? WINDOW_BALCONY_PRICE : WINDOW_ROOM_PRICES[rooms] || null;
+
+  // Q20b (client, confirmed): the room price covers three frames per rum. An
+  // empty field therefore means "the usual number", not "none", so leaving it
+  // alone never adds a charge; a customer who does not count their windows is
+  // quoted the plain room price, which is what the price list promises.
+  const includedBagar = onlyBalcony ? 0 : windowIncludedBagar(rooms);
+  const bagar = parseCount(bagarInput, { min: 1, max: MAX_BAGAR, emptyValue: includedBagar });
+  const extraBagePrice =
+    !onlyBalcony && bagar.status === "ok"
+      ? windowExtraBagePrice(bagar.value, rooms, hasSprojs)
+      : 0;
+  const extraBagar = Math.max(0, (bagar.status === "ok" ? bagar.value : 0) - includedBagar);
+
+  // Priced per frame or per job only after someone has seen the windows, and
+  // the list gives two of the three no amount at all. They are collected
+  // because they travel with the quote request, which is the point of asking.
   const addOns = [
     hasSprojs && "Spröjs",
-    hasHighCeiling && "Hög takhöjd",
-    hasTripleGlass && "Treglasfönster"
+    hasOverhanging && "Överhängda fönster",
+    hasHardToReach && "Svåråtkomliga fönster",
+    hasHeavySoiling && "Kraftigt nedsmutsade fönster",
+    extraBagar > 0 && `${extraBagar} extra fönsterbågar`,
   ].filter(Boolean);
-  // Q20 (client, confirmed): the add-ons add up instead of compounding, so two
-  // of them are +50 % of the base price, not +56 %.
-  const totalPrice =
-    basePrice === null ? null : roundKronor(basePrice * (1 + WINDOW_SURCHARGE_RATE * addOns.length));
+
+  // The room price plus the frames above the included ones. Nothing is
+  // multiplied: the 2027 list has no percentage surcharge left.
+  const totalPrice = basePrice === null ? null : basePrice + extraBagePrice;
 
   let selection = NOT_SET;
   if (onlyBalcony) selection = "Endast balkong";
@@ -63,10 +93,18 @@ const WindowCleaning = () => {
 
   const hint = bookingHint([
     { label: "antal rum", status: onlyBalcony || rooms ? "ok" : "empty" },
+    { label: "antal fönsterbågar", status: bagar.status === "invalid" ? "invalid" : "ok" },
     { label: "datum", status: date.check.status },
   ]);
+  // Spröjs and extra frames have a price, so they do not force a quote. The
+  // other three do: each needs someone to look at the windows first.
   const needsQuote = isQuoteOnly({
-    outOfRange: !onlyBalcony && (rooms === QUOTE_FROM_ROOMS || area.status === "quote"),
+    outOfRange:
+      hasOverhanging ||
+      hasHardToReach ||
+      hasHeavySoiling ||
+      bagar.status === "quote" ||
+      (!onlyBalcony && (rooms === QUOTE_FROM_ROOMS || area.status === "quote")),
     hint,
     price: totalPrice,
   });
@@ -76,7 +114,11 @@ const WindowCleaning = () => {
     cleaningType: "Fönsterputsning",
     rooms: onlyBalcony ? "Endast balkong" : `${rooms} rum och kök`,
     ...(area.status === "ok" && { area: String(area.value) }),
+    ...(!onlyBalcony && bagar.status === "ok" && { bagar: String(bagar.value) }),
     addOns: addOns.join(", "),
+    // Sent so the office can see the room price and the frame charge apart,
+    // instead of having to work out why the total is not a list price.
+    ...(basePrice !== null && { basePrice: String(basePrice) }),
     totalPrice,
     dateTime: date.dateTime,
   });
@@ -84,9 +126,11 @@ const WindowCleaning = () => {
   const clearCalculator = () => {
     setRooms("");
     setSize("");
+    setBagarInput("");
     setHasSprojs(false);
-    setHasHighCeiling(false);
-    setHasTripleGlass(false);
+    setHasOverhanging(false);
+    setHasHardToReach(false);
+    setHasHeavySoiling(false);
     setOnlyBalcony(false);
     date.setDateTime("");
   };
@@ -200,19 +244,52 @@ const WindowCleaning = () => {
               </div>
 
               <div className="form-group">
-                <label>Tillägg</label>
+                <label htmlFor="bagar">Antal fönsterbågar</label>
+                <input
+                  type="number"
+                  id="bagar"
+                  className={`form-control${bagar.status === "invalid" ? ` ${invalidClass}` : ""}`}
+                  placeholder={includedBagar ? String(includedBagar) : "Ange antal"}
+                  min="1"
+                  step="1"
+                  inputMode="numeric"
+                  value={bagarInput}
+                  onChange={(e) => setBagarInput(e.target.value)}
+                  disabled={onlyBalcony}
+                  aria-invalid={bagar.status === "invalid" || undefined}
+                  aria-describedby={bagar.status === "invalid" ? "bagar-error" : undefined}
+                />
+                <FieldError id="bagar-error">
+                  {bagar.status === "invalid" ? "Ange antalet fönsterbågar som ett helt tal." : null}
+                </FieldError>
+                <small className="form-text text-muted">
+                  {`I priset ingår ${WINDOW_INCLUDED_BAGAR_PER_ROOM} bågar per rum`}
+                  {includedBagar ? `, alltså ${includedBagar} för din bostad` : ""}
+                  {`. Varje båge därutöver kostar ${WINDOW_EXTRA_BAGE_PRICES.plain} kr, eller ${WINDOW_EXTRA_BAGE_PRICES.sprojs} kr med spröjs. Vet du inte antalet? Lämna fältet tomt.`}
+                </small>
+                <div className="form-check mt-2">
+                  <input type="checkbox" className="form-check-input" id="sprojs" checked={hasSprojs} onChange={(e) => setHasSprojs(e.target.checked)} disabled={onlyBalcony} />
+                  <label className="form-check-label" htmlFor="sprojs">Fönstren har spröjs</label>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Gäller något av det här?</label>
                 <div className="form-check">
-                  <input type="checkbox" className="form-check-input" id="sprojs" checked={hasSprojs} onChange={(e) => setHasSprojs(e.target.checked)} />
-                  <label className="form-check-label" htmlFor="sprojs">{`Spröjs (+${WINDOW_SURCHARGE_PERCENT}%)`}</label>
+                  <input type="checkbox" className="form-check-input" id="overhanging" checked={hasOverhanging} onChange={(e) => setHasOverhanging(e.target.checked)} />
+                  <label className="form-check-label" htmlFor="overhanging">Överhängda fönster</label>
                 </div>
                 <div className="form-check">
-                  <input type="checkbox" className="form-check-input" id="highCeiling" checked={hasHighCeiling} onChange={(e) => setHasHighCeiling(e.target.checked)} />
-                  <label className="form-check-label" htmlFor="highCeiling">{`Takhöjd över 280 cm (+${WINDOW_SURCHARGE_PERCENT}%)`}</label>
+                  <input type="checkbox" className="form-check-input" id="hardToReach" checked={hasHardToReach} onChange={(e) => setHasHardToReach(e.target.checked)} />
+                  <label className="form-check-label" htmlFor="hardToReach">Svåråtkomliga fönster</label>
                 </div>
                 <div className="form-check">
-                  <input type="checkbox" className="form-check-input" id="tripleGlass" checked={hasTripleGlass} onChange={(e) => setHasTripleGlass(e.target.checked)} />
-                  <label className="form-check-label" htmlFor="tripleGlass">{`Treglasfönster eller mer (+${WINDOW_SURCHARGE_PERCENT}%)`}</label>
+                  <input type="checkbox" className="form-check-input" id="heavySoiling" checked={hasHeavySoiling} onChange={(e) => setHasHeavySoiling(e.target.checked)} />
+                  <label className="form-check-label" htmlFor="heavySoiling">Kraftigt nedsmutsade fönster</label>
                 </div>
+                <small className="form-text text-muted">
+                  Då lämnar vi ett pris i en offert i stället, efter att vi har sett fönstren.
+                </small>
               </div>
 
               <div className="form-group">
@@ -238,6 +315,16 @@ const WindowCleaning = () => {
             >
               <li><strong>Val:</strong> {selection}</li>
               <li><strong>Storlek:</strong> {onlyBalcony ? "–" : describeArea(area)}</li>
+              <li>
+                <strong>Fönsterbågar:</strong>{" "}
+                {onlyBalcony
+                  ? "–"
+                  : bagar.status === "ok"
+                    ? extraBagar > 0
+                      ? `${bagar.value} (${extraBagar} utöver de ${includedBagar} som ingår, ${formatPrice(extraBagePrice)})`
+                      : `${bagar.value} (ingår i priset)`
+                    : NOT_SET}
+              </li>
               <li><strong>Tillägg:</strong> {addOns.join(", ") || "Inga"}</li>
               <li><strong>Önskat datum och tid:</strong> {describeDate(date)}</li>
               <li><strong>Uppskattat pris:</strong> {needsQuote ? "Offereras" : formatPrice(totalPrice)}</li>

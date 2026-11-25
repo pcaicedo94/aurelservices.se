@@ -4,6 +4,13 @@
 // to /api/booking leaves the page (the API is mocked).
 import { sleep } from "../lib/browser.mjs";
 import { defineSuite } from "../lib/runner.mjs";
+// The expected amounts come from the same single source the page reads, so a
+// price change never has to be typed into this suite as well.
+import {
+  WINDOW_EXTRA_BAGE_PRICES,
+  windowIncludedBagar,
+  WINDOW_ROOM_PRICES,
+} from "../../../lib/pricing.js";
 import {
   CALCULATORS,
   DAY_FIELD,
@@ -114,14 +121,20 @@ export default defineSuite("calculators", async (test, ctx) => {
     note(`min="${d.earliestDay}"`);
   });
 
-  test("con un sábado elegido la hora queda bloqueada y el aviso enlaza a /kontakt", { bug: "QA-03" }, async ({ page, expect, note }) => {
+  test("con un domingo elegido la hora queda bloqueada y el aviso enlaza a /kontakt", { bug: "QA-03" }, async ({ page, expect, note }) => {
     await page.goto("/tjanster/hemstadning");
     await fillFields(page, CALCULATORS.home.valid(d));
     const weekdayState = await readStartTimes(page);
     if (weekdayState.disabled) throw new Error("la hora ya está bloqueada con un día laborable");
+    // The 2027 price list gave Saturday a rate, so it must stay open. Checked
+    // here, before the Sunday case, because the two halves of the rule share
+    // one code path and a regression would most likely close both.
     await fillFields(page, [[DAY_FIELD, d.saturday.slice(0, 10)]]);
+    const saturdayState = await readStartTimes(page);
+    expect(!saturdayState.disabled, "con un sábado elegido la hora está bloqueada");
+    await fillFields(page, [[DAY_FIELD, d.sunday.slice(0, 10)]]);
     const state = await readStartTimes(page);
-    expect(state.disabled, "con un sábado elegido la hora sigue activa");
+    expect(state.disabled, "con un domingo elegido la hora sigue activa");
     const notice = await page.eval((sel) => {
       const group = document.querySelector(sel)?.closest("fieldset") || document.body;
       const error = group.querySelector("[role=alert]");
@@ -129,19 +142,80 @@ export default defineSuite("calculators", async (test, ctx) => {
       const link = error.querySelector("a");
       return { text: window.__qa.norm(error.innerText), href: link ? link.getAttribute("href") : null };
     }, DAY_FIELD);
-    if (expect(notice, "no se muestra ningún aviso con un sábado elegido")) {
-      expect(/måndag till fredag/i.test(notice.text), `el aviso no explica el horario online: "${notice.text}"`);
+    if (expect(notice, "no se muestra ningún aviso con un domingo elegido")) {
+      expect(/måndag till lördag/i.test(notice.text), `el aviso no explica el horario online: "${notice.text}"`);
       expect(notice.href === "/kontakt", `el aviso no enlaza a /kontakt (href "${notice.href}")`);
       note(`"${notice.text}"`);
     }
     const book = await findBookButton(page);
-    expect(book.found && book.disabled, "el botón de reservar sigue activo con un sábado elegido");
+    expect(book.found && book.disabled, "el botón de reservar sigue activo con un domingo elegido");
   });
 
-  test("/tjanster/hemstadning sábado no da 0 kr ni se puede reservar", { bug: "QA-03" }, async ({ page, api, expect }) => {
-    const a = await attemptBooking(page, api, { route: "/tjanster/hemstadning", fields: withFields(CALCULATORS.home.valid(d), dateTimeFields(d.saturday)) });
+  test("/tjanster/hemstadning domingo no da 0 kr ni se puede reservar", { bug: "QA-03" }, async ({ page, api, expect }) => {
+    const a = await attemptBooking(page, api, { route: "/tjanster/hemstadning", fields: withFields(CALCULATORS.home.valid(d), dateTimeFields(d.sunday)) });
     expectNoZeroPrice(expect, a);
-    expectNotBookable(expect, a, `sábado ${d.saturday}`);
+    expectNotBookable(expect, a, `domingo ${d.sunday}`);
+  });
+
+  // Q20b (client, confirmed 2026-11-25): three bågar per rum are included, so
+  // only the ones above that are charged. The three cases below are the whole
+  // rule: inside the allowance nothing is added, above it each båge is charged,
+  // and spröjs changes what an extra båge costs and nothing else.
+  const ROOMS = "3";
+  const INCLUDED = windowIncludedBagar(Number(ROOMS));
+  const ROOM_PRICE = WINDOW_ROOM_PRICES[ROOMS];
+  const EXTRA = 3;
+
+  for (const [label, fields, expected] of [
+    [
+      `${INCLUDED} bågar (lo que ya incluye el precio) no añade nada`,
+      [["#bagar", String(INCLUDED)]],
+      ROOM_PRICE,
+    ],
+    [
+      `${INCLUDED + EXTRA} bågar añade ${EXTRA} × ${WINDOW_EXTRA_BAGE_PRICES.plain} kr`,
+      [["#bagar", String(INCLUDED + EXTRA)]],
+      ROOM_PRICE + EXTRA * WINDOW_EXTRA_BAGE_PRICES.plain,
+    ],
+    [
+      `con spröjs los mismos ${EXTRA} extra cuestan ${WINDOW_EXTRA_BAGE_PRICES.sprojs} kr cada uno`,
+      [["#bagar", String(INCLUDED + EXTRA)], ["#sprojs", true]],
+      ROOM_PRICE + EXTRA * WINDOW_EXTRA_BAGE_PRICES.sprojs,
+    ],
+  ]) {
+    test(`/tjanster/fonsterputs ${label}`, async ({ page, api, expect, note }) => {
+      const a = await attemptBooking(page, api, {
+        route: "/tjanster/fonsterputs",
+        fields: withFields(CALCULATORS.window.valid(d), [["#rooms", ROOMS], ...fields]),
+      });
+      expect(
+        a.summary?.price === expected,
+        `se esperaba ${expected} kr y se muestra ${priceLine(a.summary)}`
+      );
+      // The price the visitor reads and the price that reaches the API have to
+      // be the same number; a mismatch there is the bug worth catching.
+      if (expect(a.posts.length === 1, `se esperaba 1 POST y hubo ${a.posts.length} (${a.reason})`)) {
+        const sent = payloadPrice(a.posts[0].json);
+        expect(sent === expected, `el POST envió ${JSON.stringify(sent)} en vez de ${expected}`);
+        // And the office has to be able to see the room price apart from the
+        // frame charge, instead of wondering why the total is not a list price.
+        expect(
+          Number(a.posts[0].json?.basePrice) === ROOM_PRICE,
+          `el POST envió basePrice=${JSON.stringify(a.posts[0].json?.basePrice)} en vez de ${ROOM_PRICE}`
+        );
+      }
+      note(priceLine(a.summary));
+    });
+  }
+
+  test("/tjanster/fonsterputs los överhängda fönster pasan a offert, no a precio", async ({ page, api, expect, note }) => {
+    const a = await attemptBooking(page, api, {
+      route: "/tjanster/fonsterputs",
+      fields: withFields(CALCULATORS.window.valid(d), [["#rooms", ROOMS], ["#overhanging", true]]),
+    });
+    expect(a.summary?.quote === true, `se esperaba Offereras y se muestra ${priceLine(a.summary)}`);
+    expectNotBookable(expect, a, "con överhängda fönster marcados");
+    note(priceLine(a.summary));
   });
 
   test("/tjanster/storstadning väggtvätt negativo no da precio negativo", { bug: "QA-04" }, async ({ page, api, expect, note }) => {

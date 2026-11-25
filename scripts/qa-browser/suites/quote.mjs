@@ -67,6 +67,12 @@ function modalInfo(page) {
 // optional, so the check fills all but the last field of the list and the mail
 // must then carry exactly the answered ones, labelled in Swedish and in the
 // declared order, with no row for the one left blank.
+// Well clear of any lead-time rule, and a fixed day so a failure is repeatable.
+const QUOTE_DATE = (() => {
+  const d = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  return d.toISOString().slice(0, 10);
+})();
+
 const FIELD_PAGES = [
   { route: "/foretag/byggstadning", before: [] },
   // The only page that renames the address row, because the address it asks
@@ -82,9 +88,16 @@ const FIELD_PAGES = [
 ];
 
 // A plausible answer per field type; selects pick a real option.
+//
+// The date branch is not cosmetic: a type="date" input silently refuses a value
+// it cannot parse, so filling one with "QA svar 1" leaves it empty and the
+// field arrives at the office as undefined. That is what the suite reported
+// before this existed, and it looked like a bug in the form rather than in the
+// filler. A date is sent in the yyyy-mm-dd form the input expects.
 const answerFor = (field, i) => {
   if (field.type === "select") return field.options[Math.min(i + 1, field.options.length - 1)];
   if (field.type === "number") return String(10 * (i + 2));
+  if (field.type === "date") return QUOTE_DATE;
   return `QA svar ${i + 1}`;
 };
 

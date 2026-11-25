@@ -202,11 +202,15 @@ check(
   "2026-11-01T06:00:00.000Z"
 );
 
-console.log("\n=== bookingRules: schedule (TODO cliente Q13 weekdays, Q16 07-17) ===");
+console.log("\n=== bookingRules: schedule (Q13 mon-sat, Q16 07-15) ===");
 const monday = at("2026-09-14T12:00"); // earliest bookable: Wednesday 16 Sep 07:00
 checkJson("weekday 10:00 a week ahead", checkSchedule(at("2026-09-21T10:00"), monday), []);
-checkJson("Saturday rejected", checkSchedule(at("2026-09-19T10:00"), monday), ["weekday"]);
+// Saturday opened on 2026-11-24 with the 2027 price list; Sunday has no rate.
+checkJson("Saturday accepted", checkSchedule(at("2026-09-19T10:00"), monday), []);
 checkJson("Sunday rejected", checkSchedule(at("2026-09-20T10:00"), monday), ["weekday"]);
+checkJson("Saturday 06:59 still out of hours", checkSchedule(at("2026-09-19T06:59"), monday), [
+  "start-time",
+]);
 checkJson("06:59 rejected", checkSchedule(at("2026-09-21T06:59"), monday), ["start-time"]);
 checkJson("07:00 accepted", checkSchedule(at("2026-09-21T07:00"), monday), []);
 checkJson("14:59 accepted", checkSchedule(at("2026-09-21T14:59"), monday), []);
@@ -243,7 +247,7 @@ const messageFor = (overrides) => bookingErrorMessage(rejected(overrides).errors
 checkJson("price 0 -> price error", rejected({ totalPrice: 0 }).errors, ["price"]);
 checkJson("price null -> price error", rejected({ totalPrice: null }).errors, ["price"]);
 checkTrue("price message invites a quote", /offert/i.test(messageFor({ totalPrice: "Offereras" })));
-checkTrue("weekend message", /måndag till fredag/.test(messageFor({ dateTime: "2026-09-19T10:00" })));
+checkTrue("closed-day message", /måndag till lördag/.test(messageFor({ dateTime: "2026-09-20T10:00" })));
 checkTrue("start time message", /mellan 07:00 och 15:00/.test(messageFor({ dateTime: "2026-09-21T18:00" })));
 check(
   "too soon message names the earliest time",

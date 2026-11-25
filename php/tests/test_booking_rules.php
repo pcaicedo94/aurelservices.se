@@ -65,12 +65,13 @@ Check::same(
 Check::is('winter 15:00 is 14:00Z', Clock::stockholmToUtc('2026-01-14T15:00')?->format('H:i'), '14:00');
 Check::is('summer 15:00 is 13:00Z', Clock::stockholmToUtc('2026-07-08T15:00')?->format('H:i'), '13:00');
 
-Check::section('BookingRules: weekdays only (TODO cliente Q13)');
+Check::section('BookingRules: Monday to Saturday (Q13)');
 
 Check::same('Monday', $startAt('2026-07-06T10:00'), []);
 Check::same('Friday', $startAt('2026-07-10T10:00'), []);
-Check::same('Saturday', $startAt('2026-07-11T10:00'), ['weekday']);
-Check::same('Sunday', $startAt('2026-07-12T10:00'), ['weekday']);
+// Saturday opened on 2026-11-24, when the 2027 price list gave it a rate.
+Check::same('Saturday is bookable', $startAt('2026-07-11T10:00'), []);
+Check::same('Sunday is not', $startAt('2026-07-12T10:00'), ['weekday']);
 // A Friday night in UTC that is already Saturday in Stockholm.
 Check::same('Friday 23:30 Stockholm is a Friday', $startAt('2026-07-10T23:30'), ['start-time']);
 
@@ -87,7 +88,9 @@ Check::same('the day after tomorrow at 07:00 is allowed', $startAt('2026-07-03T0
 Check::same('the day after tomorrow at 06:59 fails both ways', $startAt('2026-07-03T06:59'), ['too-soon', 'start-time']);
 Check::same('tomorrow is too soon', $startAt('2026-07-02T10:00'), ['too-soon']);
 Check::same('yesterday (a Tuesday) is simply in the past', $startAt('2026-06-30T10:00'), ['past']);
-Check::same('and a past Saturday is both', $startAt('2026-06-27T10:00'), ['past', 'weekday']);
+// A Sunday, so the two faults are independent: in the past AND a closed day.
+Check::same('and a past Sunday is both', $startAt('2026-06-28T10:00'), ['past', 'weekday']);
+Check::same('but a past Saturday is only in the past', $startAt('2026-06-27T10:00'), ['past']);
 
 Check::section('BookingRules: price (only a positive number can be booked)');
 
@@ -185,7 +188,7 @@ Check::contains('too soon names the earliest time', BookingRules::bookingErrorMe
 Check::is(
     'weekday',
     BookingRules::bookingErrorMessage(['weekday'], $now),
-    'Vi tar emot bokningar måndag till fredag. Vänligen välj en vardag.'
+    'Vi tar emot bokningar måndag till lördag. Vänligen välj en annan dag.'
 );
 Check::is(
     'start time',

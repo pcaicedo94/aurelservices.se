@@ -1,8 +1,10 @@
 {
   "_readme": "Single source of truth for prices. The calculators read every rate from here through lib/pricing.js, and scripts/qa-pricing.mjs checks both that no page keeps a rate of its own and that these figures still match the client's price lists. Anything with pendingConfirmation: true waits for the client's answer to `question` (null = not in the client questionnaire yet). Amounts are SEK.",
-  "version": "2026-02-19",
+  "version": "2027-01-01",
   "sources": {
-    "prislista": "Prislista Ny 2026 privat.pdf, dated 2026-02-19. Only pages 1-3 of 7 were available.",
+    "prislista 2027": "Prislista för privatpersoner Aurel 2027.docx, dated 2027-01-01. The list in force: it replaced Prislista Ny 2026 privat.pdf on 2026-11-24, when the client sent it. Complete for hemstädning, storstädning, flyttstädning and fönsterputs.",
+    "flyttkalkyl 2027": "Flyttstädning kalkyl.pdf, received 2026-11-24. The client's own specification of how flyttstädning is priced: a rate per m² and a minimum per band, whichever is higher. It is more detailed than the price list and wins where the two differ.",
+    "prislista 2026": "Prislista Ny 2026 privat.pdf, dated 2026-02-19. Superseded on 2026-11-24; kept here because the audit notes below still cite it.",
     "docx": "Servicios privados .docx (website copy for each service)",
     "calculator": "Formula found in the page's calculator; it does not appear in the price list"
   },
@@ -14,7 +16,7 @@
       "currency": "SEK",
       "includesVat": true,
       "afterRut": true,
-      "source": "prislista p. 2",
+      "source": "prislista 2027",
       "pricing": "hourly",
       "timeEstimate": {
         "baseHours": 1.57,
@@ -44,8 +46,13 @@
         "1": {
           "label": "En gång i månaden",
           "sessionsPerMonth": 1,
-          "hourlyRate": 245,
-          "source": "prislista p. 2: \"En gång i månad 245 kr\""
+          "hourlyRate": 270,
+          "source": "prislista 2027: \"En gång i månad 270 kr/ timmen\"",
+          "pendingConfirmation": false,
+          "question": "Q13b",
+          "note": "One flat rate for every bookable day, Saturday included, because the 2027 list prints no Saturday variant for the monthly plan. A monthly Saturday clean therefore costs 270 kr where a weekly one costs 320 kr. Put to the client on 2026-11-25 and confirmed as intended, so it is a decision and not an oversight in the list.",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Priset är rätt som det står: 270 kr/tim alla bokningsbara dagar."
         },
         "2": {
           "label": "Varannan vecka",
@@ -65,27 +72,29 @@
         "onetime": {
           "label": "Enstaka hemstädning",
           "sessionsPerMonth": null,
-          "hourlyRate": 270,
+          "hourlyRate": 300,
           "includesCompanyMaterial": true,
-          "source": "prislista p. 2: \"270 kr/timme ink. moms efter Rut avdrag med Aurel städmaterial\""
+          "source": "prislista 2027: \"Enstaka hemstädning: (Mån-Fre) 300 kr/timme\", \"Enstaka hemstädning: (Lör) 400 kr/timme\", both \"ink. moms efter Rut avdrag med Aurel städmaterial\"",
+          "saturdayHourlyRate": 400,
+          "note": "The only plan the 2027 list prices by weekday group rather than by weekday: Monday to Friday share 300 kr and Saturday is 400 kr. 270 kr used to be this rate and is now the monthly one, so the two are easy to confuse."
         }
       },
       "weekdayRates": {
         "byDay": {
-          "monday": 200,
-          "tuesday": 200,
-          "wednesday": 200,
-          "thursday": 220,
-          "friday": 220,
-          "saturday": null,
+          "monday": 210,
+          "tuesday": 210,
+          "wednesday": 210,
+          "thursday": 230,
+          "friday": 230,
+          "saturday": 320,
           "sunday": null
         },
-        "source": "prislista p. 2: \"Måndag till onsdag: 200 kr/timmen\", \"Torsdag och fredag: 220 kr/timmen\"",
+        "source": "prislista 2027: \"Måndag till onsdag: 210 kr/timmen\", \"Torsdag och fredag: 230 kr/timmen\", \"Lördagar: 320 kr/timmen\"",
         "pendingConfirmation": false,
         "question": "Q13",
-        "note": "No weekend rates in the price list, and none in the calculator either: Saturday and Sunday cannot be booked online.",
-        "confirmedByClient": "2026-09-19",
-        "clientAnswer": "Inga helgbokningar online. Skillnaden mån–ons (200 kr) mot tors–fre (220 kr) är avsiktlig och satt av kunden."
+        "note": "The three rates sit under the heading \"Varje vecka eller varannan vecka\", so they price the subscription plans. Saturday is new in the 2027 list: until it arrived no weekend day had a rate and weekends were closed to online booking. Sunday still has no rate and stays closed. \"En gång i månad\" and \"Enstaka hemstädning\" are priced outside this table.",
+        "confirmedByClient": "2026-11-24",
+        "clientAnswer": "Lördag får ett pris (320 kr/tim) och blir bokningsbar. Söndag saknar fortfarande pris och går inte att boka."
       },
       "material": {
         "customerProvidesProducts": true,
@@ -106,7 +115,7 @@
       "currency": "SEK",
       "includesVat": true,
       "afterRut": true,
-      "source": "prislista p. 1",
+      "source": "prislista 2027",
       "pricing": "areaTiers",
       "minHours": null,
       "minSqm": 1,
@@ -114,29 +123,29 @@
         {
           "maxSqm": 50,
           "type": "fixed",
-          "price": 2650,
-          "sourceText": "1–50 kvm 2 650 kr (fast pris)"
+          "price": 2890,
+          "sourceText": "1–50 kvm 2 890 kr (fast pris)"
         },
         {
           "maxSqm": 70,
           "type": "fixed",
-          "price": 3290,
-          "sourceText": "51–70 kvm: 3 290 kr"
+          "price": 3590,
+          "sourceText": "51–70 kvm: 3 590 kr"
         },
         {
           "maxSqm": 100,
           "type": "fixed",
-          "price": 3950,
-          "sourceText": "71–100 kvm: 3 950 kr"
+          "price": 4290,
+          "sourceText": "71–100 kvm: 4 290 kr"
         },
         {
           "maxSqm": 150,
           "type": "fixed",
-          "price": 4750,
-          "sourceText": "101–149 kvm: 4 750 kr",
+          "price": 5190,
+          "sourceText": "101–149 kvm: 5 190 kr",
           "pendingConfirmation": false,
           "question": "Q22",
-          "note": "The 150 m2 band the site uses does not exist in the price list, which jumps from \"101–149 kvm\" to \"Över 151 kvm: Offereras\". The calculator charges 4 750 kr up to 150 m2 and quotes above. Filed under the area-threshold question Q22.",
+          "note": "The 150 m² band the site uses does not exist in the price list, which jumps from \"101–149 kvm\" to \"Över 151 kvm: Offert\". The 2027 list repeats the same gap, so the calculator still charges the top band up to 150 m² and quotes above. Filed under Q22.",
           "confirmedByClient": "2026-09-17",
           "clientAnswer": "Priset får aldrig understiga toppen av föregående intervall"
         }
@@ -148,7 +157,7 @@
         "isMaximum": true,
         "requiresCustomerApproval": true,
         "appliedByCalculator": false,
-        "source": "prislista p. 1; docx Storstädning; clientAnswers Q104",
+        "source": "prislista 2027; docx Storstädning; clientAnswers Q104",
         "pendingConfirmation": false,
         "question": "Q104",
         "confirmedByClient": "2026-10-15",
@@ -163,9 +172,11 @@
           "priceIsFrom": true,
           "source": "prislista p. 1: \"Från 360 kr\"",
           "pendingConfirmation": false,
-          "question": "Q18",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q18b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false,
+          "note": "Not mentioned in the 2027 list. Kept rather than deleted, and the client confirmed on 2026-11-25 that it is still sold: of the 2026 list only 3 of 7 pages ever reached us, so silence in one sheet was never evidence of withdrawal."
         },
         "kylFrysDefrost": {
           "label": "Kyl/Frys med avfrostning",
@@ -174,9 +185,11 @@
           "priceIsFrom": true,
           "source": "prislista p. 1: \"Från 500 kr\"",
           "pendingConfirmation": false,
-          "question": "Q18",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q18b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false,
+          "note": "Not mentioned in the 2027 list. Kept rather than deleted, and the client confirmed on 2026-11-25 that it is still sold: of the 2026 list only 3 of 7 pages ever reached us, so silence in one sheet was never evidence of withdrawal."
         },
         "diskmaskin": {
           "label": "Diskmaskin invändigt",
@@ -185,9 +198,11 @@
           "priceIsFrom": false,
           "source": "calculator (pages/tjanster/storstadning.js)",
           "pendingConfirmation": false,
-          "question": "Q18",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q18b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false,
+          "note": "Not mentioned in the 2027 list. Kept rather than deleted, and the client confirmed on 2026-11-25 that it is still sold: of the 2026 list only 3 of 7 pages ever reached us, so silence in one sheet was never evidence of withdrawal."
         },
         "kapGarderob": {
           "label": "Skåp och garderober invändigt",
@@ -196,9 +211,12 @@
           "priceIsFrom": true,
           "source": "prislista p. 1: \"Från 360 kr\"",
           "pendingConfirmation": false,
-          "question": "Q18",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q18b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": true,
+          "prislista2027HourlyFrom": 200,
+          "note": "The 2027 list prints this one as \"Från 200 kr/timme\". The client confirmed on 2026-11-25 that the add-ons stay as they are, so the site keeps the fixed price of 360 kr and the hourly figure is kept here only as what the list says. An hourly from-price cannot be added to a calculator total anyway: the hours are not known until someone is in the home."
         },
         "forrad": {
           "label": "Balkong/Förråd",
@@ -207,9 +225,12 @@
           "priceIsFrom": true,
           "source": "prislista p. 1: \"Från 300 kr\"",
           "pendingConfirmation": false,
-          "question": "Q18",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q18b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": true,
+          "prislista2027HourlyFrom": 170,
+          "note": "The 2027 list prints this one as \"Från 170 kr/timme\". The client confirmed on 2026-11-25 that the add-ons stay as they are, so the site keeps the fixed price of 300 kr and the hourly figure is kept here only as what the list says. An hourly from-price cannot be added to a calculator total anyway: the hours are not known until someone is in the home."
         },
         "tvattmaskin": {
           "label": "Tvättmaskin/torktumlare invändigt",
@@ -218,9 +239,11 @@
           "priceIsFrom": false,
           "source": "calculator (pages/tjanster/storstadning.js)",
           "pendingConfirmation": false,
-          "question": "Q18",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q18b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false,
+          "note": "Not mentioned in the 2027 list. Kept rather than deleted, and the client confirmed on 2026-11-25 that it is still sold: of the 2026 list only 3 of 7 pages ever reached us, so silence in one sheet was never evidence of withdrawal."
         },
         "vaggtvatt": {
           "label": "Väggtvätt",
@@ -229,9 +252,11 @@
           "price": 250,
           "source": "calculator (pages/tjanster/storstadning.js)",
           "pendingConfirmation": false,
-          "question": "Q18",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q18b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false,
+          "note": "Not mentioned in the 2027 list. Kept rather than deleted, and the client confirmed on 2026-11-25 that it is still sold: of the 2026 list only 3 of 7 pages ever reached us, so silence in one sheet was never evidence of withdrawal."
         }
       }
     },
@@ -242,54 +267,49 @@
       "currency": "SEK",
       "includesVat": true,
       "afterRut": true,
-      "source": "prislista p. 2",
+      "source": "flyttkalkyl 2027 (method and minimums); prislista 2027 (rates)",
       "pricing": "areaTiers",
       "minHours": null,
       "minSqm": 1,
       "tiers": [
         {
           "maxSqm": 50,
-          "type": "fixed",
-          "price": 2890,
-          "sourceText": "1-50kvm, 2 890 kr (fast pris)",
-          "pendingConfirmation": false,
-          "question": "Q22",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Priset får aldrig understiga toppen av föregående intervall"
+          "type": "perSqm",
+          "pricePerSqm": 60,
+          "minPrice": 2990,
+          "sourceText": "1–50 m²: 60 kr/m², minst 2 990 kr"
+        },
+        {
+          "maxSqm": 70,
+          "type": "perSqm",
+          "pricePerSqm": 55,
+          "minPrice": 3290,
+          "sourceText": "51–70 m²: 55 kr/m², minst 3 290 kr"
         },
         {
           "maxSqm": 100,
           "type": "perSqm",
-          "pricePerSqm": 51,
-          "sourceText": "51-100kvm, 51 kr",
-          "pendingConfirmation": false,
-          "question": "Q22",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Priset får aldrig understiga toppen av föregående intervall"
+          "pricePerSqm": 54,
+          "minPrice": 4290,
+          "sourceText": "71–100 m²: 54 kr/m², minst 4 290 kr"
+        },
+        {
+          "maxSqm": 120,
+          "type": "perSqm",
+          "pricePerSqm": 53,
+          "minPrice": 5790,
+          "sourceText": "101–120 m²: 53 kr/m², minst 5 790 kr"
         },
         {
           "maxSqm": 150,
           "type": "perSqm",
-          "pricePerSqm": 47,
-          "sourceText": "101-150kvm, 47 kr",
-          "pendingConfirmation": false,
-          "question": "Q22",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Priset får aldrig understiga toppen av föregående intervall"
-        },
-        {
-          "maxSqm": null,
-          "type": "perSqm",
-          "pricePerSqm": 42,
-          "sourceText": "151-uppåt 42 kr",
-          "pendingConfirmation": false,
-          "question": "Q22",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Priset får aldrig understiga toppen av föregående intervall"
+          "pricePerSqm": 51,
+          "minPrice": 6790,
+          "sourceText": "121–150 m²: 51 kr/m², minst 6 790 kr"
         }
       ],
-      "tierNote": "The per-m2 rate applies to the whole area, which on its own would make 51 m2 (2 601 kr) cheaper than 50 m2 (2 890 kr). Q22 settled it: no band may price below the top of the one before it, so the bands start at 2 890, 5 100 and 7 050 kr.",
-      "quoteAboveSqm": null,
+      "tierNote": "The 2027 method, straight from the client's own spec: price = the higher of (area × the band's rate per m²) and the band's minimum, never the two added together. The rate applies to the whole area, so without the minimums a 51 m² home would cost less than a 50 m² one; with them the price rises across every band boundary (checked at 49, 50, 51, 70, 71, 100, 101, 120, 121 and 150 m²). The Q22 floor rule is kept in lib/pricing.js and is now redundant: the minimums already hold the price above the previous band everywhere.",
+      "quoteAboveSqm": 150,
       "includesWindowCleaning": true,
       "windowCleaningExcludes": "Spröjsade fönster",
       "timeEstimate": {
@@ -302,16 +322,16 @@
         "note": "Only used to price the \"biytor\" extra, with the hours rounded to two decimals."
       },
       "soilingSurcharge": {
-        "maxPercent": 20,
+        "maxPercent": 25,
         "isMaximum": true,
         "requiresCustomerApproval": true,
         "appliedByCalculator": false,
-        "source": "prislista p. 2; docx Flyttstädning; clientAnswers Q104",
+        "source": "prislista 2027; docx Flyttstädning; clientAnswers Q104",
         "pendingConfirmation": false,
         "question": "Q104",
         "confirmedByClient": "2026-10-15",
         "clientAnswer": "Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 % tillkomma. Vid extrem nedsmutsning, där arbetsinsatsen väsentligt överstiger vad som normalt kan förväntas, görs en separat bedömning och priset kan justeras utöver 20 %. Kunden informeras alltid på plats och ska godkänna pristillägget innan extra arbete utförs.",
-        "note": "Q104 settled it: up to 20 %, never a flat 20 %, and in extreme cases judged separately and possibly above 20 %. The customer is always told on site and has to approve before any extra work; without approval only the original order is carried out, or the job is stopped by agreement, and the end result is not guaranteed. No calculator applies it; it stays a text notice."
+        "note": "Q104 settled the shape: a ceiling, never a flat rate, always approved by the customer on site before any extra work. The 2027 list raised the figure for flyttstädning from 20 % to 25 % while leaving storstädning at 20 %, so the two services no longer share one number and lib/pricing.js exposes them separately."
       },
       "extras": {
         "kylFrysDefrost": {
@@ -320,10 +340,11 @@
           "price": 400,
           "source": "calculator (pages/tjanster/flyttstadning.js)",
           "pendingConfirmation": false,
-          "question": "Q17",
-          "note": "Storstädning charges 500 kr for the same extra.",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q17b",
+          "note": "Not mentioned in the 2027 list either. Carried by the same answer as the storstädning add-ons (Q18b, 2026-11-25), which was about those specifically: this one is an inference from it, not a separate confirmation. Say so if it is ever questioned.",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false
         },
         "persienner": {
           "label": "Rengöring av persienner",
@@ -331,9 +352,11 @@
           "price": 360,
           "source": "calculator (pages/tjanster/flyttstadning.js)",
           "pendingConfirmation": false,
-          "question": "Q17",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q17b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false,
+          "note": "Not mentioned in the 2027 list either. Carried by the same answer as the storstädning add-ons (Q18b, 2026-11-25), which was about those specifically: this one is an inference from it, not a separate confirmation. Say so if it is ever questioned."
         },
         "biytor": {
           "label": "Städning av biytor såsom förråd, garage och balkonger",
@@ -341,10 +364,11 @@
           "hourlyRate": 360,
           "source": "calculator (pages/tjanster/flyttstadning.js)",
           "pendingConfirmation": false,
-          "question": "Q17",
-          "note": "360 kr per estimated hour of the whole home, not of the extra space.",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q17b",
+          "note": "Not mentioned in the 2027 list either. Carried by the same answer as the storstädning add-ons (Q18b, 2026-11-25), which was about those specifically: this one is an inference from it, not a separate confirmation. Say so if it is ever questioned.",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false
         },
         "inglasadBalkong": {
           "label": "Fönsterputsning av inglasade balkonger",
@@ -352,10 +376,21 @@
           "price": 650,
           "source": "calculator (pages/tjanster/flyttstadning.js)",
           "pendingConfirmation": false,
-          "question": "Q17",
-          "confirmedByClient": "2026-09-17",
-          "clientAnswer": "Tilläggen behålls som de är"
+          "question": "Q17b",
+          "confirmedByClient": "2026-11-25",
+          "clientAnswer": "Tilläggen är fortfarande giltiga och behålls som de är.",
+          "inPrislista2027": false,
+          "note": "Not mentioned in the 2027 list either. Carried by the same answer as the storstädning add-ons (Q18b, 2026-11-25), which was about those specifically: this one is an inference from it, not a separate confirmation. Say so if it is ever questioned."
         }
+      },
+      "quoteAboveSqmNote": "New in 2027 and a real change of policy: homes over 150 m² are quoted, not priced online. The 2026 list priced them at 42 kr/m² with no upper limit.",
+      "minPriceAtFiftySqm": {
+        "value": 3000,
+        "pendingConfirmation": false,
+        "question": "Q22b",
+        "confirmedByClient": "2026-11-25",
+        "clientAnswer": "3 000 kr vid 50 m².",
+        "note": "The two 2027 documents disagreed here: the price list says \"1-50kvm, 2990 kr (fast pris)\" and the calculation spec gives 50 x 60 = 3 000 kr, its \"Mínimo hasta\" column stopping at 49 m². The client chose the spec, which is what the site already did. The printed list therefore understates this one size by 10 kr; prisinformationslagen makes that the client's risk to carry, and he has accepted it."
       }
     },
     "windowcleaning": {
@@ -365,21 +400,21 @@
       "currency": "SEK",
       "includesVat": true,
       "afterRut": true,
-      "source": "prislista p. 3",
+      "source": "prislista 2027",
       "pricing": "rooms",
       "minHours": null,
-      "includes": "Rengöring av fönstrets bågar och damning av persienner",
+      "includes": "Rengöring av fönstrets bågar och damning av persiennerna",
       "rooms": {
-        "1": 799,
-        "2": 899,
-        "3": 999,
-        "4": 1099
+        "1": 920,
+        "2": 1040,
+        "3": 1150,
+        "4": 1290
       },
       "quote": {
         "fromRooms": 5,
         "aboveSqm": 120,
         "calculatorAsksForSqm": true,
-        "source": "prislista p. 3: \"5 rum och kök eller större än 120 kvm - Offereras\"",
+        "source": "prislista 2027: \"5 rum och kök eller större än 120 kvm - Offereras\"",
         "docxText": "För bostäder upp till 5 rum och kök eller max 120 kvm kan du få ett pris direkt via vårt formulär. För bostäder större än 5 rum och kök eller över 120 kvm lämnas offert.",
         "pendingConfirmation": false,
         "question": "Q21",
@@ -390,35 +425,78 @@
       "balconyOnly": {
         "price": 450,
         "priceIsFrom": true,
-        "source": "prislista p. 3: \"Endast balkong – Från 450 kr\"",
+        "source": "prislista 2027: \"Balkonginglasning – Från 450 kr\"",
         "pendingConfirmation": false,
         "question": "Q20",
-        "note": "The calculator charges a flat 450 kr and applies the surcharges to it.",
+        "note": "Unchanged at 450 kr. The 2026 list called it \"Endast balkong\"; the 2027 list prints it as \"Balkonginglasning\" inside the add-on table. The percentage surcharges that used to be applied on top of it no longer exist, so this is now a flat from-price.",
         "confirmedByClient": "2026-09-17",
         "clientAnswer": "Tilläggen adderas: 25 % av grundpriset vardera"
       },
-      "surcharges": {
-        "source": "prislista p. 3",
-        "pendingConfirmation": false,
-        "question": "Q20",
-        "note": "Each surcharge is +25 %, but the price list does not say how several combine. The client settled it on 2026-09-17, see `combination`: the percentages add up, so two surcharges are +50 % and not +56.25 %. A `stacking: \"compound\"` field described the old calculator and was dropped.",
-        "items": {
-          "sprojs": {
-            "label": "Spröjs",
-            "percent": 25
-          },
-          "highCeiling": {
-            "label": "Takhöjd över 280 cm",
-            "percent": 25
-          },
-          "tripleGlass": {
-            "label": "Treglasfönster eller fler",
-            "percent": 25
-          }
+      "roomsSource": "prislista 2027: \"1 rum och kök - 920 kr\", \"2 rum och kök - 1040 kr\", \"3 rum och kök - 1150 kr\", \"4 rum och kök - 1290 kr\"",
+      "surchargesRemoved": {
+        "removedOn": "2026-11-24",
+        "were": [
+          "Spröjs +25 %",
+          "Takhöjd över 280 cm +25 %",
+          "Treglasfönster eller fler +25 %"
+        ],
+        "note": "The 2027 list carries none of these three. Spröjs survives only as the price of an extra window frame (140 kr instead of 110 kr), and height and glazing are not priced at all. They were removed from the calculator rather than left in place: charging a customer +25 % for a reason the current price list does not mention is worse than charging too little."
+      },
+      "extras": {
+        "extraBageUtanSprojs": {
+          "label": "Extra fönsterbåge utan spröjs",
+          "type": "perUnit",
+          "unit": "båge",
+          "price": 110,
+          "source": "prislista 2027 (Tilläggtjänster): \"Extra fönsterbåge utan spröjs 110 kr\"",
+          "chargedByCalculator": true
         },
-        "confirmedByClient": "2026-09-17",
-        "clientAnswer": "Tilläggen adderas: 25 % av grundpriset vardera",
-        "combination": "additive"
+        "extraBageMedSprojs": {
+          "label": "Extra fönsterbåge med spröjs",
+          "type": "perUnit",
+          "unit": "båge",
+          "price": 140,
+          "source": "prislista 2027 (Tilläggtjänster): \"Extra fönsterbåge med spröjs 140 kr\"",
+          "chargedByCalculator": true
+        },
+        "overhangdaFonster": {
+          "label": "Överhängda fönster",
+          "type": "perUnit",
+          "unit": "båge",
+          "price": 160,
+          "source": "prislista 2027 (Tilläggtjänster): \"Överhängda fönster 160 kr/båge\"",
+          "chargedByCalculator": false
+        },
+        "svaratkomligaFonster": {
+          "label": "Svåråtkomliga fönster",
+          "type": "quote",
+          "price": null,
+          "source": "prislista 2027 (Tilläggtjänster): \"Svåråtkomliga fönster Offert\"",
+          "chargedByCalculator": false
+        },
+        "kraftigtNedsmutsadeFonster": {
+          "label": "Kraftigt nedsmutsade fönster",
+          "type": "quote",
+          "price": null,
+          "source": "prislista 2027 (Tilläggtjänster): \"Kraftigt nedsmutsade fönster Offert\"",
+          "chargedByCalculator": false
+        }
+      },
+      "extrasNote": {
+        "shownByCalculator": true,
+        "pendingConfirmation": false,
+        "question": "Q20b",
+        "confirmedByClient": "2026-11-25",
+        "note": "The calculator now charges extra bågar: the customer gives the total, and anything above includedBagarPerRoom x rum is billed at 110 kr, or 140 kr when the windows have spröjs. Överhängda fönster, svåråtkomliga fönster and kraftigt nedsmutsade fönster stay quote-only: each is priced per båge or per job after someone has seen them, and the list gives two of them no amount at all."
+      },
+      "includedBagarPerRoom": {
+        "value": 3,
+        "source": "clientAnswers Q20b",
+        "pendingConfirmation": false,
+        "question": "Q20b",
+        "confirmedByClient": "2026-11-25",
+        "clientAnswer": "3 bågar per rum. Ett rum har i regel ett fönster med 3 bågar.",
+        "note": "What the room price covers, and therefore what counts as an EXTRA båge. The 2027 list prices extra bågar but never says how many are included, which is why the calculator could not total them until this answer. Counted per rum, not per \"rum och kök\": the kitchen is not a rum, so \"2 rum och kök\" includes 6 bågar."
       }
     },
     "officecleaning": {

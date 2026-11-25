@@ -6,8 +6,9 @@ import styles from "./Booking.module.css";
 // Date and time picker of the booking calculators. The form only offers what
 // can actually be booked: the date cannot start before the lead time and the
 // hours are the ones the client accepts online, so nothing has to be typed and
-// then refused. Weekends cannot be switched off in a native date input, so a
-// weekend day is explained inline and the hour is locked instead.
+// then refused. A single day cannot be switched off in a native date input, so
+// a closed day — Sunday, the only one left since the 2027 price list gave
+// Saturday a rate — is explained inline and the hour is locked instead.
 const DateTimeField = ({
   id = "dateTime",
   label = "Önskat datum och tid",
@@ -22,16 +23,16 @@ const DateTimeField = ({
   const timeId = `${id}-time`;
   const errorId = `${id}-error`;
   const { check, dayCheck } = date;
-  const isWeekend = dayCheck.status === "weekend";
+  const isClosed = dayCheck.status === "closed";
 
   let message = null;
   if (conflict) {
     message = "Tiden är tyvärr redan bokad. Välj en annan dag eller tid.";
-  } else if (isWeekend) {
+  } else if (isClosed) {
     message = (
       <>
-        <strong>Helgbokning?</strong> <Link href="/kontakt">Kontakta oss</Link> – online kan du
-        boka måndag till fredag.
+        <strong>Söndagsstädning?</strong> <Link href="/kontakt">Kontakta oss</Link> – online kan
+        du boka måndag till lördag.
       </>
     );
   } else if (dayCheck.message) {
@@ -73,7 +74,7 @@ const DateTimeField = ({
             className={`form-control${invalid}`}
             value={date.time}
             onChange={(e) => date.setTime(e.target.value)}
-            disabled={isWeekend}
+            disabled={isClosed}
             required
             aria-invalid={message ? true : undefined}
             aria-describedby={describedBy}
