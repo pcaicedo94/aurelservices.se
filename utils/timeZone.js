@@ -89,3 +89,14 @@ export function formatStockholm(date) {
     timeStyle: "short",
   }).format(date);
 }
+
+// Date without the clock. The withdrawal period ends at 23:59:59 on its last
+// day, and "16 mars 2026 23:59" reads like a train departure rather than a
+// deadline; Swedish practice is "till och med den 16 mars 2026". The instant
+// itself stays exact in the database — this is only how it is shown.
+export function formatStockholmDate(date) {
+  return new Intl.DateTimeFormat("sv-SE", {
+    timeZone: TIME_ZONE,
+    dateStyle: "long",
+  }).format(date);
+}
