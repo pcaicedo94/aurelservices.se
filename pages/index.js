@@ -210,8 +210,13 @@ const Index = () => {
               </div>
             ))}
 
+            {/* The clients get a full-width tile of their own: the client
+                asked for them to stand out more than one bento cell. */}
             <div className={`${s.glass} ${s.partners}`}>
-              <p className={s.eyebrow}>3 stora byggföretag litar på oss</p>
+              <div className={s.partnersHead}>
+                <p className={s.eyebrow}>Kunder som litar på oss</p>
+                <h3 className={s.partnersTitle}>Tre stora byggföretag anlitar oss</h3>
+              </div>
               <ul className={s.logos}>
                 {PARTNERS.map((p) => (
                   <li key={p.name}>

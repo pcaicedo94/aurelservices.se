@@ -28,6 +28,13 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 12px 32px -16px rgba(13, 27, 42, 0.22);
   --g-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Photos support the copy instead of carrying the page: less saturation
+     and contrast, a light softening and a frosted wash. The client found the
+     AI look of the photos too visible. */
+  --g-photo-filter: saturate(0.7) contrast(0.92) brightness(1.04) blur(0.6px);
+  --g-photo-wash:
+    linear-gradient(180deg, rgba(238, 243, 241, 0.2) 0%, rgba(238, 243, 241, 0.5) 100%),
+    rgba(52, 167, 131, 0.06);
   /* Room the floating navbar takes at the top of a page. */
   --g-nav-space: 112px;
 }
@@ -302,7 +309,8 @@ textarea.form-control {
 .home-cleaning-form,
 .move-cleaning-form,
 .window-cleaning-form,
-.deep-cleaning-form {
+.deep-cleaning-form,
+.container-cleaning-form {
   padding: 24px;
   background: var(--g-glass-bg);
   -webkit-backdrop-filter: var(--g-blur);
@@ -312,7 +320,16 @@ textarea.form-control {
   box-shadow: var(--g-shadow);
 }
 #berakna-pris {
-  margin: 8px 0 14px;
+  margin: 0 0 16px;
+  font-size: 1.12rem;
+}
+/* The calculator card and the summary beside it end at the same line. */
+.ptb-50 .row > .col-lg-6 > .home-cleaning-form,
+.ptb-50 .row > .col-lg-6 > .move-cleaning-form,
+.ptb-50 .row > .col-lg-6 > .window-cleaning-form,
+.ptb-50 .row > .col-lg-6 > .deep-cleaning-form {
+  height: 100%;
+  margin-top: 0;
 }
 
 /* Price summary: glass tile, light rows, figures aligned right. */
@@ -405,11 +422,30 @@ textarea.form-control {
   color: var(--g-green-action);
 }
 .page-hero-photo {
+  position: relative;
   min-height: 240px;
+  overflow: hidden;
   border-radius: var(--g-radius);
   background-size: cover;
   background-position: center;
   box-shadow: 0 12px 32px -16px rgba(13, 27, 42, 0.3);
+}
+/* The photo is painted on a layer of its own so the filter does not blur
+   the tile's rounded edge and shadow. */
+.page-hero-photo::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  background-image: inherit;
+  background-size: cover;
+  background-position: inherit;
+  filter: var(--g-photo-filter);
+}
+.page-hero-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--g-photo-wash);
 }
 
 /* ---------- Home-template sections reused on inner pages ---------- */
@@ -480,12 +516,68 @@ textarea.form-control {
 .productive-image img {
   border-radius: var(--g-radius);
 }
+.about-image img,
+.productive-image img,
+.data-service-image img,
+.process-item img {
+  filter: var(--g-photo-filter);
+  opacity: 0.92;
+}
+.data-service-image img,
+.process-item img {
+  border-radius: var(--g-radius-sm);
+}
+
+/* Clients (components/Common/Customers.js on Om oss): one large glass frame
+   with the logos on white tiles, so they stand out. */
 .partner-shape,
 .partner-shape-img1 {
   display: none;
 }
-.partner-item img {
-  border-radius: 14px;
+.partner-section .container {
+  padding: clamp(24px, 3.5vw, 44px);
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: var(--g-blur);
+  backdrop-filter: var(--g-blur);
+  border: 2px solid var(--g-glass-border);
+  border-radius: var(--g-radius);
+  box-shadow: var(--g-shadow);
+}
+.partner-section .partner-title {
+  margin-bottom: 24px;
+  text-align: left;
+}
+.partner-section .partner-list {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.partner-section .partner-list .partner-item {
+  flex: none;
+  max-width: none;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  height: 130px;
+  padding: 20px 24px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  box-shadow: 0 10px 24px -16px rgba(13, 27, 42, 0.35);
+}
+.partner-section .partner-list .partner-item img {
+  max-height: 76px;
+  width: auto;
+  object-fit: contain;
+}
+@media (max-width: 767.98px) {
+  .partner-section .partner-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .partner-section .partner-list .partner-item {
+    max-width: none;
+    height: 92px;
+  }
 }
 
 /* ---------- Contact page ---------- */
@@ -534,6 +626,146 @@ textarea.form-control {
 }
 .faq-accordion .accordion .accordion__item .accordion__panel p {
   font-size: 15px;
+}
+
+/* ---------- FAQ chatbot (components/ChatBot/FAQbot.js) ----------
+   A glass panel like the rest of the site: frosted window, light header,
+   white bubbles, and the topic buttons as outlined chips. */
+.faq-chat-button {
+  width: auto;
+  height: 52px;
+  padding: 0 20px 0 16px;
+  gap: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid var(--g-glass-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 14px 30px -14px rgba(13, 27, 42, 0.4);
+  font-size: 20px;
+}
+.faq-chat-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 34px -14px rgba(13, 27, 42, 0.45);
+}
+.faq-chat-button .chat-button-text {
+  display: inline;
+  font-family: var(--g-font);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--g-ink);
+}
+.faq-chat-window {
+  bottom: 24px;
+  right: 24px;
+  border-radius: var(--g-radius);
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  backdrop-filter: blur(26px) saturate(180%);
+  border: 1px solid var(--g-glass-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 30px 60px -24px rgba(13, 27, 42, 0.45);
+  font-family: var(--g-font);
+}
+.faq-chat-header {
+  background: transparent;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--g-line);
+}
+.faq-chat-header h3 {
+  color: var(--g-ink);
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.faq-close-button {
+  color: var(--g-ink);
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(13, 27, 42, 0.08);
+}
+.faq-close-button:hover {
+  background: #fff;
+}
+.faq-chat-header :focus-visible {
+  outline-color: var(--g-green-action) !important;
+}
+.faq-chat-messages {
+  background: transparent;
+  padding: 16px 18px;
+}
+.faq-message.bot .faq-message-content {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 18px 18px 18px 6px;
+  box-shadow: 0 8px 20px -14px rgba(13, 27, 42, 0.35);
+}
+.faq-message.user .faq-message-content {
+  border-radius: 18px 18px 6px 18px;
+  box-shadow: 0 8px 20px -14px rgba(31, 122, 92, 0.6);
+}
+.faq-message-content p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--g-ink-2);
+}
+.faq-message.user .faq-message-content p {
+  color: #fff;
+}
+.faq-option-button {
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(31, 122, 92, 0.25);
+  color: var(--g-green-action);
+  font-family: var(--g-font);
+  font-weight: 600;
+  box-shadow: none;
+}
+.faq-option-button:hover {
+  background: var(--g-green-action);
+  border-color: var(--g-green-action);
+  color: #fff;
+  transform: none;
+  box-shadow: none;
+}
+.faq-chat-footer {
+  background: transparent;
+  border-top: 1px solid var(--g-line);
+}
+.faq-chat-footer p {
+  color: var(--g-ink-3);
+}
+@media (max-width: 480px) {
+  .faq-chat-window {
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.88);
+  }
+  .faq-chat-button {
+    width: 52px;
+    padding: 0;
+  }
+  .faq-chat-button .chat-button-text {
+    display: none;
+  }
+}
+
+/* Back-to-top button as a small glass disc above the chat button. */
+.go-top {
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid var(--g-glass-border);
+  color: var(--g-green-action);
+  box-shadow: 0 12px 26px -14px rgba(13, 27, 42, 0.4);
 }
 
 /* ---------- Quote modal ---------- */

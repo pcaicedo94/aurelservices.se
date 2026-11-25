@@ -77,7 +77,26 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Photos stay in the background: less saturation and contrast, a light
+     softening and a frosted wash, so they support the copy instead of
+     carrying the page (the client finds the AI look too visible). */
+  filter: saturate(0.7) contrast(0.92) brightness(1.04) blur(0.6px);
+  transform: scale(1.02);
   transition: transform 0.6s ease;
+}
+.tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(238, 243, 241, 0.2) 0%, rgba(238, 243, 241, 0.55) 100%),
+    rgba(52, 167, 131, 0.06);
+}
+.tile > :not(img) {
+  position: relative;
+  z-index: 1;
 }
 
 /* ---------- Type scale: few sizes, short measures ---------- */
@@ -249,7 +268,7 @@ a:hover .arrow {
   min-height: 380px;
 }
 .photoChip {
-  position: absolute;
+  position: absolute !important;
   left: 16px;
   bottom: 16px;
 }
@@ -368,7 +387,6 @@ a:hover .arrow {
 }
 .about {
   grid-column: span 2;
-  grid-row: span 2;
   padding: clamp(24px, 3vw, 36px);
   display: flex;
   flex-direction: column;
@@ -402,31 +420,47 @@ a:hover .arrow {
   color: var(--green-action) !important;
 }
 .partners {
-  grid-column: span 2;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 16px;
+  grid-column: 1 / -1;
+  padding: clamp(24px, 3vw, 36px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 24px 32px;
+  background: rgba(255, 255, 255, 0.72);
+  border-width: 2px;
+}
+.partnersHead {
+  display: grid;
+  gap: 8px;
+}
+.partnersTitle {
+  font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem);
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-wrap: balance;
 }
 .logos {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 14px;
 }
 .logos li {
   display: grid;
   place-items: center;
-  height: 64px;
-  padding: 10px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.85);
+  height: 120px;
+  padding: 18px 22px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  box-shadow: 0 10px 24px -16px rgba(13, 27, 42, 0.35);
 }
 .logos img {
-  max-height: 40px;
+  max-height: 70px;
   width: auto;
+  max-width: 100%;
   object-fit: contain;
-  mix-blend-mode: multiply;
 }
 .reviews {
   grid-column: 1 / -1;
@@ -472,6 +506,9 @@ a:hover .arrow {
   .hero {
     grid-template-rows: none;
   }
+  .partners {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .about,
   .partners,
   .calcTile {
@@ -513,8 +550,12 @@ a:hover .arrow {
     flex: 1 1 100%;
     justify-content: center;
   }
+  .logos {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
   .logos li {
-    height: 52px;
+    height: 84px;
   }
 }
 
