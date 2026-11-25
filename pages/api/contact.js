@@ -4,15 +4,15 @@
 // Test mode: with APP_TEST_MODE=1 mail is rendered by nodemailer's
 // jsonTransport and never sent; `x-test-scenario: mail-error` forces the
 // failure path. See utils/testMode.js.
-import { escapeHtml, escapeHtmlMultiline, singleLine } from "../../utils/escapeHtml";
-import { FROM, ADMIN_EMAIL, FOOTER, SIGNATURE, row, shell } from "../../utils/emailLayout";
+import { singleLine } from "../../utils/escapeHtml";
+import { FROM, ADMIN_EMAIL } from "../../utils/emailLayout";
+import { contactCustomer, contactAdmin } from "../../utils/emailMessages";
 import { startTestTrace, respond } from "../../utils/testMode";
 import { createMailer } from "../../utils/mailer";
 import {
   screenSubmission,
   createRateLimiter,
   rateLimitKey,
-  greetingName,
   RATE_LIMIT,
   GENERIC_REJECTION_MESSAGE,
   RATE_LIMIT_MESSAGE,
@@ -66,37 +66,6 @@ function validate(body) {
   return { errors, data: { name, email, phone, subject, text, details } };
 }
 
-// This mail goes to whatever address was typed in, so it repeats none of the
-// sender's text (no message, no details): otherwise the form could be used to
-// deliver someone else's words from our address. Only a plausible name stays.
-function customerEmail(data) {
-  const name = greetingName(data.name);
-  const inner = `
-            <p style="font-size: 16px;">Hej${name ? ` <strong>${escapeHtml(name)}</strong>` : ""},</p>
-            <p>Tack för att du kontaktar oss. Vi har tagit emot ditt meddelande och du får svar inom 24 timmar.</p>
-            ${SIGNATURE}`;
-  return shell("Tack för ditt meddelande!", inner);
-}
-
-function adminEmail(data) {
-  const inner = `
-            <table style="width: 100%; border-collapse: collapse;">${row("Namn", data.name, {
-              bold: true,
-            })}${row("E-post", data.email, { href: `mailto:${data.email}` })}${row("Telefon", data.phone, {
-    href: `tel:${data.phone}`,
-  })}${row("Ämne", data.subject)}${data.details.map(([label, value]) => row(label, value)).join("")}
-            </table>
-            ${
-              data.text
-                ? `<p style="color: #6c757d; font-size: 14px; margin: 20px 0 5px;">Meddelande:</p>
-            <blockquote style="margin: 0; padding: 12px 15px; background: #fff; border-left: 3px solid #34a783; border-radius: 4px;">${escapeHtmlMultiline(
-              data.text
-            )}</blockquote>`
-                : ""
-            }`;
-  return shell("Nytt meddelande från webbsidan", inner, FOOTER);
-}
-
 export default async function handler(req, res) {
   // Null unless APP_TEST_MODE=1; then mail is only simulated.
   const trace = startTestTrace(req);
@@ -140,7 +109,7 @@ export default async function handler(req, res) {
       from: FROM,
       to: data.email,
       subject: "Tack för ditt meddelande - Aurel Städ & Allservice",
-      html: customerEmail(data),
+      html: contactCustomer(data),
     });
 
     await mailer.send({
@@ -148,7 +117,7 @@ export default async function handler(req, res) {
       to: ADMIN_EMAIL,
       replyTo: data.email,
       subject: `Nytt meddelande - ${data.subject}`,
-      html: adminEmail(data),
+      html: contactAdmin(data),
     });
 
     return reply(200, { message: SUCCESS_MESSAGE });

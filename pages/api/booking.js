@@ -7,8 +7,8 @@
 // are simulated, and only the availability check reads the real calendar.
 // `x-test-scenario: conflict|race|calendar-error|mail-error` forces a path.
 // See utils/testMode.js.
-import { escapeHtml } from "../../utils/escapeHtml";
-import { FROM, ADMIN_EMAIL, FOOTER, SIGNATURE, row, shell } from "../../utils/emailLayout";
+import { FROM, ADMIN_EMAIL } from "../../utils/emailLayout";
+import { bookingCustomer, bookingAdmin } from "../../utils/emailMessages";
 import { TIME_ZONE, utcToStockholmWallClock, formatStockholm } from "../../utils/timeZone";
 import { startTestTrace, respond } from "../../utils/testMode";
 import { createMailer } from "../../utils/mailer";
@@ -36,52 +36,6 @@ const SUCCESS_MESSAGE = "Bokning skapad! Vi skickar en bekräftelse till din e-p
 // 5 bookings per 10 minutes per IP. Kept in memory, so on serverless hosting
 // it is per instance; the PHP version keeps the counters in the database.
 const limiter = createRateLimiter(RATE_LIMIT);
-
-/* ---------------------------------- email --------------------------------- */
-
-function customerEmail(data, when) {
-  const inner = `
-            <p style="font-size: 16px;">Hej <strong>${escapeHtml(data.name)}</strong>,</p>
-            <p>Vi har mottagit din bokning för <strong>${escapeHtml(data.cleaningType)}</strong>. Här är en sammanfattning:</p>
-            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">${row("Datum/tid", when)}${row("Adress", data.address)}
-              <tr>
-                <td style="padding: 10px 0; color: #6c757d;">Uppskattat pris</td>
-                <td style="padding: 10px 0; font-weight: bold; font-size: 18px; color: #2d9070;">${escapeHtml(data.totalPrice)} kr</td>
-              </tr>
-            </table>
-            <p>Vi återkommer med en bekräftelse inom kort.</p>
-            ${SIGNATURE}`;
-  return shell("Tack för din bokning!", inner);
-}
-
-// A failed database write must never be silent: the booking is real (it is in
-// the calendar and in this mail) but it is missing from the records, and only
-// this banner would tell anyone.
-function adminEmail(data, details, when, dbFailed) {
-  const warning = dbFailed
-    ? `<p style="background: #fff3cd; border: 1px solid #ffe08a; border-radius: 8px; padding: 12px 15px; margin: 0 0 20px; color: #664d03; font-size: 14px;">
-                <strong>OBS:</strong> bokningen kunde inte sparas i databasen. Den finns i kalendern och i detta mejl, men saknas i bokningslistan. Kontrollera Supabase.
-              </p>`
-    : "";
-  const rows = [
-    row("Tjänst", data.cleaningType, { bold: true }),
-    row("Kund", data.name, { bold: true }),
-    row("E-post", data.email, { href: `mailto:${data.email}` }),
-    row("Telefon", data.phone, { href: `tel:${data.phone}` }),
-    row("Adress", data.address),
-    row("Datum/tid", when),
-    // Everything else the form sent (contact preference, add-ons, rooms...).
-    ...details.map(([label, value]) => row(label, value)),
-  ].join("");
-  const inner = `${warning}
-            <table style="width: 100%; border-collapse: collapse;">${rows}
-              <tr>
-                <td style="padding: 12px 0; color: #6c757d; font-size: 16px;">Pris</td>
-                <td style="padding: 12px 0; font-weight: bold; font-size: 20px; color: #2d9070;">${escapeHtml(data.totalPrice)} kr</td>
-              </tr>
-            </table>`;
-  return shell("Ny bokning mottagen", inner, FOOTER);
-}
 
 /* --------------------------------- handler -------------------------------- */
 
@@ -186,7 +140,7 @@ export default async function handler(req, res) {
       from: FROM,
       to: data.email,
       subject: `Bokningsbekräftelse - ${data.cleaningType}`,
-      html: customerEmail(data, when),
+      html: bookingCustomer(data, when),
     });
 
     // 4. Send notification email to admin
@@ -195,7 +149,7 @@ export default async function handler(req, res) {
       to: ADMIN_EMAIL,
       replyTo: data.email,
       subject: `Ny bokning - ${data.cleaningType} - ${data.name}`,
-      html: adminEmail(data, details, when, Boolean(dbError)),
+      html: bookingAdmin(data, details, when, Boolean(dbError)),
     });
 
     return reply(200, { message: SUCCESS_MESSAGE });

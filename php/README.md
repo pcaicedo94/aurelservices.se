@@ -246,6 +246,19 @@ Un solo comando, `PASS`/`FAIL` por comprobación y un resumen
 falla. Sin red, sin base de datos, sin SMTP y sin Composer, así que también se
 puede correr por SSH en el servidor antes de dar por bueno un despliegue.
 
+Aparte, y desde el lado de Node:
+
+```sh
+node scripts/qa-email.mjs [--out=<carpeta>]
+```
+
+Renderiza los cuatro correos con los constructores de Node
+(`utils/emailMessages.js`) y otra vez con los de PHP (`php/lib/Messages.php`) y
+**compara byte a byte**. Son dos implementaciones en ficheros distintos: se
+separan en cuanto alguien edita una sola, y un correo que cambia de aspecto
+según qué backend respondió es un fallo que el cliente ve. Con `--out` escribe
+el HTML a una carpeta para mirarlo en el navegador, sin mandar nada.
+
 Cubre:
 
 - **`php -l` de todos los ficheros** que se suben, para que una errata en un

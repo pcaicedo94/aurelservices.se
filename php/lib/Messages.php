@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace Aurel;
 
 /**
- * The four emails, same content and same signature as today:
+ * The four emails, same content and same markup as
  * pages/api/booking.js (customerEmail, adminEmail) and pages/api/contact.js
  * (customerEmail, adminEmail).
+ *
+ * Each method mirrors its JavaScript twin line for line, concatenating the
+ * EmailLayout helpers rather than writing markup inline: the helpers already
+ * carry their own newline and indent, so the two backends produce the same
+ * bytes. tests/test_email_layout.php proves it.
  *
  * Pure string building, no transport: tests/test_messages.php renders these
  * without PHPMailer, MySQL or a network.
@@ -16,25 +21,35 @@ final class Messages
 {
     /* ------------------------------- booking ------------------------------ */
 
-    /** @param array<string,mixed> $data */
+    /**
+     * The date and time are the one thing the customer comes back to this mail
+     * for, weeks later, so they get the highlight band instead of a row in the
+     * table. Everything else stays in the table under it.
+     *
+     * @param array<string,mixed> $data
+     */
     public static function bookingCustomer(array $data, string $when): string
     {
-        $inner = "\n            <p style=\"font-size: 16px;\">Hej <strong>" . Escape::html($data['name'])
-            . "</strong>,</p>\n            <p>Vi har mottagit din bokning för <strong>"
-            . Escape::html($data['cleaningType']) . '</strong>. Här är en sammanfattning:</p>'
-            . "\n            <table style=\"width: 100%; border-collapse: collapse; margin: 20px 0;\">"
-            . EmailLayout::row('Datum/tid', $when)
-            . EmailLayout::row('Adress', $data['address'])
-            . "\n              <tr>"
-            . "\n                <td style=\"padding: 10px 0; color: #6c757d;\">Uppskattat pris</td>"
-            . "\n                <td style=\"padding: 10px 0; font-weight: bold; font-size: 18px; color: #2d9070;\">"
-            . Escape::html(BookingRules::formatPrice((float) $data['totalPrice'])) . ' kr</td>'
-            . "\n              </tr>"
-            . "\n            </table>"
-            . "\n            <p>Vi återkommer med en bekräftelse inom kort.</p>"
-            . "\n            " . EmailLayout::SIGNATURE;
+        $price = BookingRules::formatPrice((float) $data['totalPrice']);
 
-        return EmailLayout::shell('Tack för din bokning!', $inner);
+        $inner = EmailLayout::paragraph('Hej <strong>' . Escape::html($data['name']) . '</strong>,')
+            . EmailLayout::paragraph(
+                'Vi har mottagit din bokning för <strong>' . Escape::html($data['cleaningType'])
+                . '</strong>. Här är en sammanfattning:'
+            )
+            . EmailLayout::highlight($when)
+            . EmailLayout::TABLE_OPEN_SPACED
+            . EmailLayout::row('Adress', $data['address'])
+            . EmailLayout::priceRow('Uppskattat pris', $price)
+            . EmailLayout::TABLE_CLOSE
+            . EmailLayout::paragraph('Vi återkommer med en bekräftelse inom kort.')
+            . EmailLayout::SIGNATURE;
+
+        return EmailLayout::shell(
+            'Tack för din bokning!',
+            $inner,
+            $data['cleaningType'] . ' — ' . $when
+        );
     }
 
     /**
@@ -54,18 +69,20 @@ final class Messages
             $rows .= EmailLayout::row($label, $value);
         }
 
-        // No "could not be saved" banner here, unlike pages/api/booking.js: the
+        // No "could not be saved" warning here, unlike pages/api/booking.js: the
         // row is written before any mail goes out, so a booking that is mailed
         // is a booking that exists. See BookingStore.
-        $inner = "\n            <table style=\"width: 100%; border-collapse: collapse;\">" . $rows
-            . "\n              <tr>"
-            . "\n                <td style=\"padding: 12px 0; color: #6c757d; font-size: 16px;\">Pris</td>"
-            . "\n                <td style=\"padding: 12px 0; font-weight: bold; font-size: 20px; color: #2d9070;\">"
-            . Escape::html(BookingRules::formatPrice((float) $data['totalPrice'])) . ' kr</td>'
-            . "\n              </tr>"
-            . "\n            </table>";
+        $price = BookingRules::formatPrice((float) $data['totalPrice']);
+        $inner = EmailLayout::TABLE_OPEN
+            . $rows
+            . EmailLayout::priceRow('Pris', $price)
+            . EmailLayout::TABLE_CLOSE;
 
-        return EmailLayout::shell('Ny bokning mottagen', $inner, EmailLayout::FOOTER);
+        return EmailLayout::shell(
+            'Ny bokning mottagen',
+            $inner,
+            $data['name'] . ' — ' . $data['cleaningType'] . ' ' . $when
+        );
     }
 
     /* ------------------------------- contact ------------------------------ */
@@ -82,13 +99,20 @@ final class Messages
     {
         $name = AntiSpam::greetingName($data['name'] ?? '');
         $greeting = $name === '' ? '' : ' <strong>' . Escape::html($name) . '</strong>';
-        $inner = "\n            <p style=\"font-size: 16px;\">Hej" . $greeting . ",</p>"
-            // Q90, confirmed by the client on 2026-10-15: always within 24 hours.
-            . "\n            <p>Tack för att du kontaktar oss. Vi har tagit emot ditt meddelande och du får svar "
-            . "inom 24 timmar.</p>"
-            . "\n            " . EmailLayout::SIGNATURE;
 
-        return EmailLayout::shell('Tack för ditt meddelande!', $inner);
+        $inner = EmailLayout::paragraph('Hej' . $greeting . ',')
+            // Q90, confirmed by the client on 2026-10-15: always within 24 hours.
+            . EmailLayout::paragraph(
+                'Tack för att du kontaktar oss. Vi har tagit emot ditt meddelande och du får svar '
+                . 'inom 24 timmar.'
+            )
+            . EmailLayout::SIGNATURE;
+
+        return EmailLayout::shell(
+            'Tack för ditt meddelande!',
+            $inner,
+            'Vi har tagit emot ditt meddelande. Du får svar inom 24 timmar.'
+        );
     }
 
     /** @param array<string,mixed> $data */
@@ -105,17 +129,23 @@ final class Messages
         }
 
         $text = (string) $data['text'];
-        $quote = $text === ''
+        $message = $text === ''
             ? ''
-            : "<p style=\"color: #6c757d; font-size: 14px; margin: 20px 0 5px;\">Meddelande:</p>"
-                . "\n            <blockquote style=\"margin: 0; padding: 12px 15px; background: #fff; "
-                . "border-left: 3px solid #34a783; border-radius: 4px;\">"
+            : "\n            <p style=\"margin: 24px 0 8px; color: #6c757d; font-size: 13px; "
+                . "text-transform: uppercase; letter-spacing: 0.04em;\">Meddelande</p>"
+                . "\n            <blockquote style=\"margin: 0; padding: 16px 18px; "
+                . "background-color: #f8f9fa; border-left: 4px solid #34a783; border-radius: 10px; "
+                . "font-size: 15px; line-height: 1.6; color: #212529;\">"
                 . Escape::htmlMultiline($text) . '</blockquote>';
 
-        $inner = "\n            <table style=\"width: 100%; border-collapse: collapse;\">" . $rows
-            . "\n            </table>"
-            . "\n            " . $quote;
+        $inner = EmailLayout::TABLE_OPEN . $rows . EmailLayout::TABLE_CLOSE . $message;
 
-        return EmailLayout::shell('Nytt meddelande från webbsidan', $inner, EmailLayout::FOOTER);
+        $who = ($data['name'] ?? '') !== '' ? $data['name'] : $data['email'];
+
+        return EmailLayout::shell(
+            'Nytt meddelande från webbsidan',
+            $inner,
+            $data['subject'] . ' — ' . $who
+        );
     }
 }
