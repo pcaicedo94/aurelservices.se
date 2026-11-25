@@ -51,6 +51,11 @@ export const LOGO_CID = "aurel-logo";
 
 export const LOGO_WIDTH = ${Math.round(info.width / 2)};
 
+// Both dimensions go on the <img> tag. Outlook reserves no space for an image
+// it has not measured, so with width alone the logo band jumps as the picture
+// loads and the heading moves under the reader's eye.
+export const LOGO_HEIGHT = ${Math.round(info.height / 2)};
+
 const LOGO_PNG_BASE64 =
   "${base64}";
 

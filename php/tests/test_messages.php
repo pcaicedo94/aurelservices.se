@@ -47,7 +47,13 @@ Check::contains('customer email is a mailto link', $admin, 'href="mailto:asa@exa
 Check::contains('phone is a tel link', $admin, 'href="tel:070-123 45 67"');
 Check::contains('every detail row the form sent is there', $admin, '82 m²');
 Check::contains('and the second one', $admin, '>Rum</td>');
-Check::contains('footer', $admin, 'Aurel Städ &amp; Allservice AB — info@aurelservice.se');
+// The footer is part of the shell now, not something each message passes in,
+// so it carries the company name, a mailto link and the phone number — and it
+// is on the customer's copy too, which it was not before.
+Check::contains('footer names the company', $admin, 'Aurel Städ &amp; Allservice AB —');
+Check::contains('footer links the inbox', $admin, 'href="mailto:info@aurelservice.se"');
+Check::contains('footer gives the phone number', $admin, '076-045 02 28');
+Check::contains('the customer copy has the footer too', $customer, 'href="mailto:info@aurelservice.se"');
 // pages/api/booking.js needed a "could not be saved" banner because the
 // database write came last and was only logged. Here the row exists before any
 // mail goes out, so the banner is gone on purpose.
