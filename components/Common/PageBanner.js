@@ -1,6 +1,10 @@
 import React from "react";
 import Link from "next/link";
 
+// Page header of every inner page, in the glass + bento style of the home
+// page: a frosted card with the breadcrumb and the H1, next to a photo tile.
+// On a phone the photo becomes a short band above the card. The props are the
+// same as before, so no page had to change.
 const PageBanner = ({
   pageTitle,
   breadcrumbTextOne,
@@ -10,36 +14,36 @@ const PageBanner = ({
   bgPosition,
 }) => {
   return (
-    <>
-      <div
-        className="page-title-area"
-        style={{
-          backgroundImage: `url(${bgImage})`,
-          // The strip is only 500px tall, so `cover` hides most of a photo's
-          // height. Pages can move the visible band; unset keeps the
-          // stylesheet's `center center`.
-          ...(bgPosition && { backgroundPosition: bgPosition }),
-        }}
-      >
-        <div className="d-table">
-          <div className="d-table-cell">
-            <div className="container">
-              <div className="page-title-content">
-                <h1>{pageTitle}</h1>
-                {breadcrumbUrl && (
-                  <ul>
-                    <li>
-                      <Link href={breadcrumbUrl}>{breadcrumbTextOne}</Link>
-                    </li>
-                    <li>{breadcrumbTextTwo}</li>
-                  </ul>
-                )}
-              </div>
-            </div>
-          </div>
+    <section className="page-hero">
+      <div className="container page-hero-grid">
+        <div className="glass-panel page-hero-card">
+          {breadcrumbUrl ? (
+            <nav aria-label="Brödsmulor">
+              <ol className="page-hero-crumbs">
+                <li>
+                  <Link href={breadcrumbUrl}>{breadcrumbTextOne}</Link>
+                </li>
+                <li aria-current="page">{breadcrumbTextTwo}</li>
+              </ol>
+            </nav>
+          ) : (
+            <p className="page-hero-eyebrow">Aurel Städ &amp; Allservice</p>
+          )}
+          <h1>{pageTitle}</h1>
         </div>
+
+        {bgImage && (
+          <div
+            className="page-hero-photo"
+            style={{
+              backgroundImage: `url(${bgImage})`,
+              ...(bgPosition && { backgroundPosition: bgPosition }),
+            }}
+            aria-hidden="true"
+          />
+        )}
       </div>
-    </>
+    </section>
   );
 };
 

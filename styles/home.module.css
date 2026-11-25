@@ -1,0 +1,527 @@
+/* Home page, glass + bento (pages/index.js). The ground, the navbar and the
+   shared surfaces live in styles/glass.css; this file only lays out the
+   home bento grids. */
+
+.page {
+  --ink: #0d1b2a;
+  --ink-2: #3b4a5a;
+  --ink-3: #5f6d7c;
+  --green: #34a783;
+  --green-action: #1f7a5c;
+  --green-hover: #186349;
+  --glass-bg: rgba(255, 255, 255, 0.56);
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --radius: 24px;
+  --gap: 16px;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 124px 0 24px;
+  color: var(--ink);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15.5px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The template styles h1–h6, p, ul and a globally (Dosis, margins, colours).
+   Reset them inside the proposal so the type scale below is the only one. */
+.page :is(h1, h2, h3, p, ul, li, a, button, span) {
+  font-family: inherit;
+  margin: 0;
+}
+.page ul {
+  list-style: none;
+  padding: 0;
+}
+.page a {
+  text-decoration: none;
+}
+
+/* ---------- Surfaces ---------- */
+.wrap {
+  width: min(1200px, 100% - 32px);
+  margin-inline: auto;
+}
+.wrap + .wrap {
+  margin-top: 72px;
+}
+
+.glass {
+  position: relative;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 12px 32px -16px rgba(13, 27, 42, 0.22);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: rgba(255, 255, 255, 0.94);
+  }
+}
+
+.tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px -16px rgba(13, 27, 42, 0.3);
+}
+.tile > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+/* ---------- Type scale: few sizes, short measures ---------- */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green-action);
+}
+.h1 {
+  display: grid;
+  gap: 14px;
+}
+.h1Main {
+  display: block;
+  font-size: clamp(2rem, 1.25rem + 2.4vw, 3.3rem);
+  font-weight: 650;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  max-width: 16ch;
+  text-wrap: balance;
+}
+.h2 {
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.25rem);
+  font-weight: 650;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.lead {
+  margin-top: 16px !important;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 38ch;
+  text-wrap: pretty;
+}
+.body {
+  color: var(--ink-2);
+  max-width: 46ch;
+  text-wrap: pretty;
+}
+.sectionHead {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Buttons and chips ---------- */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+.btnPrimary,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.btnPrimary {
+  background: var(--green-action);
+  color: #fff !important;
+  border: 0;
+}
+.btnPrimary:hover {
+  background: var(--green-hover);
+  transform: translateY(-1px);
+}
+.btnGhost {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--ink) !important;
+  border: 1px solid rgba(13, 27, 42, 0.14);
+}
+.btnGhost:hover {
+  background: #fff;
+}
+.arrow {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  transition: transform 0.2s ease;
+}
+a:hover > .arrow,
+a:hover .arrow {
+  transform: translateX(3px);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px !important;
+}
+.chip {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(13, 27, 42, 0.1);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink) !important;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.chip:hover {
+  background: #fff;
+  border-color: var(--green);
+}
+.glassChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px rgba(52, 167, 131, 0.2);
+}
+
+/* ---------- 1. Hero bento ---------- */
+.hero {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: minmax(190px, auto) minmax(190px, auto) auto;
+}
+.heroMain {
+  grid-column: 1 / 3;
+  grid-row: 1 / 3;
+  padding: clamp(28px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.heroPhoto {
+  grid-column: 3 / 5;
+  grid-row: 1 / 3;
+  min-height: 380px;
+}
+.photoChip {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+}
+.statTile {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+  min-height: 140px;
+}
+.statValue {
+  font-size: clamp(2rem, 1.6rem + 1vw, 2.6rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.statLabel {
+  font-size: 13.5px;
+  color: var(--ink-3);
+  line-height: 1.35;
+}
+.rutTile .statValue {
+  color: var(--green-action);
+}
+.calcTile {
+  grid-column: span 2;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ---------- 2. Services bento ---------- */
+.servicesGrid {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 230px;
+  grid-auto-flow: dense;
+}
+.service {
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+}
+.service:hover > img {
+  transform: scale(1.05);
+}
+.feature {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.tall {
+  grid-row: span 2;
+}
+.wide {
+  grid-column: span 2;
+}
+.serviceCard {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 18px;
+  color: var(--ink) !important;
+}
+.tag {
+  justify-self: start;
+  margin-bottom: 6px !important;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(31, 122, 92, 0.12);
+  color: var(--green-action);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.serviceTitle {
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.wide .serviceCard,
+.feature .serviceCard {
+  width: auto;
+  max-width: 360px;
+}
+.feature .serviceTitle {
+  font-size: 24px;
+}
+.serviceText {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px !important;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--green-action);
+}
+
+/* ---------- 3. Trust bento ---------- */
+.trustGrid {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.about {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: clamp(24px, 3vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+}
+.values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.values li {
+  padding: 7px 14px 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(13, 27, 42, 0.08);
+  font-size: 14px;
+  font-weight: 500;
+}
+.values li::before {
+  content: "✓";
+  margin-right: 7px;
+  color: var(--green-action);
+  font-weight: 700;
+}
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--green-action) !important;
+}
+.partners {
+  grid-column: span 2;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+.logos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.logos li {
+  display: grid;
+  place-items: center;
+  height: 64px;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.85);
+}
+.logos img {
+  max-height: 40px;
+  width: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.reviews {
+  grid-column: 1 / -1;
+  padding: 24px;
+  min-height: 120px;
+}
+.reviews > div {
+  margin-top: 12px;
+}
+
+/* ---------- 4. CTA ---------- */
+.cta {
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  padding: clamp(16px, 3vw, 40px);
+}
+.ctaCard {
+  max-width: 480px;
+  padding: clamp(24px, 3vw, 36px);
+  display: grid;
+  gap: 10px;
+}
+.ctaCard .actions {
+  margin-top: 14px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1099px) {
+  .hero,
+  .servicesGrid,
+  .trustGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .heroMain,
+  .heroPhoto {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .heroPhoto {
+    min-height: 300px;
+  }
+  .hero {
+    grid-template-rows: none;
+  }
+  .about,
+  .partners,
+  .calcTile {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 639px) {
+  .page {
+    padding-top: 100px;
+    --gap: 12px;
+    --radius: 20px;
+  }
+  .wrap + .wrap {
+    margin-top: 56px;
+  }
+  .servicesGrid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 200px;
+  }
+  .feature,
+  .tall,
+  .wide {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .feature {
+    grid-row: span 1;
+  }
+  .heroPhoto {
+    min-height: 220px;
+  }
+  .statTile {
+    min-height: 116px;
+    padding: 18px;
+  }
+  .actions > * {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+  .logos li {
+    height: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile > img,
+  .arrow,
+  .btnPrimary {
+    transition: none;
+  }
+}
