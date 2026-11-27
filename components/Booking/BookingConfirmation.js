@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./Booking.module.css";
 
-// Shown in the page after a successful booking, replacing the old
-// "Bekräftelse" popup that reloaded the page.
+// Shown in the page after a request is sent, replacing the old
+// "Bekräftelse" popup that reloaded the page. Since Textosweb (2026-11-26)
+// it confirms a non-binding request, not a booking.
 const BookingConfirmation = ({ service, when, email, onDismiss }) => {
   const panelRef = useRef(null);
 
@@ -18,11 +19,15 @@ const BookingConfirmation = ({ service, when, email, onDismiss }) => {
       role="status"
       tabIndex={-1}
     >
-      <h3>Tack för din bokning!</h3>
+      <h3>Tack för din förfrågan!</h3>
       <p>
-        Vi har tagit emot din bokning av {service.toLowerCase()}
-        {when ? `, ${when}` : ""}. En sammanfattning skickas till <strong>{email}</strong> och
-        vi återkommer med en bekräftelse inom kort.
+        Vi har tagit emot din förfrågan om {service.toLowerCase()}
+        {when ? `, önskad tid ${when}` : ""}. En sammanfattning skickas till{" "}
+        <strong>{email}</strong>.
+      </p>
+      <p>
+        Vi går igenom dina önskemål och återkommer via e-post med ett prisförslag och information
+        om tillgängliga tider. Förfrågan är kostnadsfri och inte bindande.
       </p>
       <button type="button" className="default-btn" onClick={onDismiss}>
         Stäng

@@ -2,11 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://aurelservice.se/</loc>
-    <lastmod>2026-09-19</lastmod>
+    <lastmod>2026-11-25</lastmod>
   </url>
   <url>
     <loc>https://aurelservice.se/allmanna-villkor</loc>
     <lastmod>2026-09-29</lastmod>
+  </url>
+  <url>
+    <loc>https://aurelservice.se/bokningsvillkor</loc>
   </url>
   <url>
     <loc>https://aurelservice.se/foretag</loc>
@@ -70,15 +73,15 @@
   </url>
   <url>
     <loc>https://aurelservice.se/tjanster/flyttstadning</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-11-25</lastmod>
   </url>
   <url>
     <loc>https://aurelservice.se/tjanster/fonsterputs</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-11-25</lastmod>
   </url>
   <url>
     <loc>https://aurelservice.se/tjanster/hemstadning</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-11-25</lastmod>
   </url>
   <url>
     <loc>https://aurelservice.se/tjanster/mattvatt</loc>
@@ -90,7 +93,7 @@
   </url>
   <url>
     <loc>https://aurelservice.se/tjanster/storstadning</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-11-25</lastmod>
   </url>
   <url>
     <loc>https://aurelservice.se/tjanster/tradgardsskotsel</loc>

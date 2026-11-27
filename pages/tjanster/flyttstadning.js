@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { RutPrice, RutTag } from "../../components/Common/RutTag";
 import Footer from "../../components/Layouts/Footer";
 import BookingSummary from "../../components/Booking/BookingSummary";
 import BookingContactForm from "../../components/Booking/BookingContactForm";
@@ -12,12 +13,15 @@ import useBookingFlow from "../../lib/booking/useBookingFlow";
 import useBookingDate from "../../lib/booking/useBookingDate";
 import { bookingHint, isQuoteOnly, parseArea, QUOTE_ONLY_HINT } from "../../lib/booking/rules";
 import Seo from "../../components/Common/Seo";
+import { IncludedAccordion, NumberedTips } from "../../components/ServiceContent/ServiceContent";
+import { flyttIncluded, flyttPrepare, flyttWalls } from "../../content/services/flyttstadning";
 import {
   estimateHours,
   moveCleaningBasePrice,
   MOVE_CLEANING_EXTRAS,
   MOVE_CLEANING_QUOTE_ABOVE_AREA,
   MOVE_TIME_ESTIMATE,
+  SOILING_SURCHARGE_MAX_PERCENT,
 } from "../../lib/pricing";
 import {
   describeArea,
@@ -25,7 +29,6 @@ import {
   formatArea,
   formatDateTime,
   formatHours,
-  formatPrice,
   NO_PRICE,
   roundKronor,
 } from "../../lib/booking/format";
@@ -136,7 +139,7 @@ const MoveCleaning = () => {
       <PageBanner pageTitle="Flyttstädning" bgImage="/images/banners/flyttstadning.webp" />
 
       {/* Descriptive Section */}
-      <div className="container ptb-50">
+      <div className="container ptb-50 svc-page">
         <div className="row">
           <div className="col-lg-7">
             <h2>Flyttstädning i Stockholm – Noggrann städning inför besiktning</h2>
@@ -153,52 +156,19 @@ const MoveCleaning = () => {
           </div>
         </div>
 
-        <div className="row" style={{ marginTop: "30px" }}>
-          <div className="col-lg-4">
-            <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h3>Allmänna utrymmen</h3>
-              <ul>
-                <li>Dammsugning och våttorkning av golv</li>
-                <li>Rengöring av golvlister och trösklar</li>
-                <li>Rengöring av dörrar, dörrkarmar och handtag</li>
-                <li>Rengöring av strömbrytare och eluttag</li>
-                <li>Borttagning av synliga fläckar på väggar och tak</li>
-                <li>Fönsterputsning, både invändigt och utvändigt</li>
-              </ul>
-            </div>
-          </div>
-          <div className="col-lg-4">
-            <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h3>Kök</h3>
-              <ul>
-                <li>Rengöring av alla skåp och lådor, invändigt och utvändigt</li>
-                <li>Djupgående rengöring av ugn och spis inklusive plattor och galler</li>
-                <li>Rengöring av kyl och frys (ska vara tömda och avfrostade)</li>
-                <li>Rengöring av diskmaskin om sådan finns</li>
-                <li>Rengöring av köksfläkt och filter</li>
-              </ul>
-            </div>
-          </div>
-          <div className="col-lg-4">
-            <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h3>Badrum</h3>
-              <ul>
-                <li>Noggrann rengöring av toalett, handfat, dusch och badkar</li>
-                <li>Borttagning av kalkavlagringar på kranar och kakel</li>
-                <li>Rengöring av speglar och badrumsskåp</li>
-                <li>Rengöring av ventilation och luftgaller</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        <IncludedAccordion {...flyttIncluded} />
 
-        <div className="row" style={{ marginTop: "10px" }}>
-          <div className="col-lg-12">
-            <div className="brand-card-warning">
-              {/* Q104, bekräftat av kunden 2026-10-15: upp till 20 procent, och
-                  kunden godkänner tillägget innan något extra arbete utförs. */}
-              <strong>Viktig information om pris:</strong> Priset baseras på att bostaden är i normalt skick. Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 procent tillkomma. Du informeras alltid på plats och ska godkänna pristillägget innan vi utför något extra arbete.
-            </div>
+        <div className="svc-notices">
+          <div className="brand-card-warning">
+            <strong>OBS!</strong> {flyttWalls}
+          </div>
+          <div className="brand-card-warning">
+            {/* Q104 and the 2027 list: a ceiling of 25 % for flyttstädning,
+                approved by the customer before any extra work. */}
+            <strong>Viktig information om pris:</strong> Priset baseras på att bostaden är i
+            normalt skick. Vid kraftig nedsmutsning kan ett pristillägg på upp till{" "}
+            {SOILING_SURCHARGE_MAX_PERCENT.movecleaning} procent tillkomma. Du informeras alltid på
+            plats och ska godkänna pristillägget innan vi utför något extra arbete.
           </div>
         </div>
 
@@ -238,7 +208,7 @@ const MoveCleaning = () => {
                     onChange={(e) => setHasKylFrysDefrost(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="kylfrysdefrost">
-                    {`Kyl/Frys med avfrostning - ${MOVE_CLEANING_EXTRAS.kylFrysDefrost} kr`}
+                    {`Kyl/Frys med avfrostning - ${MOVE_CLEANING_EXTRAS.kylFrysDefrost} kr`} <RutTag />
                   </label>
                 </div>
                 <div className="form-check">
@@ -250,7 +220,7 @@ const MoveCleaning = () => {
                     onChange={(e) => setHasPersienner(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="persienner">
-                    {`Persienner (kan bokas som tillägg) - ${MOVE_CLEANING_EXTRAS.persienner} kr`}
+                    {`Persienner (kan bokas som tillägg) - ${MOVE_CLEANING_EXTRAS.persienner} kr`} <RutTag />
                   </label>
                 </div>
                 <div className="form-check">
@@ -262,7 +232,7 @@ const MoveCleaning = () => {
                     onChange={(e) => setHasBalkonger(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="balkonger">
-                    {`Städning av biytor såsom förråd, garage och balkonger - ${MOVE_CLEANING_EXTRAS.biytor} kr/timmen`}
+                    {`Städning av biytor såsom förråd, garage och balkonger - ${MOVE_CLEANING_EXTRAS.biytor} kr/timmen`} <RutTag />
                   </label>
                 </div>
                 <div className="form-check">
@@ -274,7 +244,7 @@ const MoveCleaning = () => {
                     onChange={(e) => setHasBalkongerGlas(e.target.checked)}
                   />
                   <label className="form-check-label" htmlFor="balkongerglas">
-                    {`Fönsterputsning av inglasade balkonger - ${MOVE_CLEANING_EXTRAS.inglasadBalkong} kr`}
+                    {`Fönsterputsning av inglasade balkonger - ${MOVE_CLEANING_EXTRAS.inglasadBalkong} kr`} <RutTag />
                   </label>
                 </div>
               </div>
@@ -290,6 +260,7 @@ const MoveCleaning = () => {
           {/* Summary Section */}
           <div className="col-lg-6">
             <BookingSummary
+              privateCustomer
               mode={needsQuote ? "quote" : "book"}
               hint={needsQuote ? "" : hint}
               onBook={flow.openContact}
@@ -306,14 +277,14 @@ const MoveCleaning = () => {
                 <strong>Beräknad tid:</strong> {cleaningTime === null ? NO_PRICE : formatHours(cleaningTime)}
               </li>
               <li>
-                <strong>Baspris:</strong> {needsQuote ? "Offereras" : formatPrice(basePrice)}
+                <strong>Baspris:</strong> {needsQuote ? "Offereras" : <RutPrice amount={basePrice} />}
               </li>
               <li>
                 <strong>Tillägg:</strong> {extras.map((extra) => extra.short).join(", ") || "Inga"}
               </li>
               <li>
-                <strong>Uppskattat totalpris:</strong>{" "}
-                {needsQuote ? "Offereras" : formatPrice(totalPrice)}
+                <strong>Preliminärt totalpris:</strong>{" "}
+                {needsQuote ? "Offereras" : <RutPrice amount={totalPrice} />}
               </li>
             </BookingSummary>
           </div>
@@ -337,6 +308,8 @@ const MoveCleaning = () => {
             </div>
           )}
         </div>
+
+        <NumberedTips {...flyttPrepare} />
       </div>
 
       <QuoteModal

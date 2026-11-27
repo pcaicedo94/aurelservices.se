@@ -139,7 +139,7 @@ export default async function handler(req, res) {
     await mailer.send({
       from: FROM,
       to: data.email,
-      subject: `Bokningsbekräftelse - ${data.cleaningType}`,
+      subject: `Vi har tagit emot din förfrågan - ${data.cleaningType}`,
       html: bookingCustomer(data, when),
     });
 
@@ -148,7 +148,7 @@ export default async function handler(req, res) {
       from: FROM,
       to: ADMIN_EMAIL,
       replyTo: data.email,
-      subject: `Ny bokning - ${data.cleaningType} - ${data.name}`,
+      subject: `Ny bokningsförfrågan - ${data.cleaningType} - ${data.name}`,
       html: bookingAdmin(data, details, when, Boolean(dbError)),
     });
 

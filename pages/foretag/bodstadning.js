@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import {
+  ServiceIntro,
+  ServiceSections,
+  GoodToKnow,
+  HowItWorks,
+  QuoteCta,
+} from "../../components/ServiceContent/ServiceContent";
+import content from "../../content/services/bodstadning";
 import { QUOTE_FIELDS } from "../../config/quoteFields";
 import Footer from "../../components/Layouts/Footer";
 import BookingSummary from "../../components/Booking/BookingSummary";
@@ -98,29 +106,30 @@ const ContainerCleaning = () => {
         bgImage="/images/banners/bodstadning.webp"
       />
 
-      <div className="container ptb-50">
+      <div className="container ptb-50 svc-page">
         <div className="row">
+          <div className="col-lg-8">
+            <ServiceIntro {...content.intro} />
+          </div>
+          <div className="col-lg-4">
+            <div className="summary-frame svc-aside">
+              <h3>Räkna ut ett pris</h3>
+              <p>
+                Ange antal bodar och städfrekvens i kalkylatorn nedan för ett uppskattat pris,
+                eller begär en offert direkt.
+              </p>
+              <button type="button" className="default-btn" onClick={() => setShowQuote(true)}>
+                Begär offert
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ServiceSections {...content.sections} />
+
+        <div className="row svc-calculator">
           {/* Form Section */}
           <div className="col-lg-6">
-            <h2>Byggstädning i Stockholm – Etableringsstädning, bodstädning och slutstädning vid renovering</h2>
-            <p>
-              Behöver ni professionell städning i samband med byggprojekt eller renovering? Aurel Städ &amp; Allservice erbjuder byggstädning i Stockholm, anpassad för entreprenörer, byggföretag och fastighetsägare. Vi ser till att arbetsplatsen hålls ren, säker och redo för nästa steg i projektet.
-            </p>
-            <h3>Vad vi erbjuder</h3>
-            <ul>
-              <li>Städning av bodar, baracker och personalutrymmen</li>
-              <li>Löpande städning under byggprojekt</li>
-              <li>Slutstädning inför överlämning</li>
-              <li>Städning efter renoveringar</li>
-              <li>Borttagning av byggdamm och smuts</li>
-              <li>Dammsugning och våttorkning av golv och ytor</li>
-              <li>Rengöring av dörrar, karmar och fasta installationer</li>
-              <li>Rengöring av kök och hygienutrymmen</li>
-              <li>Avfallshantering vid behov</li>
-            </ul>
-            <p>
-              Vi erbjuder både löpande byggstädning under projektets gång samt slutstädning inför färdigställande. Priserna är exklusive moms och baserade på antal bodar och önskad städfrekvens.
-            </p>
             {/* The chatbot links straight to the calculator, so it needs an anchor. */}
             <form
               id="berakna-pris"
@@ -228,8 +237,11 @@ const ContainerCleaning = () => {
               </li>
             </BookingSummary>
           </div>
-
         </div>
+
+        <GoodToKnow {...content.goodToKnow} />
+        <HowItWorks steps={content.steps} />
+        <QuoteCta {...content.cta} onClick={() => setShowQuote(true)} />
       </div>
 
       <QuoteModal

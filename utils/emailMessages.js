@@ -27,24 +27,30 @@ import {
 
 /* --------------------------------- booking -------------------------------- */
 
-// The date and time are the one thing the customer comes back to this mail
-// for, weeks later, so they get the highlight band instead of a row in the
-// table. Everything else stays in the table under it.
+// The client's "förfrågan mottagen" text (Textosweb.docx, 2026-11-26): the
+// website sends a free, non-binding request, and Aurel answers with an offer.
+// The wished-for date gets the highlight band; the preliminary price stays in
+// the table under it.
 export function bookingCustomer(data, when) {
   const inner =
-    paragraph(`Hej <strong>${escapeHtml(data.name)}</strong>,`) +
+    paragraph(`Hej <strong>${escapeHtml(data.name)}</strong>!`) +
+    paragraph("Tack för din förfrågan och för ditt intresse för Aurel Städ &amp; Allservice AB!") +
     paragraph(
-      `Vi har mottagit din bokning för <strong>${escapeHtml(data.cleaningType)}</strong>. Här är en sammanfattning:`
+      `Vi har tagit emot dina uppgifter för <strong>${escapeHtml(data.cleaningType)}</strong> och kommer nu att gå igenom dina önskemål för att kunna erbjuda dig en städlösning som passar just ditt hem.`
     ) +
     highlight(when) +
     TABLE_OPEN_SPACED +
     row("Adress", data.address) +
-    priceRow("Uppskattat pris", data.totalPrice) +
+    priceRow("Preliminärt pris efter RUT", data.totalPrice) +
     TABLE_CLOSE +
-    paragraph("Vi återkommer med en bekräftelse inom kort.") +
+    paragraph("Vi återkommer via e-post med ett prisförslag och information om tillgängliga tider.") +
+    paragraph(
+      "Observera att din förfrågan är kostnadsfri och inte innebär någon bindande bokning. Ett eventuellt resetillägg anges separat i prisförslaget."
+    ) +
+    paragraph("Har du frågor under tiden är du varmt välkommen att kontakta oss.") +
     SIGNATURE;
 
-  return shell("Tack för din bokning!", inner, `${data.cleaningType} — ${when}`);
+  return shell("Tack för din förfrågan!", inner, `${data.cleaningType} — ${when}`);
 }
 
 // A failed database write must never be silent: the booking is real (it is in
@@ -73,7 +79,7 @@ export function bookingAdmin(data, details, when, dbFailed = false) {
     warning + TABLE_OPEN + rows + priceRow("Pris", data.totalPrice) + TABLE_CLOSE;
 
   return shell(
-    "Ny bokning mottagen",
+    "Ny bokningsförfrågan",
     inner,
     `${data.name} — ${data.cleaningType} ${when}`
   );

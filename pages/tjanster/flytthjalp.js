@@ -1,83 +1,21 @@
-import React, { useState } from "react";
-import Navbar from "../../components/Layouts/Navbar";
-import PageBanner from "../../components/Common/PageBanner";
-import QuoteModal from "../../components/Common/QuoteModal";
-import { QUOTE_FIELDS } from "../../config/quoteFields";
-import Footer from "../../components/Layouts/Footer";
-import Seo from "../../components/Common/Seo";
+import React from "react";
+import QuoteServicePage from "../../components/ServiceContent/QuoteServicePage";
+import content from "../../content/services/flytthjalp";
 
-const MovingHelp = () => {
-  const [showQuote, setShowQuote] = useState(false);
-
-  return (
-    <>
-      <Seo route="/tjanster/flytthjalp" />
-
-      <Navbar />
-      <PageBanner pageTitle="Flytthjälp" bgImage="/images/banners/flytthjalp.webp" />
-
-      <div className="container ptb-50">
-        <div className="row">
-          <div className="col-lg-8">
-            <h2>Flytthjälp i Stockholm – Smidig och säker flytt</h2>
-            <p>
-              Behöver du hjälp med flytt? Aurel Städ &amp; Allservice erbjuder professionell flytthjälp i Stockholm för privatpersoner, företag och bostadsrättsföreningar. Vi ser till att din flytt sker smidigt, säkert och effektivt.
-            </p>
-
-            <h3>Vad vi erbjuder</h3>
-            <ul>
-              <li>Hjälp med packning vid behov</li>
-              <li>Transport av möbler och tillhörigheter</li>
-              <li>Bärhjälp och lastning</li>
-              <li>Montering och demontering av möbler</li>
-              <li>Flexibla lösningar efter behov</li>
-            </ul>
-
-            <h3>Fördelar</h3>
-            <ul>
-              <li>Trygg och säker hantering av dina tillhörigheter</li>
-              <li>Effektiv flyttprocess</li>
-              <li>Flexibla upplägg</li>
-              <li>En smidig helhetslösning tillsammans med flyttstädning</li>
-            </ul>
-
-            <h3>Flexibla upplägg</h3>
-            <p>Vi erbjuder både mindre flyttar och större uppdrag, anpassade efter dina eller era behov.</p>
-
-            <h3>Så fungerar det</h3>
-            <ol>
-              <li>Kontakta oss med din eller er förfrågan</li>
-              <li>Vi bokar vid behov ett kostnadsfritt platsbesök</li>
-              <li>Du eller ni får en offert baserad på omfattning och behov</li>
-            </ol>
-          </div>
-
-          <div className="col-lg-4">
-            <div className="summary-frame">
-              <h3>Kontakta oss</h3>
-              <p>Vill du ha hjälp med flytt i Stockholm? Kontakta oss idag för offert och planering.</p>
-              <button type="button" className="default-btn" onClick={() => setShowQuote(true)}>
-                Begär offert
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* The address the quote form asks for is where the move starts; where it
-          ends is the first of the service fields. */}
-      <QuoteModal
-        open={showQuote}
-        onClose={() => setShowQuote(false)}
-        service="Flytthjälp"
-        addressLabel="Adress du flyttar från"
-        addressPlaceholder="Ange adressen du flyttar från"
-        fields={QUOTE_FIELDS["/tjanster/flytthjalp"]}
-      />
-
-      <Footer />
-    </>
-  );
-};
+const MovingHelp = () => (
+  <QuoteServicePage
+    route="/tjanster/flytthjalp"
+    pageTitle="Flytthjälp"
+    banner="/images/banners/flytthjalp.webp"
+    service="Flytthjälp"
+    quoteProps={{
+      // The address the quote form asks for is where the move starts; where
+      // it ends is the first of the service fields.
+      addressLabel: "Adress du flyttar från",
+      addressPlaceholder: "Ange adressen du flyttar från",
+    }}
+    content={content}
+  />
+);
 
 export default MovingHelp;

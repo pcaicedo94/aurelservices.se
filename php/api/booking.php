@@ -146,7 +146,7 @@ try {
         $mailer->send([
             'to' => $config->get('admin_email'),
             'replyTo' => (string) $data['email'],
-            'subject' => 'Ny bokning - ' . $data['cleaningType'] . ' - ' . $data['name'],
+            'subject' => 'Ny bokningsförfrågan - ' . $data['cleaningType'] . ' - ' . $data['name'],
             'html' => Messages::bookingAdmin($data, $details, $when),
         ]);
         $adminSent = true;
@@ -158,7 +158,7 @@ try {
     try {
         $mailer->send([
             'to' => (string) $data['email'],
-            'subject' => 'Bokningsbekräftelse - ' . $data['cleaningType'],
+            'subject' => 'Vi har tagit emot din förfrågan - ' . $data['cleaningType'],
             'html' => Messages::bookingCustomer($data, $when),
         ]);
         $customerSent = true;

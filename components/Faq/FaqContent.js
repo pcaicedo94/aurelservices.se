@@ -45,8 +45,9 @@ export const FAQ_ITEMS = [
     id: "storstadning",
     question: "Vad är skillnaden mellan hemstädning och storstädning?",
     answer: [
-      "Hemstädning håller hemmet rent i vardagen. Storstädning är en grundlig rengöring av hela bostaden från golv till tak, där vi även tar lister, dörrkarmar och skåp, kyl och frys utvändigt samt brunnar i kök och badrum.",
-      "Vi har med oss all utrustning och alla städprodukter. Fönsterputsning ingår inte, men du kan boka den som tillägg. Priset beror på bostadens storlek.",
+      "Storstädning är en mer omfattande och grundlig rengöring där vi lägger extra tid på detaljer och ytor som vanligtvis inte ingår i den löpande hemstädningen, till exempel snickerier, dörrkarmar, golvlister, element och andra svåråtkomliga ytor. Den passar särskilt bra inför vår- eller höstsäsongen, inför en speciell tillställning eller när hemmet behöver lite extra omsorg.",
+      "Hemstädning är en regelbunden städning som hjälper dig att hålla hemmet rent och trivsamt i vardagen, med fokus på dammsugning, golvtorkning, dammtorkning samt rengöring av kök och badrum. Många kunder bokar storstädning en eller två gånger om året som ett komplement till sin vanliga hemstädning.",
+      "Vid storstädning har vi med oss all utrustning och alla städprodukter. Fönsterputsning ingår inte, men du kan boka den som tillägg. Priset beror på bostadens storlek.",
     ],
     link: { href: "/tjanster/storstadning", label: "Läs mer och beräkna pris för storstädning" },
   },
@@ -64,8 +65,8 @@ export const FAQ_ITEMS = [
     id: "fonsterputs",
     question: "Vad ingår i fönsterputsning?",
     answer: [
-      "Vi putsar fönstren på in- och utsidan, rengör bågarna, torkar av karmar och kanter och dammar av persiennerna.",
-      "Priset beror på hur många rum bostaden har. Har bostaden fem rum och kök eller fler, eller är den större än 120 kvadratmeter, lämnar vi en offert. I rumspriset ingår tre fönsterbågar per rum; har bostaden fler kostar varje båge därutöver 110 kr, eller 140 kr om fönstren har spröjs. Är fönstren överhängda, svåråtkomliga eller kraftigt nedsmutsade lämnar vi en offert i stället, för då behöver vi se dem först.",
+      "Vi putsar fönsterrutornas samtliga åtkomliga sidor, både invändigt och utvändigt, och tar med all utrustning och alla rengöringsmedel. Rengöring av persienner och fönsterbleck ingår inte.",
+      "Priset beror på hur många rum bostaden har. Har bostaden fem rum och kök eller fler, eller är den större än 120 kvadratmeter, lämnar vi en offert. I rumspriset ingår tre fönsterbågar per rum; har bostaden fler kostar varje båge därutöver 110 kr, eller 140 kr om fönstren har spröjs, efter RUT-avdrag. Är fönstren överhängda, svåråtkomliga eller kraftigt nedsmutsade lämnar vi en offert i stället, för då behöver vi se dem först.",
     ],
     link: { href: "/tjanster/fonsterputs", label: "Läs mer och beräkna pris för fönsterputsning" },
   },
@@ -92,7 +93,7 @@ export const FAQ_ITEMS = [
     question: "Hur fungerar det med nycklar och tillträde?",
     answer: [
       "Vi behöver kunna komma in i bostaden vid den bokade tiden. Du kan vara hemma när vi städar eller lämna en nyckel till oss. Nycklar, portkoder och larminformation hanteras konfidentiellt och endast av behörig personal.",
-      "Du som kund ansvarar för att vi har tillgång till bostaden vid avtalad tid. Kommer vi inte in kontaktar vi dig och försöker i första hand hitta en lösning tillsammans. Kan tillträde inte ordnas och arbetet därför inte utföras kan vi debitera den bokade tiden eller framkörningen.",
+      "Du som kund ansvarar för att vi har tillgång till bostaden vid avtalad tid. Kommer vi inte in kontaktar vi dig och försöker i första hand hitta en lösning tillsammans. Kan tillträde inte ordnas inom rimlig tid och städningen därför inte genomföras kan en ersättning på högst 50 procent av det avtalade priset för städarbetet före RUT-avdrag debiteras. Ersättningen ger inte RUT-avdrag.",
     ],
   },
   {
@@ -106,13 +107,12 @@ export const FAQ_ITEMS = [
     id: "avbokning",
     question: "Hur avbokar eller flyttar jag en städning?",
     answer: [
-      "Kontakta oss på 076-045 02 28 eller info@aurelservice.se så snart du vet att tiden inte passar.",
-      // Q24 (2026-09-17) och Q101 (2026-10-15) gäller samma tidsgräns: 48
-      // timmar är de två dagarna, och hela webbplatsen skriver den som
-      // "48 timmar (2 dagar)". Avgifterna är tak, aldrig fasta belopp.
-      "Avbokning och ombokning är kostnadsfri senast 48 timmar (2 dagar) före den bokade tiden.",
-      "Avbokar du senare än så kan en avgift på upp till 50 procent av det avtalade priset debiteras, och vid avbokning samma dag, eller om vi inte får tillträde till bostaden, upp till 100 procent av det avtalade priset.",
-      "Vi försöker alltid vara flexibla. Går tiden att boka om, eller personalen att planera om, hittar vi hellre en lösning tillsammans med dig. Behöver vi på Aurel avboka erbjuder vi en ny tid så snart som möjligt, och du debiteras självklart inte för arbete som inte har utförts.",
+      "Kontakta oss så snart som möjligt, gärna via e-post till info@aurelservice.se, eller ring 076-045 02 28.",
+      // Textosweb (2026-11-26) ersätter Q24/Q101: 72 timmar (3 dagar), och
+      // därefter skälig ersättning utan fast procentsats.
+      "Avbokning är kostnadsfri senast 72 timmar (3 dagar) före avtalad starttid.",
+      "Vid senare avbokning kan vi begära skälig ersättning för kostnader och förluster som uppstår till följd av avbokningen, i enlighet med tillämplig lag. Vi försöker alltid hjälpa dig att hitta en ny tid när det är möjligt.",
+      "Behöver vi på Aurel ändra eller ställa in en städning kontaktar vi dig så snart som möjligt och erbjuder i första hand en ny tid. Du debiteras inte för arbete som inte har utförts.",
     ],
   },
   {
@@ -127,22 +127,27 @@ export const FAQ_ITEMS = [
     id: "bekraftelse",
     question: "När är min bokning bekräftad?",
     answer: [
-      // Q105, bekräftat av kunden 2026-10-15.
-      "Bokningen är klar först när du har fått vår bekräftelse via e-post. Du skriver inte under något och betalar ingenting i förväg.",
+      // Textosweb (2026-11-26) ersätter Q105.
+      "Att skicka en bokningsförfrågan via webbplatsen är kostnadsfritt och inte bindande. Vi går igenom dina uppgifter och återkommer via e-post med ett prisförslag och tillgängliga tider.",
+      "Bokningen blir bindande först när du skriftligen har accepterat prisförslaget och bokningsvillkoren, till exempel genom att svara på vårt mejl, och vi har bekräftat bokningen skriftligen. Du betalar ingenting i förväg.",
     ],
+    link: { href: "/bokningsvillkor", label: "Läs våra bokningsvillkor" },
   },
   {
     id: "avtal",
     question: "Binder jag mig om jag bokar återkommande städning?",
     answer: [
-      "Återkommande städning, till exempel hemstädning varje eller varannan vecka, gäller tills vidare med tre månaders uppsägningstid. [ATT BEKRÄFTA: att uppsägningstiden gäller alla återkommande avtal och hur avtalet tecknas]",
+      "Vid löpande hemstädning upprättar vi ett separat skriftligt avtal där pris, städfrekvens, uppsägningstid och övriga villkor framgår. Avtalet kan signeras elektroniskt eller på papper. Uppsägningstiden är tre månader.",
+      "Vill du först se hur vi arbetar kan du börja med en provstädning. Den debiteras som en enstaka städning, utan krav på fortsatt städning. Tecknar du avtal om löpande hemstädning inom 14 kalenderdagar justerar vi priset för provstädningen till det överenskomna priset för löpande hemstädning.",
     ],
   },
   {
     id: "garanti",
     question: "Vad händer om jag inte är nöjd?",
     answer: [
-      "Hör av dig så snart som möjligt och berätta vad som inte blev bra, så åtgärdar vi det. [ATT BEKRÄFTA: garantins villkor – webbplatsen anger i dag att vi kommer tillbaka inom 24–48 timmar utan extra kostnad, och på ett annat ställe att du ska höra av dig inom 24 timmar]",
+      "Kontakta oss så snart som möjligt och beskriv vad du inte är nöjd med. Vi undersöker ärendet och försöker hitta en lämplig lösning.",
+      "Vid flyttstädning har du 48 timmar efter avslutad städning på dig att kontakta oss. Vi åtgärdar eventuella brister som omfattas av städuppdraget utan extra kostnad och så snart som möjligt.",
+      "Vid fel i tjänsten gäller dina rättigheter enligt konsumenttjänstlagen och annan tillämplig lagstiftning.",
     ],
   },
   {

@@ -8,6 +8,8 @@ import BookingSummary from "../../components/Booking/BookingSummary";
 import FieldError, { invalidClass } from "../../components/Booking/FieldError";
 import { billableHours, bookingHint, MIN_BILLABLE_HOURS, parseArea } from "../../lib/booking/rules";
 import Seo from "../../components/Common/Seo";
+import { IncludedAccordion } from "../../components/ServiceContent/ServiceContent";
+import { kontorMenu, kontorIncluded } from "../../content/services/kontorsstadning";
 import { estimateHours, OFFICE_FREQUENCIES, OFFICE_TIME_ESTIMATE } from "../../lib/pricing";
 import {
   describeArea,
@@ -60,7 +62,7 @@ const OfficeCleaning = () => {
       <Navbar associates />
       <PageBanner pageTitle="Kontorsstädning" bgImage="/images/banners/kontorsstadning.webp" />
 
-      <div className="container ptb-50">
+      <div className="container ptb-50 svc-page">
         <div className="row">
           <div className="col-lg-7">
             <h2>Kontorsstädning i Stockholm – Professionell städservice för företag</h2>
@@ -70,21 +72,23 @@ const OfficeCleaning = () => {
           </div>
           <div className="col-lg-5 mt-4 mt-lg-0">
             <div className="info-card">
-              <h3>Vad ingår i kontorsstädning</h3>
-              <ul>
-                <li>Dammsugning och våttorkning av golv</li>
-                <li>Tömning av papperskorgar</li>
-                <li>Rengöring av kök och personalutrymmen</li>
-                <li>Rengöring av toaletter och hygienutrymmen</li>
-                <li>Avtorkning av skrivbord och ytor</li>
-                <li>Påfyllning av förbrukningsmaterial vid behov</li>
-              </ul>
+              <h3>Behöver ni en offert?</h3>
+              <p>
+                Räkna ut ett ungefärligt pris nedan, eller berätta om era lokaler så tar vi fram
+                en kostnadsfri offert anpassad efter er verksamhet.
+              </p>
+              <button type="button" className="default-btn" onClick={() => setShowQuote(true)}>
+                Begär offert
+              </button>
             </div>
           </div>
         </div>
 
+        <IncludedAccordion {...kontorMenu} />
+        <IncludedAccordion {...kontorIncluded} />
+
         {/* Form + Summary Section */}
-        <div className="row" style={{ marginTop: "30px" }}>
+        <div className="row" style={{ marginTop: "48px" }}>
           <div className="col-lg-6 mb-4 mb-lg-0">
             {/* Heading lives inside the card so the card fills the height of the
                 summary beside it instead of leaving an empty band. */}

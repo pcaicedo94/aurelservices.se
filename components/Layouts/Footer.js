@@ -125,6 +125,11 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} Aurel Städ & Allservice AB. Alla rättigheter
             förbehållna.
           </p>
+          <nav className="footer-legal" aria-label="Villkor">
+            <Link href="/allmanna-villkor">Allmänna villkor</Link>
+            <Link href="/bokningsvillkor">Bokningsvillkor</Link>
+            <Link href="/integritetspolicy">Integritetspolicy</Link>
+          </nav>
         </div>
       </div>
     </footer>

@@ -22,9 +22,10 @@ final class Messages
     /* ------------------------------- booking ------------------------------ */
 
     /**
-     * The date and time are the one thing the customer comes back to this mail
-     * for, weeks later, so they get the highlight band instead of a row in the
-     * table. Everything else stays in the table under it.
+     * The client's "förfrågan mottagen" text (Textosweb.docx, 2026-11-26): the
+     * website sends a free, non-binding request, and Aurel answers with an
+     * offer. The wished-for date gets the highlight band; the preliminary
+     * price stays in the table under it.
      *
      * @param array<string,mixed> $data
      */
@@ -32,21 +33,26 @@ final class Messages
     {
         $price = BookingRules::formatPrice((float) $data['totalPrice']);
 
-        $inner = EmailLayout::paragraph('Hej <strong>' . Escape::html($data['name']) . '</strong>,')
+        $inner = EmailLayout::paragraph('Hej <strong>' . Escape::html($data['name']) . '</strong>!')
+            . EmailLayout::paragraph('Tack för din förfrågan och för ditt intresse för Aurel Städ &amp; Allservice AB!')
             . EmailLayout::paragraph(
-                'Vi har mottagit din bokning för <strong>' . Escape::html($data['cleaningType'])
-                . '</strong>. Här är en sammanfattning:'
+                'Vi har tagit emot dina uppgifter för <strong>' . Escape::html($data['cleaningType'])
+                . '</strong> och kommer nu att gå igenom dina önskemål för att kunna erbjuda dig en städlösning som passar just ditt hem.'
             )
             . EmailLayout::highlight($when)
             . EmailLayout::TABLE_OPEN_SPACED
             . EmailLayout::row('Adress', $data['address'])
-            . EmailLayout::priceRow('Uppskattat pris', $price)
+            . EmailLayout::priceRow('Preliminärt pris efter RUT', $price)
             . EmailLayout::TABLE_CLOSE
-            . EmailLayout::paragraph('Vi återkommer med en bekräftelse inom kort.')
+            . EmailLayout::paragraph('Vi återkommer via e-post med ett prisförslag och information om tillgängliga tider.')
+            . EmailLayout::paragraph(
+                'Observera att din förfrågan är kostnadsfri och inte innebär någon bindande bokning. Ett eventuellt resetillägg anges separat i prisförslaget.'
+            )
+            . EmailLayout::paragraph('Har du frågor under tiden är du varmt välkommen att kontakta oss.')
             . EmailLayout::SIGNATURE;
 
         return EmailLayout::shell(
-            'Tack för din bokning!',
+            'Tack för din förfrågan!',
             $inner,
             $data['cleaningType'] . ' — ' . $when
         );
@@ -79,7 +85,7 @@ final class Messages
             . EmailLayout::TABLE_CLOSE;
 
         return EmailLayout::shell(
-            'Ny bokning mottagen',
+            'Ny bokningsförfrågan',
             $inner,
             $data['name'] . ' — ' . $data['cleaningType'] . ' ' . $when
         );

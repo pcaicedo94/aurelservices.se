@@ -146,3 +146,35 @@ select.invalid.invalid {
 .confirmation p {
   margin-bottom: 15px;
 }
+
+/* Booking request (Textosweb, 2026-11-26): the lead under the heading, the
+   Bokningsvillkor checkbox and the links under it. */
+.formLead {
+  margin: -4px 0 16px;
+  font-size: 15px;
+  color: #3b4a5a;
+}
+
+.terms {
+  margin: 8px 0 6px;
+}
+
+.terms label {
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.termsLinks {
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  color: #5f6d7c;
+}
+
+.termsLinks a {
+  color: #1f7a5c;
+  text-decoration: underline;
+}
+
+.button + .termsLinks {
+  margin: 8px 0 0;
+}
