@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { RutPrice, RutTag, RUT_LABEL } from "../../components/Common/RutTag";
 import Footer from "../../components/Layouts/Footer";
 import BookingSummary from "../../components/Booking/BookingSummary";
 import BookingContactForm from "../../components/Booking/BookingContactForm";
@@ -23,6 +24,11 @@ import {
 } from "../../lib/pricing";
 import { describeArea, describeDate, formatDateTime, formatPrice, NOT_SET } from "../../lib/booking/format";
 import Seo from "../../components/Common/Seo";
+import {
+  GoodToKnow,
+  ServiceIntro,
+  ServiceSections,
+} from "../../components/ServiceContent/ServiceContent";
 
 // Q21 (client, confirmed): a home of this many rooms, or larger than
 // WINDOW_QUOTE_ABOVE_AREA, is quoted and never priced online. The room count
@@ -158,51 +164,55 @@ const WindowCleaning = () => {
       <PageBanner pageTitle="Fönsterputsning" bgImage="/images/banners/fonsterputs.webp" />
 
       {/* Descriptive Section */}
-      <div className="container ptb-50">
+      <div className="container ptb-50 svc-page">
         <div className="row">
           <div className="col-lg-7">
-            <h2>Fönsterputsning i Stockholm – Skinande rena fönster</h2>
-            <p>
-              Vill du ha rena fönster utan ränder och fläckar? Aurel Städ &amp; Allservice erbjuder professionell fönsterputsning i Stockholm för privatpersoner. Vi ser till att dina fönster blir skinande rena och ger ett bättre ljusinsläpp i ditt hem.
-            </p>
+            {/* Client copy from Textosweb.docx, point 6 (2026-11-26). */}
+            <ServiceIntro
+              heading="Fönsterputsning i Stockholm – in- och utvändig fönsterputs"
+              paras={[
+                "Rena fönster gör stor skillnad för både ljusinsläppet och känslan i hemmet. Med Aurel får du professionell fönsterputsning med fokus på kvalitet, noggrannhet och ett skinande rent resultat.",
+              ]}
+            />
           </div>
           <div className="col-lg-5">
             <div className="brand-card">
               <h3>RUT-avdrag</h3>
               <p>Du som privatperson kan använda RUT-avdraget och få upp till 50 procent avdrag på arbetskostnaden. Vi sköter hela ansökan direkt på fakturan.</p>
+              <p>Priserna i kalkylatorn är inklusive moms och efter RUT-avdrag.</p>
             </div>
           </div>
         </div>
 
-        <div className="row" style={{ marginTop: "30px" }}>
-          <div className="col-lg-4">
-            <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h3>Vad ingår</h3>
-              <ul>
-                <li>Rengöring av fönstrets in- och utsida</li>
-                <li>Putsning av fönsterglas för klart och fläckfritt resultat</li>
-                <li>Avtorkning av fönsterkarmar och kanter</li>
-              </ul>
-            </div>
-          </div>
-          <div className="col-lg-4">
-            <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h3>Fördelar</h3>
-              <ul>
-                <li>Klart och randfritt resultat</li>
-                <li>Ökat ljusinsläpp i hemmet</li>
-                <li>Professionell och noggrann service</li>
-                <li>Sparar tid</li>
-              </ul>
-            </div>
-          </div>
-          <div className="col-lg-4">
-            <div className="info-card" style={{ marginBottom: "20px" }}>
-              <h3>Prisinformation</h3>
-              <p>Priser inkl. moms efter RUT-avdrag. I priserna ingår rengöring av fönstrets bågar och dammning av persienner.</p>
-            </div>
-          </div>
-        </div>
+        <ServiceSections
+          sections={[
+            {
+              title: "Det här ingår i vår fönsterputsning",
+              items: [
+                "Noggrann putsning av fönsterrutornas samtliga åtkomliga sidor, både invändigt och utvändigt.",
+                "Vi tar med all nödvändig utrustning och professionella rengöringsmedel.",
+                "Vi har ansvarsförsäkring som ger extra trygghet om en skada skulle uppstå i samband med arbetet.",
+                "Vi utför fönsterputsning året runt, även vid regn och snö, när väderförhållandena tillåter det. Vi arbetar vid temperaturer ner till cirka -10 °C.",
+              ],
+            },
+            {
+              title: "Säkerhet vid användning av stege",
+              paras: [
+                "Om vi behöver använda en stege som finns i bostaden ska den vara stabil och säker. Tvåbenta stegar får vara högst 2 meter höga. Vid högre arbetshöjder krävs en lämplig och säker arbetsplattform eller annan godkänd utrustning.",
+                "Vi förbehåller oss rätten att avstå från arbeten som inte kan utföras på ett säkert sätt.",
+              ],
+            },
+          ]}
+        />
+
+        <GoodToKnow
+          items={[
+            "Vi putsar fönster på höjder upp till 3,5 meter. Om stege eller särskild utrustning behövs kan en tilläggskostnad tillkomma.",
+            "Rengöring av persienner och fönsterbleck ingår inte i den ordinarie fönsterputsningen.",
+            "Vi putsar inte skadade fönster eller fönster som inte kan öppnas på ett säkert sätt. Meddela oss gärna i förväg om något fönster har särskilda förutsättningar.",
+            "Fönster som kräver arbete från yttertaket ingår inte i tjänsten.",
+          ]}
+        />
 
         {/* Form + Summary Section */}
         <div className="row">
@@ -266,7 +276,7 @@ const WindowCleaning = () => {
                 <small className="form-text text-muted">
                   {`I priset ingår ${WINDOW_INCLUDED_BAGAR_PER_ROOM} bågar per rum`}
                   {includedBagar ? `, alltså ${includedBagar} för din bostad` : ""}
-                  {`. Varje båge därutöver kostar ${WINDOW_EXTRA_BAGE_PRICES.plain} kr, eller ${WINDOW_EXTRA_BAGE_PRICES.sprojs} kr med spröjs. Vet du inte antalet? Lämna fältet tomt.`}
+                  {`. Varje båge därutöver kostar ${WINDOW_EXTRA_BAGE_PRICES.plain} kr, eller ${WINDOW_EXTRA_BAGE_PRICES.sprojs} kr med spröjs, ${RUT_LABEL}. Vet du inte antalet? Lämna fältet tomt.`}
                 </small>
                 <div className="form-check mt-2">
                   <input type="checkbox" className="form-check-input" id="sprojs" checked={hasSprojs} onChange={(e) => setHasSprojs(e.target.checked)} disabled={onlyBalcony} />
@@ -297,7 +307,7 @@ const WindowCleaning = () => {
                 <label>Endast Balkong</label>
                 <div className="form-check">
                   <input type="checkbox" className="form-check-input" id="onlyBalcony" checked={onlyBalcony} onChange={(e) => { setOnlyBalcony(e.target.checked); if (e.target.checked) setRooms(""); }} />
-                  <label className="form-check-label" htmlFor="onlyBalcony">{`Endast inglasad balkong (från ${WINDOW_BALCONY_PRICE} kr)`}</label>
+                  <label className="form-check-label" htmlFor="onlyBalcony">{`Endast inglasad balkong (från ${WINDOW_BALCONY_PRICE} kr)`} <RutTag /></label>
                 </div>
               </div>
 
@@ -308,6 +318,7 @@ const WindowCleaning = () => {
           {/* Summary Section */}
           <div className="col-lg-6">
             <BookingSummary
+              privateCustomer
               mode={needsQuote ? "quote" : "book"}
               hint={needsQuote ? "" : hint}
               onBook={flow.openContact}
@@ -322,13 +333,13 @@ const WindowCleaning = () => {
                   ? "–"
                   : bagar.status === "ok"
                     ? extraBagar > 0
-                      ? `${bagar.value} (${extraBagar} utöver de ${includedBagar} som ingår, ${formatPrice(extraBagePrice)})`
+                      ? `${bagar.value} (${extraBagar} utöver de ${includedBagar} som ingår, ${formatPrice(extraBagePrice)} ${RUT_LABEL})`
                       : `${bagar.value} (ingår i priset)`
                     : NOT_SET}
               </li>
               <li><strong>Tillägg:</strong> {addOns.join(", ") || "Inga"}</li>
               <li><strong>Önskat datum och tid:</strong> {describeDate(date)}</li>
-              <li><strong>Uppskattat pris:</strong> {needsQuote ? "Offereras" : formatPrice(totalPrice)}</li>
+              <li><strong>Preliminärt pris:</strong> {needsQuote ? "Offereras" : <RutPrice amount={totalPrice} />}</li>
             </BookingSummary>
           </div>
 

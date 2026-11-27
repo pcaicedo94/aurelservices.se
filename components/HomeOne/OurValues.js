@@ -1,104 +1,58 @@
 import React from "react";
-import Link from "next/link";
+import LineIcon from "../Common/LineIcon";
 
-const OurValues = () => {
-  return (
-    <>
-      <div className="data-service-section pb-100">
-        <div className="container">
-          <div className="section-title">
-            <h2>Våra Värderingar</h2>
-          </div>
+// Våra värderingar on Om oss. The AI-made compass illustration was removed and
+// the template's unrelated font icons (charts, "big data") replaced by line
+// icons that match each value (Textosweb, 2026-11-26, points 16 and 18). The
+// text is unchanged.
+const VALUES = [
+  {
+    icon: "respect",
+    title: "Respekt",
+    text: "Vi tänker på våra medarbetares hälsa. Ingen är mindre än en annan i vårt företag och alla ska bli behandlade på ett rättvist sätt.",
+  },
+  {
+    icon: "empathy",
+    title: "Empati",
+    text: "Vi fokuserar på våra kunders behov och tänker alltid på att uppfylla förväntningar vi skulle ha om vi var dem.",
+  },
+  {
+    icon: "responsibility",
+    title: "Ansvar",
+    text: "Vi gör vårt jobb i tid, på ett effektivt sätt och tar ansvar för allt som kan uppstå på vägen.",
+  },
+  {
+    icon: "will",
+    title: "Vilja",
+    text: "Vi gör vårt jobb med passion och entusiasm. Vi är stolta över att vara en del av detta företag och gör jobbet som om vi skulle göra det till oss själva.",
+  },
+  {
+    icon: "environment",
+    title: "Miljö",
+    text: "Vi är medvetna om vårt ansvar för att skydda miljön och tar alltid hänsyn till detta i vårt arbete. Vi använder miljövänliga produkter och metoder.",
+  },
+  {
+    icon: "flex",
+    title: "Flexibilitet",
+    text: "Vi anpassar oss till våra kunders behov och tider. Vi är flexibla och gör allt för att passa in i våra kunders schema.",
+  },
+];
 
-          <div className="row align-items-center justify-content-center">
-            <div className="col-lg-4 col-md-6">
-              <div className="data-services-item">
-                <div className="single-data-service-box">
-                  <div className="icon">
-                    <i className="flaticon-big-data"></i>
-                  </div>
-                  <h3>Respekt</h3>
-                  <p>
-                    Vi tänker på våra medarbetares hälsa. Ingen är mindre än
-                    annan i vårt företag och alla ska bli behandlade på ett
-                    rättvist sätt.
-                  </p>
-                </div>
-
-                <div className="single-data-service-box">
-                  <div className="icon">
-                    <i className="flaticon-science"></i>
-                  </div>
-                  <h3>Empati</h3>
-                  <p>
-                    Vi fokuserar på våra kunders behov och tänker alltid på att
-                    uppfylla förväntningar vi skulle ha om vi var dem.
-                  </p>
-                </div>
-
-                <div className="single-data-service-box">
-                  <div className="icon">
-                    <i className="flaticon-document"></i>
-                  </div>
-                  <h3>Ansvar</h3>
-                  <p>
-                    Vi gör vårt jobb i tid, på ett effektivt sätt och tar ansvar
-                    för allt som kan uppstå på vägen.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-4 col-md-6">
-              <div className="data-service-image">
-                <img src="/images/values.jpeg" alt="image" />
-              </div>
-            </div>
-
-            <div className="col-lg-4 col-md-6">
-              <div className="data-services-item">
-                <div className="single-data-service-box">
-                  <div className="icon">
-                    <i className="flaticon-data-analytics"></i>
-                  </div>
-                  <h3>Vilja</h3>
-                  <p>
-                    Vi gör vårt jobb med passion och entusiasm. Vi är stolta
-                    över att vara en del av detta företag och gör jobbet som om
-                    vi skulle göra det till oss själva.
-                  </p>
-                </div>
-
-                <div className="single-data-service-box">
-                  <div className="icon">
-                    <i className="flaticon-chart"></i>
-                  </div>
-                  <h3>Miljö</h3>
-                  <p>
-                    Vi är medvetna om vårt ansvar för att skydda miljön och tar
-                    alltid hänsyn till detta i vårt arbete. Vi använder
-                    miljövänliga produkter och metoder.
-                  </p>
-                </div>
-
-                <div className="single-data-service-box">
-                  <div className="icon">
-                    <i className="flaticon-right"></i>
-                  </div>
-                  <h3>Flexibilitet</h3>
-                  <p>
-                    Vi anpassar oss till våra kunders behov och tider. Vi är
-                    flexibla och gör allt för att passa in i våra kunders
-                    schema.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
+const OurValues = () => (
+  <div className="container pb-70 our-values-v2">
+    <h2 className="svc-block-title">Våra värderingar</h2>
+    <div className="about-values about-values-6">
+      {VALUES.map((value) => (
+        <article key={value.title} className="info-card about-value">
+          <span className="about-icon">
+            <LineIcon name={value.icon} />
+          </span>
+          <h3>{value.title}</h3>
+          <p>{value.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+);
 
 export default OurValues;

@@ -623,6 +623,28 @@ check(
     faq.includes(`${prices.terms.cancellationNoticeDays.value} dagar`),
   true
 );
+// Textosweb (2026-11-26): the no-access ceiling, the flyttstädning guarantee
+// and the provstädning window are also written out by hand.
+check(
+  "FAQ: el techo sin tillträde coincide con los datos",
+  faq.includes(`högst ${prices.terms.noAccessFeeMaxPercent.value} procent`),
+  true
+);
+check(
+  "FAQ: la garantía de flyttstädning coincide con los datos",
+  faq.includes(`${prices.terms.satisfactionGuaranteeHours.value} timmar efter avslutad städning`),
+  true
+);
+check(
+  "FAQ: el plazo de la provstädning coincide con los datos",
+  faq.includes(`${prices.terms.trialCleaning.adjustWithinDays} kalenderdagar`),
+  true
+);
+check(
+  "FAQ: ya no cita la penalización del 100 % ni el plazo de 48 h para cancelar",
+  /100 procent|48 timmar \(2 dagar\)/.test(faq),
+  false
+);
 check(
   "FAQ: la factura cuesta lo que dicen los datos",
   faq.includes(`${prices.terms.invoiceFee.value} kr`),

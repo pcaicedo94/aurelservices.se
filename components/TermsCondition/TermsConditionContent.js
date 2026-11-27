@@ -1,5 +1,12 @@
 import React from "react";
 import Link from "next/link";
+import {
+  CANCELLATION_NOTICE_DAYS,
+  CANCELLATION_NOTICE_HOURS,
+  MOVE_GUARANTEE_HOURS,
+  NO_ACCESS_FEE_MAX_PERCENT,
+  SOILING_SURCHARGE_MAX_PERCENT,
+} from "../../lib/pricing";
 
 // Sources: Prislista 2026 (payment terms, notice period, materials, soiling
 // surcharge), the service copy in "Servicios privados" and the client's own
@@ -7,10 +14,10 @@ import Link from "next/link";
 // [ATT BEKRÄFTA: …] is unconfirmed by the client and must be resolved before
 // launch.
 //
-// Figures here mirror the `terms` block of config/prices.json, which is the
-// single source of truth the chatbot reads: the cancellation deadline is one
-// deadline written both ways, "48 timmar (2 dagar)", and the two cancellation
-// fees are ceilings, so every sentence says "upp till".
+// Figures are read from the `terms` block of config/prices.json, which the
+// chatbot reads too. Since Textosweb.docx (2026-11-26) the booking flow,
+// cancellation, no-access fee and guarantee follow the client's Bokningsvillkor
+// (pages/bokningsvillkor.js), and these sections must say the same thing.
 const TermsConditionContent = () => {
   return (
     <div className="privacy-policy ptb-100">
@@ -28,26 +35,31 @@ const TermsConditionContent = () => {
             inte de rättigheterna.
           </p>
           <p>
-            <strong>Senast uppdaterad:</strong>{" "}
-            <mark>[ATT BEKRÄFTA: datum då villkoren publiceras]</mark>
+            <strong>Senast uppdaterad:</strong> 26 november 2026
           </p>
 
           <h2>1. Bokning och avtal</h2>
           <ul>
             <li>
-              Hemstädning, storstädning, flyttstädning och fönsterputsning kan du boka direkt på
-              webbplatsen. Övriga tjänster utförs efter offert.
+              För hemstädning, storstädning, flyttstädning och fönsterputsning skickar du en
+              bokningsförfrågan via webbplatsen. Förfrågan är kostnadsfri och innebär ingen bindande
+              bokning eller betalningsskyldighet. Övriga tjänster utförs efter offert.
             </li>
             <li>
-              {/* Q105, bekräftat av kunden 2026-10-15. */}
-              När vi har tagit emot din bokning får du en bekräftelse via e-post. Avtalet är slutet
-              när du har fått den bekräftelsen. Du skriver inte under något och betalar ingenting i
-              förväg.
+              {/* Textosweb 2026-11-26, ersätter Q105. */}
+              Vi går igenom din förfrågan och återkommer via e-post med ett prisförslag och
+              tillgängliga tider. Bokningen blir bindande först när du skriftligen har accepterat
+              prisförslaget och bokningsvillkoren, till exempel genom att svara på vårt mejl, och vi
+              har bekräftat bokningen skriftligen. Du betalar ingenting i förväg.
             </li>
             <li>
-              Återkommande tjänster, till exempel hemstädning varje vecka, varannan vecka eller en
-              gång i månaden, regleras i ett avtal mellan dig och oss.{" "}
-              <mark>[ATT BEKRÄFTA: hur avtalet tecknas]</mark>
+              Återkommande tjänster, till exempel löpande hemstädning varje vecka eller varannan
+              vecka, regleras i ett separat skriftligt avtal där pris, städfrekvens, uppsägningstid
+              och övriga villkor framgår. Avtalet kan signeras elektroniskt eller på papper.
+            </li>
+            <li>
+              Hur förfrågan, provstädning, bekräftelse och avbokning fungerar i detalj beskriver vi i
+              våra <Link href="/bokningsvillkor">bokningsvillkor</Link>.
             </li>
             <li>
               Du ansvarar för att uppgifterna du lämnar stämmer, till exempel bostadens storlek och
@@ -59,20 +71,24 @@ const TermsConditionContent = () => {
           <ul>
             <li>Priser för privatpersoner anges inklusive moms och efter RUT-avdrag.</li>
             <li>
-              Priset som visas i formuläret bygger på de uppgifter du lämnar.{" "}
-              <mark>
-                [ATT BEKRÄFTA: att priset justeras om uppgifterna inte stämmer, t.ex. om bostaden är
-                större än angivet]
-              </mark>
+              Priset som visas i prisberäkningen är preliminärt och bygger på de uppgifter du lämnar,
+              till exempel bostadens storlek och önskad städfrekvens. Det slutliga priset får du i
+              vårt prisförslag innan du bestämmer dig för att boka.
             </li>
-            {/* Q104, bekräftat av kunden 2026-10-15: upp till 20 procent, inte 20 procent fast. */}
+            <li>
+              Beroende på bostadens adress och avstånd kan ett resetillägg tillkomma. Det anges
+              separat i prisförslaget och berättigar inte till RUT-avdrag.
+            </li>
+            {/* Q104 och 2027 års lista: tak, inte fasta procentsatser. */}
             <li>
               Priset för storstädning och flyttstädning förutsätter att bostaden är i normalt skick.
-              Vid kraftig nedsmutsning kan ett pristillägg på upp till 20 procent tillkomma.
+              Vid kraftig nedsmutsning kan ett pristillägg tillkomma: upp till{" "}
+              {SOILING_SURCHARGE_MAX_PERCENT.deepcleaning} procent vid storstädning och upp till{" "}
+              {SOILING_SURCHARGE_MAX_PERCENT.movecleaning} procent vid flyttstädning.
             </li>
             <li>
               Vid extrem nedsmutsning, där arbetsinsatsen väsentligt överstiger vad som normalt kan
-              förväntas, görs en separat bedömning och priset kan justeras utöver 20 procent.
+              förväntas, görs en separat bedömning och priset kan justeras utöver dessa nivåer.
             </li>
             <li>
               Du informeras alltid på plats och ska godkänna pristillägget innan något extra arbete
@@ -140,17 +156,18 @@ const TermsConditionContent = () => {
           </ul>
 
           <h2>6. Förberedelser och tillträde</h2>
-          {/* Q102 och Q107, bekräftade av kunden 2026-10-15. Avgiften vid
-              uteblivet tillträde står också i punkt 8, och de två måste säga
-              samma sak. */}
+          {/* Q102 och Q107 (2026-10-15); ersättningen vid uteblivet tillträde
+              följer Bokningsvillkoren (Textosweb 2026-11-26). */}
           <ul>
             <li>
               Du ansvarar för att vi har tillgång till bostaden vid avtalad tid. Kommer vi inte in
               kontaktar vi dig och försöker i första hand hitta en lösning tillsammans.
             </li>
             <li>
-              Kan tillträde inte ordnas och arbetet därför inte utföras kan vi debitera den bokade
-              tiden eller framkörningen, enligt punkt 8.
+              Kan tillträde inte ordnas inom rimlig tid och städningen därför inte genomföras kan en
+              skälig ersättning på högst {NO_ACCESS_FEE_MAX_PERCENT} procent av det avtalade priset
+              för städarbetet före eventuellt RUT-avdrag debiteras. Ersättningen berättigar inte till
+              RUT-avdrag.
             </li>
             <li>
               Nycklar, portkoder och larminformation hanteras konfidentiellt och endast av behörig
@@ -191,25 +208,23 @@ const TermsConditionContent = () => {
           </ul>
 
           <h2>8. Avbokning och ombokning</h2>
-          {/* Q24 (2026-09-17) och Q101 (2026-10-15) gäller samma tidsgräns:
-              48 timmar är de två dagarna, och hela webbplatsen skriver den
-              som "48 timmar (2 dagar)". Avgifterna är tak, aldrig fasta
-              belopp. */}
+          {/* Textosweb 2026-11-26 ersätter Q24/Q101: 72 timmar (3 dagar),
+              därefter skälig ersättning utan fast procentsats. */}
           <ul>
-            <li>Avbokning och ombokning gör du via telefon eller e-post.</li>
-            <li>Avbokning är kostnadsfri senast 48 timmar (2 dagar) före den bokade tiden.</li>
             <li>
-              Vid avbokning senare än 48 timmar (2 dagar) före den bokade tiden kan en avgift på upp
-              till 50 procent av det avtalade priset debiteras.
+              Behöver du avboka eller ändra din bokning ber vi dig kontakta oss så snart som möjligt,
+              gärna via e-post.
             </li>
             <li>
-              Vid avbokning samma dag, eller om vi inte får tillträde till bostaden, kan
-              upp till 100 procent av det avtalade priset debiteras.
+              Avbokning är kostnadsfri senast{" "}
+              {`${CANCELLATION_NOTICE_HOURS} timmar (${CANCELLATION_NOTICE_DAYS} dagar)`} före
+              avtalad starttid.
             </li>
             <li>
-              Vi försöker alltid vara flexibla. Går tiden att boka om, eller personalen att planera
-              om, hittar vi hellre en lösning tillsammans med dig.
+              Vid senare avbokning kan vi begära skälig ersättning för kostnader och förluster som
+              uppstår till följd av avbokningen, i enlighet med tillämplig lag.
             </li>
+            <li>Vi försöker alltid hjälpa dig att hitta en ny tid när det är möjligt.</li>
             <li>
               Behöver vi på Aurel avboka erbjuder vi en ny tid så snart som möjligt. Du debiteras
               självklart inte för arbete som inte har utförts.
@@ -233,11 +248,17 @@ const TermsConditionContent = () => {
               du har upptäckt felet, så att vi kan åtgärda det.
             </li>
             <li>
-              <mark>
-                [ATT BEKRÄFTA: reklamationsrutin och garanti – webbplatsen anger i dag att vi kommer
-                tillbaka inom 24–48 timmar utan extra kostnad. Rutinen får inte begränsa konsumentens
-                lagstadgade rätt att reklamera.]
-              </mark>
+              Beskriv vad du inte är nöjd med. Vi undersöker ärendet och försöker hitta en lämplig
+              lösning.
+            </li>
+            <li>
+              Vid flyttstädning har du {MOVE_GUARANTEE_HOURS} timmar efter avslutad städning på dig
+              att kontakta oss. Vi åtgärdar då brister som omfattas av städuppdraget utan extra
+              kostnad och så snart som möjligt.
+            </li>
+            <li>
+              Vid fel i tjänsten gäller dina rättigheter enligt konsumenttjänstlagen och annan
+              tillämplig lagstiftning.
             </li>
           </ul>
 

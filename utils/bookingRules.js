@@ -181,6 +181,9 @@ const CONTACT_PREFERENCES = { call: "Bli uppringd", visit: "Få ett hembesök" }
 // the admin mail and the calendar event, in display order (QA-06).
 export const BOOKING_DETAIL_FIELDS = [
   { key: "contactPreference", label: "Kontaktmetod", format: (v) => CONTACT_PREFERENCES[v] || v },
+  // Textosweb (2026-11-26): what the hemstädning request asks for.
+  { key: "interest", label: "Önskemål" },
+  { key: "housingType", label: "Bostadstyp" },
   { key: "area", label: "Yta", format: (v) => `${v} m²` },
   { key: "rooms", label: "Rum" },
   { key: "bagar", label: "Fönsterbågar" },
@@ -193,6 +196,8 @@ export const BOOKING_DETAIL_FIELDS = [
   { key: "basePrice", label: "Grundpris", format: (v) => `${v} kr` },
   { key: "hourlyRate", label: "Timpris", format: (v) => `${v} kr/tim` },
   { key: "pricePerUnit", label: "Pris per enhet", format: (v) => `${v} kr` },
+  { key: "trialPrice", label: "Provstädning (enstaka pris)", format: (v) => `${v} kr` },
+  { key: "termsAccepted", label: "Bokningsvillkor", format: () => "Godkända" },
 ];
 
 const HOURS_FIELDS = ["estimatedHours", "hours"];

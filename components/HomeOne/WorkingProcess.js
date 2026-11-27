@@ -1,5 +1,8 @@
 import React from "react";
-import Link from "next/link";
+import LineIcon from "../Common/LineIcon";
+
+// Mission and vision. The AI-made illustrations were replaced by icons at the
+// client's request (Textosweb, 2026-11-26, point 16); the text is unchanged.
 
 const WorkingProcess = () => {
   return (
@@ -25,7 +28,9 @@ const WorkingProcess = () => {
               data-aos-once="true"
             >
               <div className="process-item">
-                <img src="/images/process/mision-img.jpg" alt="image" />
+                <span className="about-icon">
+                  <LineIcon name="mission" />
+                </span>
 
                 <h2>Mission</h2>
 
@@ -56,7 +61,9 @@ const WorkingProcess = () => {
               data-aos-once="true"
             >
               <div className="process-item">
-                <img src="/images/process/vision-img.jpeg" alt="image" />
+                <span className="about-icon">
+                  <LineIcon name="vision" />
+                </span>
 
                 <h2>Vision</h2>
                 <p>

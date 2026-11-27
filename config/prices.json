@@ -618,52 +618,58 @@
     }
   },
   "terms": {
-    "_readme": "Commercial terms the client confirmed on 2026-09-17 (Q24, Q25) and on 2026-10-15 (Q101-Q110). They sit next to the prices because the pages, the legal documents and the chatbot must quote the same figures, and lib/pricing.js exposes them the same way it exposes a rate. Amounts are SEK.",
-    "firstCleaningDiscountPercent": {
-      "value": 10,
-      "source": "clientAnswers Q25",
+    "_readme": "Commercial terms the client confirmed on 2026-09-17 (Q24, Q25) and on 2026-10-15 (Q101-Q110). They sit next to the prices because the pages, the legal documents and the chatbot must quote the same figures, and lib/pricing.js exposes them the same way it exposes a rate. Amounts are SEK. On 2026-11-26 the client's Textosweb.docx replaced the cancellation, no-access, first-customer and booking-closure terms; Pablo decided it wins over the earlier answers.",
+    "trialCleaning": {
+      "adjustWithinDays": 14,
+      "source": "Textosweb.docx",
       "pendingConfirmation": false,
-      "question": "Q25",
-      "confirmedByClient": "2026-09-17",
-      "clientAnswer": "10 % rabatt på första städningen"
+      "confirmedByClient": "2026-11-26",
+      "clientAnswer": "Om du inom 14 kalenderdagar efter utförd provstädning tecknar avtal om löpande hemstädning hos oss, justerar vi priset för provstädningen till det överenskomna priset för motsvarande löpande hemstädning.",
+      "note": "Replaces the 10 % off the first cleaning (Q25, 2026-09-17): Pablo decided on 2026-11-26 that Textosweb wins where it contradicts earlier answers. The provstädning is billed as an enstaka cleaning; the adjustment covers the cleaning work only, not travel costs or other separately agreed add-ons. The '300 kr rabatt' in the client's mock image was an illustrative example, not a figure."
     },
     "cancellationNoticeDays": {
-      "value": 2,
-      "source": "clientAnswers Q24",
+      "value": 3,
+      "source": "Textosweb.docx",
       "pendingConfirmation": false,
-      "question": "Q24",
-      "confirmedByClient": "2026-09-17",
-      "clientAnswer": "avbokning senast 2 dagar innan",
-      "note": "Q101 restated the very same deadline in hours (\"senast 48 timmar\"). Both figures are the one deadline, so cancellationNoticeHours holds the client's wording and every piece of copy quotes them together: \"48 timmar (2 dagar)\". They must never drift apart."
+      "confirmedByClient": "2026-11-26",
+      "clientAnswer": "Avbokning kan göras kostnadsfritt senast 72 timmar före avtalad starttid.",
+      "note": "72 hours = 3 days. Replaces 48 h / 2 days (Q24, Q101). Copy quotes both figures together: \"72 timmar (3 dagar)\". They must never drift apart.",
+      "supersedes": {
+        "value": 2,
+        "source": "clientAnswers Q24",
+        "pendingConfirmation": false,
+        "question": "Q24",
+        "confirmedByClient": "2026-09-17",
+        "clientAnswer": "avbokning senast 2 dagar innan",
+        "note": "Q101 restated the very same deadline in hours (\"senast 48 timmar\"). Both figures are the one deadline, so cancellationNoticeHours holds the client's wording and every piece of copy quotes them together: \"48 timmar (2 dagar)\". They must never drift apart."
+      }
     },
     "cancellationNoticeHours": {
-      "value": 48,
-      "source": "clientAnswers Q101",
+      "value": 72,
+      "source": "Textosweb.docx",
       "pendingConfirmation": false,
-      "question": "Q101",
-      "confirmedByClient": "2026-10-15",
-      "clientAnswer": "Kostnadsfri avbokning senast 48 timmar före bokad tid.",
-      "note": "48 hours = the 2 days of cancellationNoticeDays; the client wrote the deadline in hours."
+      "confirmedByClient": "2026-11-26",
+      "clientAnswer": "Avbokning kan göras kostnadsfritt senast 72 timmar före avtalad starttid.",
+      "note": "Replaces 48 h (Q101)."
     },
-    "lateCancellationFeePercent": {
+    "lateCancellation": {
+      "value": "reasonable-compensation",
+      "source": "Textosweb.docx",
+      "pendingConfirmation": false,
+      "confirmedByClient": "2026-11-26",
+      "clientAnswer": "Vid senare avbokning kan vi begära skälig ersättning för kostnader och förluster som uppstår till följd av avbokningen, i enlighet med tillämplig lag.",
+      "note": "Replaces the 50 % / 100 % ceilings of Q101. No percentage may be quoted for a late cancellation any more."
+    },
+    "noAccessFeeMaxPercent": {
       "value": 50,
       "isMaximum": true,
-      "source": "clientAnswers Q101",
+      "basis": "price of the cleaning work before RUT",
+      "rutEligible": false,
+      "source": "Textosweb.docx",
       "pendingConfirmation": false,
-      "question": "Q101",
-      "confirmedByClient": "2026-10-15",
-      "clientAnswer": "Vid avbokning senare än 48 timmar kan en avgift på upp till 50 % av det avtalade priset debiteras.",
-      "note": "A ceiling, not a flat fee: every sentence that quotes it says \"upp till\"."
-    },
-    "sameDayCancellationFeePercent": {
-      "value": 100,
-      "isMaximum": true,
-      "source": "clientAnswers Q101",
-      "pendingConfirmation": false,
-      "question": "Q101",
-      "confirmedByClient": "2026-10-15",
-      "clientAnswer": "Vid avbokning samma dag eller om vi inte får tillträde till lokalen kan upp till 100 % av det avtalade priset debiteras.",
-      "note": "Also a ceiling, and it covers being denied access, which is why section 6 and section 8 of the terms have to say the same thing."
+      "confirmedByClient": "2026-11-26",
+      "clientAnswer": "Om tillträde inte kan ordnas inom rimlig tid och städningen därför inte kan genomföras, kan en ersättning motsvarande högst 50 % av det avtalade priset för städarbetet före eventuellt RUT-avdrag debiteras.",
+      "note": "Replaces 'upp till 100 %' for no access (Q101). A ceiling; the compensation must be reasonable and is not RUT-eligible."
     },
     "cancellationByCompanyFeePercent": {
       "value": 0,
@@ -682,12 +688,20 @@
       "clientAnswer": "Om Skatteverket helt eller delvis avslår RUT-avdraget har Aurel rätt att fakturera kunden motsvarande belopp. Kunden ansvarar då för att betala mellanskillnaden."
     },
     "bookingClosedBy": {
-      "value": "email-confirmation",
-      "source": "clientAnswers Q105",
+      "value": "customer-acceptance",
+      "source": "Textosweb.docx",
       "pendingConfirmation": false,
-      "question": "Q105",
-      "confirmedByClient": "2026-10-15",
-      "clientAnswer": "Solo se confirma por correo, pero no firman o pagan algo anticipado."
+      "confirmedByClient": "2026-11-26",
+      "clientAnswer": "Bokningen blir bindande först när du har accepterat erbjudandet och vi har bekräftat bokningen skriftligen.",
+      "note": "Replaces Q105 (binding on Aurel's e-mail confirmation alone). The website form now sends a non-binding, free förfrågan; Aurel answers with an offer and the customer accepts it in writing, e.g. by replying to the e-mail.",
+      "supersedes": {
+        "value": "email-confirmation",
+        "source": "clientAnswers Q105",
+        "pendingConfirmation": false,
+        "question": "Q105",
+        "confirmedByClient": "2026-10-15",
+        "clientAnswer": "Solo se confirma por correo, pero no firman o pagan algo anticipado."
+      }
     },
     "responseTimeHours": {
       "value": 24,
@@ -699,7 +713,9 @@
       "clientAnswer": "Yo Diego. Siempre en 24 horas o menos."
     },
     "paymentMethods": {
-      "value": ["invoice"],
+      "value": [
+        "invoice"
+      ],
       "source": "clientAnswers Q92",
       "pendingConfirmation": false,
       "question": "Q92",
@@ -751,6 +767,26 @@
       "question": "Q24",
       "confirmedByClient": "2026-09-17",
       "clientAnswer": "3 månaders uppsägningstid"
+    },
+    "travelSurcharge": {
+      "possible": true,
+      "rutEligible": false,
+      "source": "Textosweb.docx",
+      "pendingConfirmation": false,
+      "confirmedByClient": "2026-11-26",
+      "clientAnswer": "Beroende på bostadens adress och avstånd kan ett resetillägg tillkomma. Eventuella resekostnader anges separat i vårt prisförslag och meddelas innan bokningen bekräftas. Resekostnader berättigar inte till RUT-avdrag.",
+      "note": "No amount and no zone list: the surcharge is quoted per address in the offer."
+    },
+    "satisfactionGuaranteeHours": {
+      "value": 48,
+      "appliesTo": [
+        "movecleaning"
+      ],
+      "source": "Textosweb.docx",
+      "pendingConfirmation": false,
+      "confirmedByClient": "2026-11-26",
+      "clientAnswer": "Skulle något ha missats har du 48 timmar efter avslutad städning på dig att kontakta oss.",
+      "note": "Stated for flyttstädning only. Bokningsvillkor point 12 gives no deadline for other services ('så snart som möjligt'), so the site no longer promises 24 h (Q8)."
     }
   },
   "clientAnswers": {

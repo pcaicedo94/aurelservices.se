@@ -1,13 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import useBookingSubmit from "../../lib/booking/useBookingSubmit";
 import styles from "./Booking.module.css";
 
 const EMPTY_CONTACT = { name: "", email: "", phone: "", address: "" };
 
-// Contact step of an online booking. It owns the visitor's details, the
+// Contact step of a booking request. It owns the visitor's details, the
 // anti-spam fields and the request state; the page supplies the calculator
 // part of the payload through buildPayload(). Errors never reload the page,
 // so everything the visitor typed stays in place.
+//
+// Since Textosweb (2026-11-26) the website sends a free, non-binding
+// förfrågan: the visitor ticks that they have read the Bokningsvillkor, and
+// the booking binds only once they accept Aurel's e-mailed offer.
 const BookingContactForm = ({
   buildPayload,
   blockedHint = "",
@@ -21,6 +26,7 @@ const BookingContactForm = ({
   // Anti-spam contract with /api/booking: the honeypot must arrive empty and
   // formStartedAt tells the server how long the form was open.
   const [companyWebsite, setCompanyWebsite] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const startedAt = useRef(0);
   const sectionRef = useRef(null);
   const firstFieldRef = useRef(null);
@@ -30,7 +36,7 @@ const BookingContactForm = ({
     startedAt.current = Date.now();
   }, []);
 
-  // When the form appears, and again on every "Boka tjänsten" click.
+  // When the form appears, and again on every "Gå vidare till förfrågan" click.
   useEffect(() => {
     sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     firstFieldRef.current?.focus({ preventScroll: true });
@@ -48,6 +54,7 @@ const BookingContactForm = ({
     const payload = {
       ...buildPayload(),
       ...contact,
+      termsAccepted,
       company_website: companyWebsite,
       formStartedAt: startedAt.current,
     };
@@ -56,6 +63,7 @@ const BookingContactForm = ({
 
     if (result.ok) {
       setContact(EMPTY_CONTACT);
+      setTermsAccepted(false);
       onSuccess?.(payload);
       return;
     }
@@ -72,7 +80,8 @@ const BookingContactForm = ({
 
   return (
     <div ref={sectionRef} className={`accordion ${styles.section}`}>
-      <h3>Kontaktformulär</h3>
+      <h3>Bokningsförfrågan</h3>
+      <p className={styles.formLead}>Ej bindande förfrågan. Fyll i dina kontaktuppgifter så återkommer vi med ett prisförslag.</p>
       <form className="contact-form" onSubmit={handleSubmit} aria-busy={sending || undefined}>
         <div className="form-group">
           <label htmlFor="name">Namn</label>
@@ -151,7 +160,7 @@ const BookingContactForm = ({
               </>
             ) : (
               <>
-                <strong>Bokningen kunde inte skickas.</strong> {error.message} Dina uppgifter
+                <strong>Förfrågan kunde inte skickas.</strong> {error.message} Dina uppgifter
                 finns kvar.
               </>
             )}
@@ -164,13 +173,40 @@ const BookingContactForm = ({
           </div>
         )}
 
+        <div className={`form-check ${styles.terms}`}>
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id="termsAccepted"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+            required
+          />
+          <label className="form-check-label" htmlFor="termsAccepted">
+            Jag har tagit del av bokningsvillkoren och förstår att min förfrågan är kostnadsfri och
+            inte innebär en bindande bokning.
+          </label>
+        </div>
+        <p className={styles.termsLinks}>
+          Läs våra{" "}
+          <Link href="/bokningsvillkor" target="_blank">
+            bokningsvillkor
+          </Link>{" "}
+          och vår{" "}
+          <Link href="/integritetspolicy" target="_blank">
+            integritetspolicy
+          </Link>
+          .
+        </p>
+
         <button
           type="submit"
           className={`default-btn ${styles.button}${sending ? ` ${styles.sending}` : ""}`}
           disabled={sending || Boolean(blockedHint)}
         >
-          {sending ? "Skickar…" : "Skicka bokning"}
+          {sending ? "Skickar…" : "Skicka förfrågan"}
         </button>
+        <p className={styles.termsLinks}>Ej bindande förfrågan.</p>
       </form>
     </div>
   );

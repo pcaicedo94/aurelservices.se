@@ -350,6 +350,14 @@ export const PAGES = {
     image: "/images/page-title-bg.jpg",
   },
 
+  "/bokningsvillkor": {
+    title: "Bokningsvillkor – förfrågan, provstädning och avbokning",
+    description:
+      "Så fungerar en bokningsförfrågan hos Aurel Städ & Allservice: preliminärt pris, resetillägg, provstädning, bekräftelse, avbokning, tillträde och ångerrätt.",
+    keywords: "bokningsvillkor städning, provstädning, avbokning städfirma Stockholm",
+    image: "/images/page-title-bg.jpg",
+  },
+
   "/404": {
     title: "Sidan finns inte – Aurel Städ & Allservice i Stockholm",
     description:

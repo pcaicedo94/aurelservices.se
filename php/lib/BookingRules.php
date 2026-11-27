@@ -374,6 +374,9 @@ final class BookingRules
         return [
             ['key' => 'contactPreference', 'label' => 'Kontaktmetod',
                 'format' => static fn (string $v): string => self::CONTACT_PREFERENCES[$v] ?? $v],
+            // Textosweb (2026-11-26): what the hemstädning request asks for.
+            ['key' => 'interest', 'label' => 'Önskemål', 'format' => null],
+            ['key' => 'housingType', 'label' => 'Bostadstyp', 'format' => null],
             ['key' => 'area', 'label' => 'Yta', 'format' => static fn (string $v): string => $v . ' m²'],
             ['key' => 'rooms', 'label' => 'Rum', 'format' => null],
             ['key' => 'bagar', 'label' => 'Fönsterbågar', 'format' => null],
@@ -389,6 +392,10 @@ final class BookingRules
             ['key' => 'hourlyRate', 'label' => 'Timpris', 'format' => static fn (string $v): string => $v . ' kr/tim'],
             ['key' => 'pricePerUnit', 'label' => 'Pris per enhet',
                 'format' => static fn (string $v): string => $v . ' kr'],
+            ['key' => 'trialPrice', 'label' => 'Provstädning (enstaka pris)',
+                'format' => static fn (string $v): string => $v . ' kr'],
+            ['key' => 'termsAccepted', 'label' => 'Bokningsvillkor',
+                'format' => static fn (string $v): string => 'Godkända'],
         ];
     }
 

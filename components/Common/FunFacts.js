@@ -65,7 +65,7 @@ const FunFacts = () => {
                 <h3>
                   3
                 </h3>
-                <p>Stora byggföretag</p>
+                <p>Byggföretag som kunder</p>
               </div>
             </div>
           </div>

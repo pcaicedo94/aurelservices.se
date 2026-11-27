@@ -427,8 +427,12 @@ ok(
   byId["info.minsta"].message.includes(`${S.homecleaning.minHours.value} timmar`)
 );
 ok(
-  "el descuento de la primera limpieza sale de los datos",
-  byId["info.rabatt"].message.includes(`${prices.terms.firstCleaningDiscountPercent.value} procent`)
+  "la provstädning nombra el plazo de ajuste de los datos",
+  byId["info.rabatt"].message.includes(`${prices.terms.trialCleaning.adjustWithinDays} kalenderdagar`)
+);
+ok(
+  "ya no promete el 10 % de descuento que reemplazó Textosweb",
+  !/procent rabatt/i.test(byId["info.rabatt"].message)
 );
 ok(
   "la antelación de cancelación sale de los datos",
@@ -520,16 +524,10 @@ console.log("\n=== Sin respuesta del cliente, se deriva a contacto ===");
 // Q90, Q92 and Q101-Q110 (answered 2026-10-15) took cancellation, keys and
 // access, heavy soiling, a denied RUT deduction, insurance, pets, when a
 // booking is closed and how we are paid off this list; what is left is still
-// unanswered: the guarantee, the cleaning materials, the staff's languages,
-// the areas covered and how a recurring agreement is signed.
-const PENDING_NODES = [
-  "info.garanti",
-  "info.material",
-  "info.sprak",
-  "info.avtal",
-  "info.omrade",
-  "tjanst.hemstadning.fraga3",
-];
+// unanswered: the cleaning materials and the staff's languages. Textosweb
+// (2026-11-26) answered the guarantee, the area and travel surcharge, and how
+// a recurring agreement is signed.
+const PENDING_NODES = ["info.material", "info.sprak", "tjanst.hemstadning.fraga3"];
 for (const id of PENDING_NODES) {
   const node = byId[id];
   ok(`${id}: existe`, Boolean(node));
@@ -571,17 +569,32 @@ ok(
     cancellation.includes(`${prices.terms.cancellationNoticeDays.value} dagar`)
 );
 ok("la antelación de cancelación es gratuita", /[Kk]ostnadsfri/.test(cancellation));
+// Textosweb (2026-11-26): a late cancellation is "skälig ersättning", with no
+// percentage, and no access has its own ceiling, before RUT.
+ok("la cancelación tardía es skälig ersättning", /skälig ersättning/i.test(cancellation));
 ok(
-  "la penalización tardía sale de los datos y es un techo",
-  cancellation.includes(`upp till ${prices.terms.lateCancellationFeePercent.value} procent`)
+  "la cancelación tardía ya no nombra un porcentaje",
+  !/avbokning[^.]*upp till \d+ procent/i.test(cancellation)
 );
 ok(
-  "la penalización del mismo día sale de los datos y es un techo",
-  cancellation.includes(`upp till ${prices.terms.sameDayCancellationFeePercent.value} procent`)
+  "sin acceso: el techo sale de los datos y es antes del RUT",
+  /tillträde/i.test(cancellation) &&
+    cancellation.includes(`högst ${prices.terms.noAccessFeeMaxPercent.value} procent`) &&
+    /före RUT-avdrag/.test(cancellation)
 );
 ok(
-  "no haber tenido acceso se trata como el mismo día",
-  /tillträde/i.test(cancellation)
+  "la garantía de flyttstädning sale de los datos",
+  byId["info.garanti"].message.includes(`${prices.terms.satisfactionGuaranteeHours.value} timmar`)
+);
+ok(
+  "una solicitud no es vinculante",
+  /inte bindande/i.test(byId["info.hurbokar"].message) &&
+    /accepterat/i.test(byId["info.hurbokar"].message)
+);
+ok(
+  "el resetillägg se menciona y no da RUT",
+  /resetillägg/i.test(byId["info.omrade"].message) &&
+    /inte RUT-avdrag/i.test(byId["info.omrade"].message)
 );
 ok(
   "si cancela Aurel no se cobra nada",
@@ -605,13 +618,13 @@ ok(
     /behörig personal/i.test(byId["info.nycklar"].message)
 );
 ok(
-  "sin tillträde se puede cobrar el tiempo reservado o el desplazamiento",
-  /den bokade tiden eller framkörningen/i.test(byId["info.nycklar"].message)
+  "sin tillträde: un techo antes del RUT, no el tiempo reservado (Textosweb)",
+  byId["info.nycklar"].message.includes(`högst ${prices.terms.noAccessFeeMaxPercent.value} procent`) &&
+    /före RUT-avdrag/.test(byId["info.nycklar"].message)
 );
 ok(
-  "la reserva queda cerrada con la confirmación por correo",
-  /bekräftelse via e-post/i.test(byId["info.hurbokar"].message) &&
-    /skriver inte under något/i.test(byId["info.hurbokar"].message)
+  "la reserva se cierra cuando el cliente acepta el prisförslag (Textosweb)",
+  /bindande först när du har accepterat/i.test(byId["info.hurbokar"].message)
 );
 ok(
   "el seguro se nombra sin inventar aseguradora ni importe",

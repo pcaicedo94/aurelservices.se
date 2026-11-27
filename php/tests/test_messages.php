@@ -37,12 +37,12 @@ Check::contains('shows the price without a trailing .0', $customer, '>2650 kr</t
 Check::contains('keeps the signature', $customer, 'Med vänliga hälsningar,');
 Check::contains('and the company name in it', $customer, 'Aurel Städ &amp; Allservice AB');
 Check::contains('and the phone number', $customer, 'Tel: 076-045 02 28');
-Check::contains('heading', $customer, 'Tack för din bokning!');
+Check::contains('heading', $customer, 'Tack för din förfrågan!');
 
 Check::section('Messages: booking notice to the office');
 
 $admin = Messages::bookingAdmin($bookingData, $details, $when);
-Check::contains('heading', $admin, 'Ny bokning mottagen');
+Check::contains('heading', $admin, 'Ny bokningsförfrågan');
 Check::contains('customer email is a mailto link', $admin, 'href="mailto:asa@example.se"');
 Check::contains('phone is a tel link', $admin, 'href="tel:070-123 45 67"');
 Check::contains('every detail row the form sent is there', $admin, '82 m²');

@@ -215,7 +215,7 @@ const Index = () => {
             <div className={`${s.glass} ${s.partners}`}>
               <div className={s.partnersHead}>
                 <p className={s.eyebrow}>Kunder som litar på oss</p>
-                <h3 className={s.partnersTitle}>Tre stora byggföretag anlitar oss</h3>
+                <h3 className={s.partnersTitle}>Företag som anlitar oss</h3>
               </div>
               <ul className={s.logos}>
                 {PARTNERS.map((p) => (

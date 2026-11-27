@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import Navbar from "../../components/Layouts/Navbar";
 import PageBanner from "../../components/Common/PageBanner";
 import QuoteModal from "../../components/Common/QuoteModal";
+import { RutPrice, RutTag, RUT_LABEL } from "../../components/Common/RutTag";
 import Footer from "../../components/Layouts/Footer";
 import BookingSummary from "../../components/Booking/BookingSummary";
 import BookingContactForm from "../../components/Booking/BookingContactForm";
@@ -11,6 +12,8 @@ import FieldError, { invalidClass } from "../../components/Booking/FieldError";
 import useBookingFlow from "../../lib/booking/useBookingFlow";
 import useBookingDate from "../../lib/booking/useBookingDate";
 import Seo from "../../components/Common/Seo";
+import { HowItWorks } from "../../components/ServiceContent/ServiceContent";
+import { hemSteps, hemTrial, hemTravel, HOUSING_TYPES } from "../../content/services/hemstadning";
 import {
   billableHours,
   bookingHint,
@@ -39,16 +42,25 @@ import {
   roundKronor,
 } from "../../lib/booking/format";
 
+// Textosweb (2026-11-26): everything recurring is "löpande hemstädning", and
+// it starts with a provstädning billed at the one-off rate.
 const FREQUENCY_LABELS = {
   onetime: "Enstaka hemstädning",
-  1: "1 gång per månad",
-  2: "2 gånger per månad",
-  4: "4 gånger per månad",
+  1: "Löpande hemstädning, 1 gång per månad",
+  2: "Löpande hemstädning, 2 gånger per månad (varannan vecka)",
+  4: "Löpande hemstädning, 4 gånger per månad (varje vecka)",
+};
+
+const INTERESTS = {
+  lopande: "Löpande hemstädning med inledande provstädning",
+  enstaka: "Endast enstaka städning",
 };
 
 const HomeCleaning = () => {
   const [size, setSize] = useState("");
   const [frequency, setFrequency] = useState("");
+  const [interest, setInterest] = useState("");
+  const [housingType, setHousingType] = useState("");
   const [showQuote, setShowQuote] = useState(false);
   const date = useBookingDate();
 
@@ -71,8 +83,23 @@ const HomeCleaning = () => {
     cleaningTime !== null && hourlyRate
       ? roundKronor(cleaningTime * hourlyRate * sessionsPerMonth)
       : null;
+  // The provstädning that opens a löpande plan is billed as a one-off clean
+  // on the chosen day, so it is priced at that day's one-off rate.
+  const isRecurring = Boolean(frequencyLabel) && frequency !== "onetime";
+  const trialRate =
+    isRecurring && date.isValid ? homeCleaningHourlyRate("onetime", date.check.parts.weekday) : null;
+  const trialPrice =
+    isRecurring && cleaningTime !== null && trialRate ? roundKronor(cleaningTime * trialRate) : null;
+  const isHouse = housingType === "Villa" || housingType === "Radhus";
+
+  const chooseInterest = (value) => {
+    setInterest(value);
+    if (value === "enstaka") setFrequency("onetime");
+    else if (frequency === "onetime") setFrequency("");
+  };
 
   const hint = bookingHint([
+    { label: "bostadstyp", status: housingType ? "ok" : "empty" },
     { label: "storlek", status: area.status },
     { label: "frekvens", status: frequencyLabel ? "ok" : "empty" },
     { label: "datum", status: date.check.status },
@@ -82,8 +109,11 @@ const HomeCleaning = () => {
   // Calculator part of the booking payload; the contact form adds the rest.
   const buildPayload = () => ({
     cleaningType: "Hemstädning",
+    interest: INTERESTS[interest],
+    housingType,
     area: String(area.value),
     frequency: frequencyLabel,
+    ...(trialPrice !== null && { trialPrice }),
     dateTime: date.dateTime,
     hourlyRate,
     totalPrice,
@@ -93,6 +123,8 @@ const HomeCleaning = () => {
   const clearCalculator = () => {
     setSize("");
     setFrequency("");
+    setInterest("");
+    setHousingType("");
     date.setDateTime("");
   };
 
@@ -106,6 +138,7 @@ const HomeCleaning = () => {
   };
 
   const quoteDetails = {
+    ...(housingType && { Bostadstyp: housingType }),
     Storlek: formatArea(area.value),
     ...(frequencyLabel && { Frekvens: frequencyLabel }),
     ...(date.isValid && { "Önskat datum och tid": formatDateTime(date.dateTime) }),
@@ -119,7 +152,7 @@ const HomeCleaning = () => {
       <PageBanner pageTitle="Hemstädning" bgImage="/images/banners/hemstadning.webp" />
 
       {/* Descriptive Section */}
-      <div className="container ptb-50">
+      <div className="container ptb-50 svc-page">
         <div className="row">
           <div className="col-lg-7">
             <h2>Hemstädning i Stockholm – Professionell och pålitlig städservice</h2>
@@ -162,8 +195,20 @@ const HomeCleaning = () => {
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-lg-12">
+        <HowItWorks {...hemSteps} />
+
+        <section className="glass-panel svc-trial">
+          <h2 className="svc-block-title">{hemTrial.title}</h2>
+          {hemTrial.paras.map((text) => (
+            <p key={text.slice(0, 30)}>{text}</p>
+          ))}
+        </section>
+
+        <div className="row svc-notices-row">
+          <div className="col-lg-12 svc-notices">
+            <div className="brand-card-warning">
+              <strong>{hemTravel.title}</strong> {hemTravel.text}
+            </div>
             <div className="brand-card-warning">
               <strong>OBS!</strong> Minsta debitering 2 timmar. Som kund ansvarar ni för att det ska finnas produkter och medel som Bolaget behöver för att utföra tjänsten. Om Kunden föredrar att Bolaget ska stå för produkter med mera kommer dessa debiteras och finnas specificerade på månadsfakturan.
             </div>
@@ -176,6 +221,56 @@ const HomeCleaning = () => {
             {/* The heading lives inside the card, like "Summering" in the summary. */}
             <form onSubmit={(e) => e.preventDefault()} className="home-cleaning-form">
               <h3 id="berakna-pris">Beräkna pris</h3>
+              <p className="form-text text-muted">Bokningsförfrågan – ej bindande</p>
+              <fieldset className="form-group">
+                <legend className="col-form-label pt-0">Vad är du intresserad av?</legend>
+                {Object.entries(INTERESTS).map(([value, label]) => (
+                  <div className="form-check" key={value}>
+                    <input
+                      type="radio"
+                      className="form-check-input"
+                      id={`interest-${value}`}
+                      name="interest"
+                      value={value}
+                      checked={interest === value}
+                      onChange={() => chooseInterest(value)}
+                    />
+                    <label className="form-check-label" htmlFor={`interest-${value}`}>
+                      {label}
+                    </label>
+                  </div>
+                ))}
+                {interest === "lopande" && (
+                  <small className="form-text text-muted">
+                    <strong>Så fungerar provstädningen:</strong> Provstädningen debiteras först som
+                    en enstaka städning. Tecknar du sedan avtal om löpande hemstädning justerar vi
+                    priset enligt överenskommelsen.
+                  </small>
+                )}
+              </fieldset>
+              <div className="form-group">
+                <label htmlFor="housingType">Bostadstyp</label>
+                <select
+                  id="housingType"
+                  className="form-control"
+                  value={housingType}
+                  onChange={(e) => setHousingType(e.target.value)}
+                  required
+                >
+                  <option value="">Välj bostadstyp</option>
+                  {HOUSING_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                {isHouse && interest !== "enstaka" && (
+                  <small className="form-text text-muted">
+                    För villa och radhus bokar vi gärna ett kostnadsfritt hembesök innan
+                    provstädningen.
+                  </small>
+                )}
+              </div>
               <div className="form-group">
                 <label htmlFor="size">Storlek i m²</label>
                 <input
@@ -200,7 +295,10 @@ const HomeCleaning = () => {
                   id="frequency"
                   className="form-control"
                   value={frequency}
-                  onChange={(e) => setFrequency(e.target.value)}
+                  onChange={(e) => {
+                    setFrequency(e.target.value);
+                    setInterest(e.target.value === "onetime" ? "enstaka" : "lopande");
+                  }}
                   required
                 >
                   <option value="">Välj frekvens</option>
@@ -208,10 +306,16 @@ const HomeCleaning = () => {
                       (HOME_ONETIME_RATES.saturday) and the day is not known
                       until the date is picked. The monthly plan is one rate
                       for every bookable day, so it names its figure. */}
-                  <option value="onetime">{`Enstaka hemstädning (från ${HOME_ONETIME_RATES.weekday} kr/h)`}</option>
-                  <option value="1">{`1 gång/månad (${HOME_MONTHLY_RATE} kr/h)`}</option>
-                  <option value="2">2 gånger/månad</option>
-                  <option value="4">4 gånger/månad</option>
+                  {interest !== "lopande" && (
+                    <option value="onetime">{`Enstaka hemstädning (från ${HOME_ONETIME_RATES.weekday} kr/h ${RUT_LABEL})`}</option>
+                  )}
+                  {interest !== "enstaka" && (
+                    <>
+                      <option value="1">{`Löpande, 1 gång/månad (${HOME_MONTHLY_RATE} kr/h ${RUT_LABEL})`}</option>
+                      <option value="2">Löpande, 2 gånger/månad (varannan vecka)</option>
+                      <option value="4">Löpande, 4 gånger/månad (varje vecka)</option>
+                    </>
+                  )}
                 </select>
               </div>
               <DateTimeField
@@ -233,7 +337,8 @@ const HomeCleaning = () => {
                           [HOME_WEEKDAY_RATES.mondayToWednesday, " (Måndag-Onsdag)"],
                           [HOME_WEEKDAY_RATES.thursdayToFriday, " (Torsdag-Fredag)"],
                           [HOME_WEEKDAY_RATES.saturday, " (Lördag)"],
-                        ].find(([rate]) => rate === hourlyRate)?.[1]}
+                        ].find(([rate]) => rate === hourlyRate)?.[1]}{" "}
+                    <RutTag />
                   </small>
                 )}
               </DateTimeField>
@@ -243,12 +348,16 @@ const HomeCleaning = () => {
           {/* Summary Section */}
           <div className="col-lg-6">
             <BookingSummary
+              privateCustomer
               mode={needsQuote ? "quote" : "book"}
               hint={needsQuote ? "" : hint}
               onBook={flow.openContact}
               onQuote={() => setShowQuote(true)}
               quoteNote="Så stora ytor prissätter vi med en offert. Skicka en förfrågan så återkommer vi."
             >
+              <li>
+                <strong>Bostadstyp:</strong> {housingType || NOT_SET}
+              </li>
               <li>
                 <strong>Storlek:</strong> {describeArea(area)}
               </li>
@@ -265,12 +374,17 @@ const HomeCleaning = () => {
               </li>
               {hourlyRate && !needsQuote && (
                 <li>
-                  <strong>Timtaxa:</strong> {formatPrice(hourlyRate)}/h
+                  <strong>Timtaxa:</strong> <RutPrice amount={hourlyRate} suffix="/h" />
+                </li>
+              )}
+              {isRecurring && !needsQuote && (
+                <li>
+                  <strong>Provstädning (enstaka pris):</strong> <RutPrice amount={trialPrice} />
                 </li>
               )}
               <li>
-                <strong>{frequency === "onetime" ? "Totalpris:" : "Totalpris för månaden:"}</strong>{" "}
-                {needsQuote ? "Offereras" : formatPrice(totalPrice)}
+                <strong>{frequency === "onetime" ? "Preliminärt pris:" : "Preliminärt pris per månad:"}</strong>{" "}
+                {needsQuote ? "Offereras" : <RutPrice amount={totalPrice} />}
               </li>
             </BookingSummary>
           </div>
